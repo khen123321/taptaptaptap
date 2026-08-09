@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #f8f8f8;
+  --cyan: #00a8c0;
+  --surface: #0a0d0f;
+  --surface-2: #11171b;
+  --muted: #9ca6ad;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -12,15 +17,62 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  background: #000;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  text-rendering: geometricPrecision;
+}
+
+::selection {
+  background: rgba(0, 168, 192, 0.32);
+  color: #f8f8f8;
+}
+
+@keyframes nfc-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes tap-phone {
+  0%,
+  100% {
+    transform: translateX(0) rotate(-2deg);
+  }
+
+  45% {
+    transform: translateX(34px) rotate(0deg);
+  }
+}
+
+.nfc-pulse {
+  animation: nfc-pulse 2.8s ease-in-out infinite;
+}
+
+.tap-demo-active {
+  animation: tap-phone 900ms ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
