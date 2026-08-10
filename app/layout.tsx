@@ -37,9 +37,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-theme="light"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+try {
+  var savedTheme = localStorage.getItem("taptaptap-theme");
+  document.documentElement.dataset.theme = savedTheme === "dark" ? "dark" : "light";
+} catch (error) {
+  document.documentElement.dataset.theme = "light";
+}
+`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }

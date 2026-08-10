@@ -48,7 +48,7 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#050607] px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="border-t theme-footer px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_2fr]">
           <div>
@@ -62,7 +62,7 @@ export function Footer() {
               />
               <span className="text-lg font-bold text-white">TapTapTap</span>
             </div>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-[#9CA6AD]">
+            <p className="mt-4 max-w-sm text-sm leading-6 theme-footer-muted">
               Smart NFC products made simple.
             </p>
             <a
@@ -87,7 +87,7 @@ export function Footer() {
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noopener noreferrer" : undefined}
                         aria-label={link.ariaLabel}
-                        className="text-sm text-[#9CA6AD] transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
+                        className="text-sm theme-footer-muted transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
                       >
                         {link.label}
                       </a>
@@ -99,7 +99,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-[#9CA6AD] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm theme-footer-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 TapTapTap. All rights reserved.</p>
           <p>Made in the Philippines.</p>
         </div>

@@ -44,15 +44,15 @@ export function DesignUploader({
   };
 
   return (
-    <div className="rounded-lg border border-white/10 bg-[#0A0D0F] p-5">
+    <div className="rounded-lg border p-5 theme-card">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-base font-bold text-white">Upload your design</h2>
-          <p className="mt-2 text-sm leading-6 text-[#9CA6AD]">
+          <h2 className="text-base font-bold theme-text">Upload your design</h2>
+          <p className="mt-2 text-sm leading-6 theme-text-secondary">
             PNG, JPG, JPEG, or WEBP. Maximum file size 10 MB.
           </p>
         </div>
-        <ImagePlus className="h-5 w-5 shrink-0 text-[#00A8C0]" aria-hidden />
+        <ImagePlus className="h-5 w-5 shrink-0 theme-accent" aria-hidden />
       </div>
 
       <label
@@ -67,15 +67,15 @@ export function DesignUploader({
           setDragging(false);
           void handleFile(event.dataTransfer.files[0]);
         }}
-        className={`mt-5 flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed p-6 text-center transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#00A8C0] ${
+        className={`mt-5 flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed p-6 text-center transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--accent)] ${
           dragging
-            ? "border-[#00A8C0] bg-[#00A8C0]/10"
-            : "border-white/15 bg-black/30 hover:border-[#00A8C0]/60"
+            ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+            : "theme-border bg-[var(--surface-secondary)] hover:border-[var(--accent)]"
         }`}
       >
-        <UploadCloud className="h-8 w-8 text-[#00A8C0]" aria-hidden />
-        <span className="mt-3 text-sm font-bold text-white">Upload Design</span>
-        <span className="mt-1 text-xs leading-5 text-[#9CA6AD]">
+        <UploadCloud className="h-8 w-8 theme-accent" aria-hidden />
+        <span className="mt-3 text-sm font-bold theme-text">Upload Design</span>
+        <span className="mt-1 text-xs leading-5 theme-text-muted">
           Drag and drop artwork here, or browse files.
         </span>
         <input
@@ -88,7 +88,7 @@ export function DesignUploader({
         />
       </label>
 
-      <p className="mt-4 text-xs leading-5 text-[#9CA6AD]">
+      <p className="mt-4 text-xs leading-5 theme-text-muted">
         Suggested artwork: portrait orientation, high resolution, PNG preferred.
       </p>
 
@@ -99,11 +99,11 @@ export function DesignUploader({
       ) : null}
 
       {uploadedImage ? (
-        <div className="mt-5 rounded-md border border-white/10 bg-black/35 p-4">
-          <p className="break-all text-sm font-semibold text-white">
+        <div className="mt-5 rounded-md border p-4 theme-subtle">
+          <p className="break-all text-sm font-semibold theme-text">
             {uploadedImage.fileName}
           </p>
-          <p className="mt-1 text-xs text-[#9CA6AD]">
+          <p className="mt-1 text-xs theme-text-muted">
             {uploadedImage.width && uploadedImage.height
               ? `${uploadedImage.width} x ${uploadedImage.height}px`
               : "Image dimensions unavailable"}
@@ -112,7 +112,7 @@ export function DesignUploader({
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-white/10 px-3 text-sm font-semibold text-white transition hover:border-[#00A8C0]/60 hover:bg-[#00A8C0]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0]"
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-semibold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               <RotateCcw className="h-4 w-4" aria-hidden />
               Replace Design
@@ -120,7 +120,7 @@ export function DesignUploader({
             <button
               type="button"
               onClick={onRemove}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-white/10 px-3 text-sm font-semibold text-white transition hover:border-red-400/60 hover:bg-red-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-semibold theme-text transition hover:border-red-400/60 hover:bg-red-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
             >
               <Trash2 className="h-4 w-4" aria-hidden />
               Remove
@@ -129,7 +129,7 @@ export function DesignUploader({
         </div>
       ) : null}
 
-      <p className="mt-4 text-xs leading-5 text-[#9CA6AD]">
+      <p className="mt-4 text-xs leading-5 theme-text-muted">
         By uploading artwork, you confirm that you have permission to use the
         design.
       </p>

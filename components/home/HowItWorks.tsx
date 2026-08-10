@@ -21,20 +21,20 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-black px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section id="how-it-works" className="theme-section px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading title="Tap. Connect. Done." />
         <div className="mt-12 grid gap-5 lg:grid-cols-4">
           {steps.map((step, index) => (
-            <article key={step.title} className="relative rounded-lg border border-white/10 bg-[#0A0D0F] p-6">
+            <article key={step.title} className="relative rounded-lg border p-6 theme-card">
               {index < steps.length - 1 ? (
                 <div className="absolute left-[calc(100%-4px)] top-10 hidden h-px w-5 bg-[#00A8C0]/60 lg:block" />
               ) : null}
-              <span className="text-sm font-black text-[#00A8C0]">
+              <span className="text-sm font-black theme-accent">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-4 text-xl font-bold text-white">{step.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-[#9CA6AD]">{step.description}</p>
+              <h3 className="mt-4 text-xl font-bold theme-text">{step.title}</h3>
+              <p className="mt-3 text-sm leading-6 theme-text-secondary">{step.description}</p>
             </article>
           ))}
         </div>

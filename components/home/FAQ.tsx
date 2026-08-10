@@ -18,7 +18,7 @@ const faqs = [
   {
     question: "What phones support NFC?",
     answer:
-      "Many modern iPhone and Android phones support NFC. QR backup can help customers with older or unsupported phones.",
+      "Many modern iPhone and Android phones support NFC. For custom NFC signs, an optional QR backup can help customers with older or unsupported phones.",
   },
   {
     question: "Can the NFC link be changed later?",
@@ -38,7 +38,7 @@ const faqs = [
   {
     question: "What if a customer's phone does not support NFC?",
     answer:
-      "A printed QR backup can be added so customers can still open the same destination.",
+      "For Custom NFC Sign orders, a printed QR backup can be added so customers can still open the same destination.",
   },
 ];
 
@@ -46,24 +46,24 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" className="bg-[#050607] px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section id="faq" className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-4xl">
         <SectionHeading title="Questions before you tap?" />
-        <div className="mt-10 divide-y divide-white/10 rounded-lg border border-white/10 bg-[#0A0D0F]">
+        <div className="mt-10 divide-y divide-[var(--border)] rounded-lg border theme-card">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <div key={faq.question}>
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left text-base font-bold text-white transition hover:bg-white/[0.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#00A8C0] sm:px-6"
+                  className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left text-base font-bold theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] sm:px-6"
                   aria-expanded={isOpen}
                   aria-controls={`faq-${index}`}
                   onClick={() => setOpenIndex(isOpen ? -1 : index)}
                 >
                   <span>{faq.question}</span>
                   <ChevronDown
-                    className={`h-5 w-5 shrink-0 text-[#00A8C0] transition ${
+                    className={`h-5 w-5 shrink-0 theme-accent transition ${
                       isOpen ? "rotate-180" : ""
                     }`}
                     aria-hidden
@@ -76,7 +76,7 @@ export function FAQ() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-5 pb-5 text-sm leading-6 text-[#9CA6AD] sm:px-6">
+                    <p className="px-5 pb-5 text-sm leading-6 theme-text-secondary sm:px-6">
                       {faq.answer}
                     </p>
                   </div>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 
 const links = [
@@ -36,8 +37,8 @@ export function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition ${
         scrolled || open
-          ? "border-b border-white/10 bg-black/88 backdrop-blur-md"
-          : "bg-transparent"
+          ? "border-b theme-header backdrop-blur-md"
+          : "theme-header-idle"
       }`}
     >
       <nav
@@ -57,7 +58,7 @@ export function Navbar() {
             priority
             className="h-11 w-11 rounded-md object-cover sm:h-12 sm:w-12"
           />
-          <span className="ml-3 text-base font-bold text-white">TapTapTap</span>
+          <span className="ml-3 text-base font-bold theme-text">TapTapTap</span>
         </Link>
 
         <div className="hidden items-center gap-7 lg:flex">
@@ -65,7 +66,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-white/70 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
+              className="text-sm font-medium theme-text-secondary transition hover:text-[var(--text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             >
               {link.label}
             </Link>
@@ -76,6 +77,7 @@ export function Navbar() {
           <Button href="/#contact" variant="ghost" className="min-h-11 px-4">
             Contact
           </Button>
+          <ThemeToggle />
           <Button href="/products" className="min-h-11 px-4">
             <ShoppingBag className="h-4 w-4" aria-hidden />
             Shop Now
@@ -84,7 +86,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/10 text-white transition hover:border-[#00A8C0]/60 hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0] lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-md border theme-border theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
@@ -94,18 +96,22 @@ export function Navbar() {
       </nav>
 
       {open ? (
-        <div className="border-t border-white/10 bg-black px-4 pb-6 pt-2 lg:hidden">
+        <div className="border-t theme-border bg-[var(--surface)] px-4 pb-6 pt-2 lg:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-3 text-base font-medium text-white/78 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0]"
+                className="rounded-md px-3 py-3 text-base font-medium theme-text-secondary transition hover:bg-[var(--accent-soft)] hover:text-[var(--text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 {link.label}
               </Link>
             ))}
+            <div className="mt-3 flex items-center justify-between rounded-md border theme-border bg-[var(--surface-secondary)] px-3 py-3">
+              <span className="text-sm font-semibold theme-text">Theme</span>
+              <ThemeToggle onToggle={() => setOpen(false)} />
+            </div>
             <div className="mt-3 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
               <Button href="/#contact" variant="secondary" onClick={() => setOpen(false)}>
                 Contact

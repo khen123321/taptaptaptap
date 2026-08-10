@@ -10,8 +10,8 @@ type ProductSelectorProps = {
 
 export function ProductSelector({ value, onChange }: ProductSelectorProps) {
   return (
-    <div className="rounded-lg border border-white/10 bg-[#0A0D0F] p-5">
-      <label htmlFor="product-type" className="text-sm font-bold text-white">
+    <div className="rounded-lg border p-5 theme-card">
+      <label htmlFor="product-type" className="text-sm font-bold theme-text">
         Product Type
       </label>
       <div className="relative mt-3">
@@ -19,7 +19,7 @@ export function ProductSelector({ value, onChange }: ProductSelectorProps) {
           id="product-type"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="min-h-12 w-full appearance-none rounded-md border border-white/10 bg-black/40 px-4 pr-10 text-sm font-semibold text-white outline-none transition focus:border-[#00A8C0] focus:ring-2 focus:ring-[#00A8C0]/25"
+          className="min-h-12 w-full appearance-none rounded-md border theme-border bg-[var(--surface-secondary)] px-4 pr-10 text-sm font-semibold theme-text outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25"
         >
           {mockupList.map((mockup) => (
             <option key={mockup.id} value={mockup.id}>
@@ -28,11 +28,11 @@ export function ProductSelector({ value, onChange }: ProductSelectorProps) {
           ))}
         </select>
         <ChevronDown
-          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#00A8C0]"
+          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 theme-accent"
           aria-hidden
         />
       </div>
-      <p className="mt-3 text-xs leading-5 text-[#9CA6AD]">
+      <p className="mt-3 text-xs leading-5 theme-text-muted">
         More product mockups such as PVC NFC cards, wall plates, and stickers
         can be added later.
       </p>

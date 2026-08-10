@@ -117,11 +117,11 @@ export function CustomizerLayout() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
       <div className="space-y-5">
-        <div className="rounded-lg border border-white/10 bg-[#0A0D0F] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#00A8C0]">
+        <div className="rounded-lg border p-5 theme-card">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] theme-accent">
             Customize your NFC
           </p>
-          <h2 className="mt-2 text-xl font-bold text-white">
+          <h2 className="mt-2 text-xl font-bold theme-text">
             Upload, position, and preview your artwork.
           </h2>
         </div>

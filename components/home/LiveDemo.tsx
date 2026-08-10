@@ -14,13 +14,13 @@ export function LiveDemo() {
   }, [active]);
 
   return (
-    <section className="bg-[#050607] px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
           title="See how simple it is."
           description="A tap can move a customer from your counter to the exact digital action you want."
         />
-        <div className="mx-auto mt-12 max-w-4xl rounded-lg border border-white/10 bg-[#0A0D0F] p-5 sm:p-8">
+        <div className="mx-auto mt-12 max-w-4xl rounded-lg border p-5 theme-card-elevated sm:p-8">
           <div className="grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
             <div className="flex justify-center">
               <div
@@ -67,8 +67,8 @@ export function LiveDemo() {
               </div>
             </div>
           </div>
-          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
-            <p className="text-sm text-[#9CA6AD]">
+          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t theme-border pt-6 sm:flex-row">
+            <p className="text-sm theme-text-secondary">
               This visual demo simulates the customer experience.
             </p>
             <button

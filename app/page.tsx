@@ -8,7 +8,6 @@ import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { IntroSection } from "@/components/home/IntroSection";
 import { LiveDemo } from "@/components/home/LiveDemo";
-import { PricingSection } from "@/components/home/PricingSection";
 import { ProductsSection } from "@/components/home/ProductsSection";
 import { TrustBar } from "@/components/home/TrustBar";
 import { WhyTapTapTap } from "@/components/home/WhyTapTapTap";
@@ -17,14 +16,13 @@ import { Navbar } from "@/components/layout/Navbar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen theme-page">
       <Navbar />
       <main>
         <Hero />
         <TrustBar />
         <IntroSection />
         <ProductsSection />
-        <PricingSection />
         <HowItWorks />
         <LiveDemo />
         <WhyTapTapTap />

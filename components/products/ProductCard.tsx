@@ -1,18 +1,40 @@
+"use client";
+
 import Image from "next/image";
-import { ArrowRight, Palette } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import type { KeyboardEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import { formatProductPrice } from "@/lib/products";
 import type { Product } from "@/types/product";
 
 type ProductCardProps = {
   product: Product;
+  onViewDetails?: (product: Product) => void;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
-  const isCustom = product.type === "custom";
+export function ProductCard({ product, onViewDetails }: ProductCardProps) {
+  const openDetails = () => {
+    onViewDetails?.(product);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (!onViewDetails) return;
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openDetails();
+    }
+  };
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0A0D0F] transition hover:-translate-y-1 hover:border-[#00A8C0]/55">
+    <article
+      role={onViewDetails ? "button" : undefined}
+      tabIndex={onViewDetails ? 0 : undefined}
+      onClick={onViewDetails ? openDetails : undefined}
+      onKeyDown={handleKeyDown}
+      className={`group flex h-full flex-col overflow-hidden rounded-lg border theme-card transition hover:-translate-y-1 hover:border-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+        onViewDetails ? "cursor-pointer" : ""
+      }`}
+    >
       <div className="relative aspect-square overflow-hidden bg-black">
         <Image
           src={product.image}
@@ -23,39 +45,25 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#00A8C0]">
-          {isCustom ? "Custom Product" : "Ready-Made Design"}
+        <p className="text-xs font-bold uppercase tracking-[0.18em] theme-accent">
+          {product.type === "custom" ? "Custom Branded" : "Standard Design"}
         </p>
-        <h3 className="mt-3 text-xl font-bold text-white">{product.name}</h3>
-        <p className="mt-3 flex-1 text-sm leading-6 text-[#9CA6AD]">
+        <h3 className="mt-3 text-xl font-bold theme-text">{product.name}</h3>
+        <p className="mt-3 flex-1 text-sm leading-6 theme-text-secondary">
           {product.description}
         </p>
-        <p className="mt-5 text-lg font-black text-white">
-          {formatProductPrice(product)}
-        </p>
-        <div className="mt-5 grid gap-3 min-[430px]:grid-cols-2">
-          {isCustom ? (
-            <>
-              <Button href="/customize" className="px-3">
-                <Palette className="h-4 w-4" aria-hidden />
-                Customize Now
-              </Button>
-              <Button href={`/products/${product.slug}`} variant="secondary" className="px-3">
-                View Mockup
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button href={`/products/${product.slug}`} variant="secondary" className="px-3">
-                View Product
-              </Button>
-              <Button href="/customize" className="px-3">
-                Customize Yours
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Button>
-            </>
-          )}
-        </div>
+
+        {onViewDetails ? (
+          <span className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md border theme-border bg-[var(--surface-secondary)] px-5 text-sm font-semibold theme-text transition group-hover:border-[var(--accent)] group-hover:bg-[var(--accent-soft)]">
+            View Details
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </span>
+        ) : (
+          <Button href={`/products/${product.slug}`} variant="secondary" className="mt-6 w-full">
+            View Details
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Button>
+        )}
       </div>
     </article>
   );

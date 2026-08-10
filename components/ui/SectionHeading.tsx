@@ -18,15 +18,15 @@ export function SectionHeading({
       }`}
     >
       {eyebrow ? (
-        <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#00A8C0]">
+        <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] theme-accent">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="text-3xl font-bold tracking-normal text-white sm:text-4xl">
+      <h2 className="text-3xl font-bold tracking-normal theme-text sm:text-4xl">
         {title}
       </h2>
       {description ? (
-        <p className="mt-4 text-base leading-7 text-[#9CA6AD] sm:text-lg">
+        <p className="mt-4 text-base leading-7 theme-text-secondary sm:text-lg">
           {description}
         </p>
       ) : null}

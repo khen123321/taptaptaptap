@@ -33,18 +33,18 @@ export function MockupControls({
   onReset,
 }: MockupControlsProps) {
   return (
-    <div className="rounded-lg border border-white/10 bg-[#0A0D0F] p-5">
-      <h2 className="text-base font-bold text-white">Fit / Fill</h2>
-      <div className="mt-4 grid grid-cols-2 gap-2 rounded-md border border-white/10 bg-black/35 p-1">
+    <div className="rounded-lg border p-5 theme-card">
+      <h2 className="text-base font-bold theme-text">Fit / Fill</h2>
+      <div className="mt-4 grid grid-cols-2 gap-2 rounded-md border theme-border bg-[var(--surface-secondary)] p-1">
         {(["fit", "fill"] as const).map((mode) => (
           <button
             key={mode}
             type="button"
             onClick={() => onFitModeChange(mode)}
-            className={`inline-flex min-h-10 items-center justify-center gap-2 rounded px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0] ${
+            className={`inline-flex min-h-10 items-center justify-center gap-2 rounded px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
               fitMode === mode
-                ? "bg-[#00A8C0] text-black"
-                : "text-white hover:bg-white/[0.06]"
+                ? "bg-[var(--accent)] text-[var(--button-primary-text)]"
+                : "theme-text hover:bg-[var(--accent-soft)]"
             }`}
           >
             {mode === "fit" ? (
@@ -98,14 +98,14 @@ export function MockupControls({
         <button
           type="button"
           onClick={onCenter}
-          className="inline-flex min-h-10 items-center justify-center rounded-md border border-white/10 px-3 text-sm font-bold text-white transition hover:border-[#00A8C0]/60 hover:bg-[#00A8C0]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0]"
+          className="inline-flex min-h-10 items-center justify-center rounded-md border theme-border px-3 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           Center Design
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-white/10 px-3 text-sm font-bold text-white transition hover:border-[#00A8C0]/60 hover:bg-[#00A8C0]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0]"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           <RotateCcw className="h-4 w-4" aria-hidden />
           Reset
@@ -135,10 +135,10 @@ function Slider({
   return (
     <div className="mt-5">
       <div className="flex items-center justify-between gap-4">
-        <label htmlFor={id} className="text-sm font-semibold text-white">
+        <label htmlFor={id} className="text-sm font-semibold theme-text">
           {label}
         </label>
-        <span className="text-sm font-bold text-[#00A8C0]">
+        <span className="text-sm font-bold theme-accent">
           {value}
           {suffix}
         </span>

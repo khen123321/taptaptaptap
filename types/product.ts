@@ -1,4 +1,4 @@
-export type ProductType = "ready-made" | "custom";
+export type ProductType = "standard" | "custom";
 
 export type Product = {
   id: string;
@@ -7,6 +7,16 @@ export type Product = {
   description: string;
   pricePhp: number;
   priceLabel?: string;
+  buyOnePrice: number;
+  buyTwoPrice: number;
+  buyTwoSavings: number;
+  unitLabel: string;
+  bundlePricePhp?: number;
+  bundleLabel?: string;
+  bundleSavingsLabel?: string;
+  includedFeatures: string[];
+  ctaLabel: string;
+  ctaHref: string;
   image: string;
   category: string;
   type: ProductType;

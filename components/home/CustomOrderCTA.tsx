@@ -5,7 +5,7 @@ const email = "taptaptap.official@outlook.com";
 
 export function CustomOrderCTA() {
   return (
-    <section id="custom" className="bg-black px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section id="custom" className="theme-section px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-lg border border-[#00A8C0]/45 bg-[#00A8C0] text-black">
         <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:p-10">
           <div>

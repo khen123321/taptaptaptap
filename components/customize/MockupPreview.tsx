@@ -109,16 +109,16 @@ export function MockupPreview({
   };
 
   return (
-    <section className="sticky top-24 rounded-lg border border-white/10 bg-[#0A0D0F] p-4 shadow-2xl sm:p-6 lg:top-28">
+    <section className="sticky top-24 rounded-lg border p-4 theme-card-elevated sm:p-6 lg:top-28">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#00A8C0]">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] theme-accent">
             Live Preview
           </p>
-          <h2 className="mt-2 text-xl font-bold text-white">{product.name}</h2>
+          <h2 className="mt-2 text-xl font-bold theme-text">{product.name}</h2>
         </div>
-        <div className="rounded-md border border-white/10 bg-black/35 px-3 py-2 text-sm font-bold text-white">
-          Starting at <span className="text-[#00A8C0]">₱599</span>
+        <div className="rounded-md border theme-border bg-[var(--surface-secondary)] px-3 py-2 text-sm font-bold theme-text">
+          Starting at <span className="theme-accent">₱1,099</span>
         </div>
       </div>
 
@@ -171,9 +171,9 @@ export function MockupPreview({
       </div>
 
       {!uploadedImage ? (
-        <div className="mt-4 rounded-lg border border-white/10 bg-black/35 p-4 text-center">
-          <Nfc className="mx-auto h-6 w-6 text-[#00A8C0]" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-white">
+        <div className="mt-4 rounded-lg border p-4 text-center theme-subtle">
+          <Nfc className="mx-auto h-6 w-6 theme-accent" aria-hidden />
+          <p className="mt-2 text-sm font-semibold theme-text">
             Upload your design to preview it here.
           </p>
         </div>
@@ -196,7 +196,7 @@ export function MockupPreview({
       <button
         type="button"
         disabled
-        className="mt-3 inline-flex min-h-11 w-full cursor-not-allowed items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.03] px-4 text-sm font-semibold text-[#9CA6AD]"
+        className="mt-3 inline-flex min-h-11 w-full cursor-not-allowed items-center justify-center gap-2 rounded-md border theme-border bg-[var(--surface-secondary)] px-4 text-sm font-semibold theme-text-muted"
       >
         <Download className="h-4 w-4" aria-hidden />
         Download Preview Coming soon
@@ -220,8 +220,8 @@ function PreviewButton({
       onClick={onClick}
       className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-md border px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0] ${
         active
-          ? "border-[#00A8C0] bg-[#00A8C0] text-black"
-          : "border-white/10 bg-black/35 text-white hover:border-[#00A8C0]/60 hover:bg-[#00A8C0]/10"
+          ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--button-primary-text)]"
+          : "theme-border bg-[var(--surface-secondary)] theme-text hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]"
       }`}
     >
       {children}
