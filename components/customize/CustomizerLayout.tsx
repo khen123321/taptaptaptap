@@ -7,6 +7,7 @@ import { DesignUploader } from "@/components/customize/DesignUploader";
 import { MockupControls } from "@/components/customize/MockupControls";
 import { MockupPreview } from "@/components/customize/MockupPreview";
 import { ProductSelector } from "@/components/customize/ProductSelector";
+import { trackEvent } from "@/lib/analytics/client";
 import { defaultMockup, mockups } from "@/lib/mockups";
 import type { CustomizerState, FitMode } from "@/types/customize";
 
@@ -58,6 +59,10 @@ export function CustomizerLayout() {
   const uploadDesign = async (file: File) => {
     const url = URL.createObjectURL(file);
     const dimensions = await readImageDimensions(url);
+    trackEvent("customizer_upload", {
+      metadata: { source: "customizer" },
+      dedupeKey: `customizer_upload:${Date.now()}`,
+    });
 
     setState((current) => {
       if (current.uploadedImage?.url) {
@@ -111,6 +116,12 @@ export function CustomizerLayout() {
 
   const requestDesign = () => {
     setUrlTouched(true);
+    if (canRequest) {
+      trackEvent("customizer_request", {
+        metadata: { source: "customizer" },
+        dedupeKey: `customizer_request:${Date.now()}`,
+      });
+    }
     return canRequest;
   };
 

@@ -78,6 +78,9 @@ export function CustomOrderActions({
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <a
                 href={`mailto:${email}`}
+                data-analytics-event="email_click"
+                data-analytics-cta="customizer-email-order"
+                data-analytics-source="customizer"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 <Mail className="h-4 w-4" aria-hidden />
@@ -88,6 +91,9 @@ export function CustomOrderActions({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Message TapTapTap on Facebook, opens in a new tab"
+                data-analytics-event="facebook_click"
+                data-analytics-cta="customizer-facebook-order"
+                data-analytics-source="customizer"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border theme-border px-4 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden />

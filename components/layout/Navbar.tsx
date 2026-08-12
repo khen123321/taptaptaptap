@@ -88,6 +88,9 @@ export function Navbar() {
             href="/#contact"
             variant="ghost"
             className="min-h-11 px-4"
+            data-analytics-event="contact_click"
+            data-analytics-cta="navbar-contact"
+            data-analytics-source="navbar"
           >
             Contact
           </Button>
@@ -95,6 +98,9 @@ export function Navbar() {
           <Button
             href="/products"
             className="min-h-11 px-4"
+            data-analytics-event="shop_click"
+            data-analytics-cta="navbar-shop-now"
+            data-analytics-source="navbar"
           >
             <ShoppingBag className="h-4 w-4" aria-hidden />
             Shop Now
@@ -134,12 +140,18 @@ export function Navbar() {
                 href="/#contact"
                 variant="secondary"
                 onClick={() => setOpen(false)}
+                data-analytics-event="contact_click"
+                data-analytics-cta="mobile-navbar-contact"
+                data-analytics-source="navbar"
               >
                 Contact
               </Button>
               <Button
                 href="/products"
                 onClick={() => setOpen(false)}
+                data-analytics-event="shop_click"
+                data-analytics-cta="mobile-navbar-shop-now"
+                data-analytics-source="navbar"
               >
                 <ShoppingBag className="h-4 w-4" aria-hidden />
                 Shop Now

@@ -210,6 +210,9 @@ export function ProductDetailsModal({ product, onClose }: ProductDetailsModalPro
             <Button
               href={product.ctaHref}
               className="mt-7 w-full"
+              data-analytics-event="shop_click"
+              data-analytics-cta={product.ctaLabel}
+              data-analytics-source="product-details-modal"
             >
               {product.ctaLabel}
             </Button>

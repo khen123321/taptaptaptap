@@ -3,9 +3,10 @@
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductDetailsModal } from "@/components/products/ProductDetailsModal";
+import { trackEvent } from "@/lib/analytics/client";
 import type { Product } from "@/types/product";
 
 export function ProductGrid({ products }: { products: Product[] }) {
@@ -29,6 +30,11 @@ export function ProductGrid({ products }: { products: Product[] }) {
   );
 
   const openProduct = (product: Product) => {
+    trackEvent("product_details_open", {
+      productId: product.id,
+      metadata: { productSlug: product.slug },
+      dedupeKey: `product_details_open:${product.id}:${Date.now()}`,
+    });
     setSelectedProduct(product);
   };
 
@@ -58,9 +64,9 @@ export function ProductGrid({ products }: { products: Product[] }) {
           <div ref={emblaRef} className="overflow-hidden" aria-label="Product carousel">
             <div className="flex gap-5">
               {products.map((product) => (
-                <div key={product.id} className="product-carousel-slide min-w-0">
+                <ProductAnalyticsSlide key={product.id} product={product}>
                   <ProductCard product={product} onViewDetails={openProduct} />
-                </div>
+                </ProductAnalyticsSlide>
               ))}
             </div>
           </div>
@@ -77,6 +83,45 @@ export function ProductGrid({ products }: { products: Product[] }) {
         onClose={() => setSelectedProduct(null)}
       />
     </>
+  );
+}
+
+function ProductAnalyticsSlide({
+  product,
+  children,
+}: {
+  product: Product;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5);
+        if (!visible) return;
+
+        trackEvent("product_view", {
+          productId: product.id,
+          metadata: { productSlug: product.slug },
+          dedupeKey: `product_view:${window.location.pathname}:${product.id}`,
+        });
+        observer.disconnect();
+      },
+      { threshold: 0.5 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [product.id, product.slug]);
+
+  return (
+    <div ref={ref} className="product-carousel-slide min-w-0">
+      {children}
+    </div>
   );
 }
 

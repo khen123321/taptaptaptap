@@ -18,7 +18,13 @@ export function CustomOrderCTA() {
             </p>
           </div>
           <div className="flex flex-col gap-3 min-[430px]:flex-row lg:flex-col">
-            <Button href="/customize" className="border-black bg-black text-white hover:bg-[#11171B]">
+            <Button
+              href="/customize"
+              className="border-black bg-black text-white hover:bg-[#11171B]"
+              data-analytics-event="shop_click"
+              data-analytics-cta="create-custom-nfc"
+              data-analytics-source="custom-order-cta"
+            >
               <Paintbrush className="h-4 w-4" aria-hidden />
               Create Custom NFC
             </Button>
@@ -26,6 +32,9 @@ export function CustomOrderCTA() {
               href={`mailto:${email}`}
               variant="secondary"
               className="border-black/20 bg-white/20 text-black hover:border-black/40 hover:bg-white/35"
+              data-analytics-event="email_click"
+              data-analytics-cta="request-bulk-order"
+              data-analytics-source="custom-order-cta"
             >
               <Boxes className="h-4 w-4" aria-hidden />
               Request Bulk Order

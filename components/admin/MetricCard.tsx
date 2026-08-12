@@ -1,9 +1,11 @@
 export function MetricCard({
   label,
   value,
+  change,
 }: {
   label: string;
   value: number | string;
+  change?: string | null;
 }) {
   return (
     <div className="rounded-lg border p-4 theme-card">
@@ -11,6 +13,7 @@ export function MetricCard({
         {label}
       </p>
       <p className="mt-3 text-3xl font-black theme-text">{value}</p>
+      {change ? <p className="mt-2 text-xs font-bold theme-accent">{change}</p> : null}
     </div>
   );
 }

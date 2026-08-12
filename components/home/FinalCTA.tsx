@@ -15,13 +15,21 @@ export function FinalCTA() {
           Connect your customers faster with TapTapTap.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 min-[430px]:flex-row">
-          <Button href="/products">
+          <Button
+            href="/products"
+            data-analytics-event="shop_click"
+            data-analytics-cta="shop-nfc-products"
+            data-analytics-source="final-cta"
+          >
             <ShoppingBag className="h-4 w-4" aria-hidden />
             Shop NFC Products
           </Button>
           <Button
             href="#contact"
             variant="secondary"
+            data-analytics-event="contact_click"
+            data-analytics-cta="contact-us"
+            data-analytics-source="final-cta"
           >
             <Mail className="h-4 w-4" aria-hidden />
             Contact Us
@@ -33,6 +41,9 @@ export function FinalCTA() {
             Email us at{" "}
             <a
               href={`mailto:${email}`}
+              data-analytics-event="email_click"
+              data-analytics-cta="final-email"
+              data-analytics-source="final-cta"
               className="break-all font-semibold theme-accent transition hover:text-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             >
               {email}
@@ -43,6 +54,9 @@ export function FinalCTA() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Message TapTapTap on Facebook, opens in a new tab"
+            data-analytics-event="facebook_click"
+            data-analytics-cta="final-facebook"
+            data-analytics-source="final-cta"
             className="mt-4 inline-flex items-center justify-center gap-2 rounded-md border px-4 py-2 font-semibold theme-text theme-border transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             <MessageCircle className="h-4 w-4 theme-accent" aria-hidden />

@@ -4,9 +4,18 @@ export function AnalyticsTables({ data }: { data: AnalyticsDashboardData }) {
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       <SmallTable title="Top Pages" columns={["Page", "Views"]} rows={data.topPages.map((row) => [row.page, row.views])} />
-      <SmallTable title="Top Products" columns={["Product", "Views"]} rows={data.topProducts.map((row) => [row.product, row.views])} />
+      <SmallTable
+        title="Most Viewed Products"
+        columns={["Product", "Views / Opens"]}
+        rows={data.topProducts.map((row) => [row.product, `${row.views} views / ${row.detailOpens} opens`])}
+      />
       <SmallTable title="Top Actions" columns={["Action", "Count"]} rows={data.topActions.map((row) => [row.action, row.count])} />
-      <SmallTable title="Traffic Sources" columns={["Source", "Count"]} rows={data.trafficSources.map((row) => [row.source, row.count])} />
+      <SmallTable
+        title="Traffic Sources"
+        columns={["Source", "Count"]}
+        rows={data.trafficSources.map((row) => [row.source, `${row.count} (${row.percentage}%)`])}
+      />
+      <SmallTable title="Conversion Funnel" columns={["Step", "Count"]} rows={data.funnel.map((row) => [row.label, row.count])} />
     </div>
   );
 }
@@ -18,7 +27,7 @@ function SmallTable({
 }: {
   title: string;
   columns: [string, string];
-  rows: Array<[string, number]>;
+  rows: Array<[string, number | string]>;
 }) {
   return (
     <section className="rounded-lg border p-4 theme-card">

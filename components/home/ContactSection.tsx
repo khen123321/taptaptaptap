@@ -29,6 +29,9 @@ export function ContactSection() {
             </div>
             <a
               href={`mailto:${email}`}
+              data-analytics-event="email_click"
+              data-analytics-cta="contact-email-text"
+              data-analytics-source="contact-section"
               className="mt-2 block break-all text-sm theme-text-secondary transition hover:text-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             >
               {email}
@@ -45,6 +48,9 @@ export function ContactSection() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Message TapTapTap on Facebook, opens in a new tab"
+              data-analytics-event="facebook_click"
+              data-analytics-cta="contact-facebook-text"
+              data-analytics-source="contact-section"
               className="mt-2 block text-sm theme-text-secondary transition hover:text-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             >
               Message TapTapTap
@@ -54,6 +60,9 @@ export function ContactSection() {
           <div className="grid gap-3 min-[430px]:grid-cols-2">
             <Button
               href={`mailto:${email}`}
+              data-analytics-event="email_click"
+              data-analytics-cta="email-us"
+              data-analytics-source="contact-section"
             >
               <Mail className="h-4 w-4" aria-hidden />
               Email Us
@@ -64,6 +73,9 @@ export function ContactSection() {
               rel="noopener noreferrer"
               aria-label="Message TapTapTap on Facebook, opens in a new tab"
               variant="secondary"
+              data-analytics-event="facebook_click"
+              data-analytics-cta="message-on-facebook"
+              data-analytics-source="contact-section"
             >
               <MessageCircle className="h-4 w-4" aria-hidden />
               Message on Facebook

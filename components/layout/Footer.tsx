@@ -71,6 +71,9 @@ export function Footer() {
             </p>
             <a
               href={`mailto:${email}`}
+              data-analytics-event="email_click"
+              data-analytics-cta="footer-email"
+              data-analytics-source="footer"
               className="mt-4 inline-block break-all text-sm font-medium text-[#00A8C0] transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
             >
               {email}
@@ -92,6 +95,9 @@ export function Footer() {
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={link.ariaLabel}
+                          data-analytics-event={link.label === "Facebook" ? "facebook_click" : undefined}
+                          data-analytics-cta={link.label === "Facebook" ? "footer-facebook" : undefined}
+                          data-analytics-source={link.label === "Facebook" ? "footer" : undefined}
                           className="text-sm theme-footer-muted transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
                         >
                           {link.label}

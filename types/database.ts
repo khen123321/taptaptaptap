@@ -63,6 +63,7 @@ export type AnalyticsSummary = {
   totalViews: number;
   uniqueVisitors: number;
   productViews: number;
+  detailOpens: number;
   customizerOpens: number;
   ctaClicks: number;
   products: number;
@@ -75,9 +76,13 @@ export type AnalyticsPoint = {
 
 export type AnalyticsDashboardData = {
   summary: AnalyticsSummary;
+  comparisons: Record<keyof Omit<AnalyticsSummary, "products">, string | null>;
   traffic: AnalyticsPoint[];
   topPages: Array<{ page: string; views: number }>;
-  topProducts: Array<{ product: string; views: number }>;
+  topProducts: Array<{ product: string; views: number; detailOpens: number }>;
   topActions: Array<{ action: string; count: number }>;
-  trafficSources: Array<{ source: string; count: number }>;
+  trafficSources: Array<{ source: string; count: number; percentage: number }>;
+  funnel: Array<{ label: string; count: number }>;
+  hasEvents: boolean;
+  rangeLabel: string;
 };
