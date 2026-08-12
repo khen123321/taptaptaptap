@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { Check, CheckCircle2, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { formatPhp } from "@/lib/products";
+import { formatPhp } from "@/lib/format";
 import type { Product } from "@/types/product";
 
 type ProductDetailsModalProps = {
@@ -114,12 +113,11 @@ export function ProductDetailsModal({ product, onClose }: ProductDetailsModalPro
 
         <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[280px] border-b theme-border bg-black lg:min-h-[640px] lg:border-b-0 lg:border-r">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={product.image}
               alt={product.name}
-              fill
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              className="object-cover"
+              className="h-full min-h-[280px] w-full object-contain lg:min-h-[640px]"
             />
           </div>
 
@@ -209,7 +207,10 @@ export function ProductDetailsModal({ product, onClose }: ProductDetailsModalPro
               </ul>
             </div>
 
-            <Button href={product.ctaHref} className="mt-7 w-full">
+            <Button
+              href={product.ctaHref}
+              className="mt-7 w-full"
+            >
               {product.ctaLabel}
             </Button>
           </div>

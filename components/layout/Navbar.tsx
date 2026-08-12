@@ -50,14 +50,24 @@ export function Navbar() {
           className="flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
           onClick={() => setOpen(false)}
         >
-          <Image
-            src="/images/branding/taptaptap-logo.jpg"
-            alt="TapTapTap"
-            width={132}
-            height={132}
-            priority
-            className="h-11 w-11 rounded-md object-cover sm:h-12 sm:w-12"
-          />
+          <span className="brand-logo brand-logo-theme">
+            <Image
+              src="/images/branding/taptaptap-logo-light.png"
+              alt="TapTapTap"
+              fill
+              sizes="48px"
+              priority
+              className="brand-logo-image brand-logo-light"
+            />
+            <Image
+              src="/images/branding/taptaptap-logo-dark.png"
+              alt="TapTapTap"
+              fill
+              sizes="48px"
+              priority
+              className="brand-logo-image brand-logo-dark"
+            />
+          </span>
           <span className="ml-3 text-base font-bold theme-text">TapTapTap</span>
         </Link>
 
@@ -74,11 +84,18 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Button href="/#contact" variant="ghost" className="min-h-11 px-4">
+          <Button
+            href="/#contact"
+            variant="ghost"
+            className="min-h-11 px-4"
+          >
             Contact
           </Button>
           <ThemeToggle />
-          <Button href="/products" className="min-h-11 px-4">
+          <Button
+            href="/products"
+            className="min-h-11 px-4"
+          >
             <ShoppingBag className="h-4 w-4" aria-hidden />
             Shop Now
           </Button>
@@ -113,10 +130,17 @@ export function Navbar() {
               <ThemeToggle onToggle={() => setOpen(false)} />
             </div>
             <div className="mt-3 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
-              <Button href="/#contact" variant="secondary" onClick={() => setOpen(false)}>
+              <Button
+                href="/#contact"
+                variant="secondary"
+                onClick={() => setOpen(false)}
+              >
                 Contact
               </Button>
-              <Button href="/products" onClick={() => setOpen(false)}>
+              <Button
+                href="/products"
+                onClick={() => setOpen(false)}
+              >
                 <ShoppingBag className="h-4 w-4" aria-hidden />
                 Shop Now
               </Button>

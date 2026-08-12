@@ -32,11 +32,18 @@ export function Hero() {
             from TapTapTap.
           </p>
           <div className="mt-8 flex flex-col gap-3 min-[430px]:flex-row">
-            <Button href="/products" className="w-full min-[430px]:w-auto">
+            <Button
+              href="/products"
+              className="w-full min-[430px]:w-auto"
+            >
               <ShoppingBag className="h-4 w-4" aria-hidden />
               Shop NFC Products
             </Button>
-            <Button href="/customize" variant="secondary" className="w-full min-[430px]:w-auto">
+            <Button
+              href="/customize"
+              variant="secondary"
+              className="w-full min-[430px]:w-auto"
+            >
               Create Custom NFC
             </Button>
           </div>

@@ -24,20 +24,28 @@ const uses = [
 ];
 
 export function BusinessUses() {
+  const loopItems = [...uses, ...uses];
+
   return (
     <section id="business" className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading title="Made for businesses like yours." />
-        <div className="mx-auto mt-12 flex max-w-5xl flex-wrap justify-center gap-3">
-          {uses.map(({ label, icon: Icon }) => (
-            <div
-              key={label}
-              className="inline-flex items-center gap-2 rounded-md border px-4 py-3 text-sm font-semibold theme-card"
-            >
-              <Icon className="h-4 w-4 theme-accent" aria-hidden />
-              {label}
-            </div>
-          ))}
+        <div className="business-marquee mx-auto mt-12 max-w-7xl overflow-hidden">
+          <div
+            aria-label="Business types carousel"
+            className="business-marquee-track flex w-max gap-3 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {loopItems.map(({ label, icon: Icon }, index) => (
+              <div
+                key={`${label}-${index}`}
+                className="inline-flex min-h-14 w-[190px] shrink-0 items-center gap-2 rounded-md border px-4 py-3 text-sm font-semibold theme-card sm:w-[220px] lg:w-[250px]"
+                aria-hidden={index >= uses.length}
+              >
+                <Icon className="h-4 w-4 shrink-0 theme-accent" aria-hidden />
+                <span className="truncate">{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

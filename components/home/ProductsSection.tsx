@@ -1,14 +1,9 @@
-"use client";
-
-import { useState } from "react";
-import { ProductCard } from "@/components/products/ProductCard";
-import { ProductDetailsModal } from "@/components/products/ProductDetailsModal";
+import { ProductGrid } from "@/components/products/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { products } from "@/lib/products";
-import type { Product } from "@/types/product";
+import { getPublishedProducts } from "@/lib/products";
 
-export function ProductsSection() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+export async function ProductsSection() {
+  const products = await getPublishedProducts();
 
   return (
     <section id="products" className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
@@ -18,22 +13,8 @@ export function ProductsSection() {
           description="Browse Standard Designs or create a Custom Branded NFC sign for your business."
         />
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onViewDetails={setSelectedProduct}
-            />
-          ))}
-        </div>
+        <ProductGrid products={products} />
       </div>
-
-      <ProductDetailsModal
-        key={selectedProduct?.id ?? "closed"}
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
     </section>
   );
 }

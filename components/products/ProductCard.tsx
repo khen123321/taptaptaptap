@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { Button } from "@/components/ui/Button";
@@ -12,6 +11,8 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ product, onViewDetails }: ProductCardProps) {
+  const image = product.cardImage ?? product.image;
+
   const openDetails = () => {
     onViewDetails?.(product);
   };
@@ -36,12 +37,11 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
       }`}
     >
       <div className="relative aspect-square overflow-hidden bg-black">
-        <Image
-          src={product.image}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={image}
           alt={product.name}
-          fill
-          sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition duration-300 group-hover:scale-[1.025]"
+          className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.025]"
         />
       </div>
       <div className="flex flex-1 flex-col p-5">

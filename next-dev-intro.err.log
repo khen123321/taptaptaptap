@@ -1,0 +1,2879 @@
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-3-open.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-3-open.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-3-open.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-3-open.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-3-open.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-1-tap.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-2-detect.jpg received null
+⨯ The requested resource isn't a valid image for /images/how-it-works/step-3-open.jpg received null
+[browser] Image with src "/images/how-it-works/step-2-detect.jpg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:11:1
+Error: Module not found: Can't resolve '@/components/home/ProductsSection'
+  [90m 9 |[0m [36mimport[0m { [33mIntroSection[0m } [36mfrom[0m [32m"@/components/home/IntroSection"[0m;
+  [90m10 |[0m [36mimport[0m { [33mLiveDemo[0m } [36mfrom[0m [32m"@/components/home/LiveDemo"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { [33mProductsSection[0m } [36mfrom[0m [32m"@/components/home/ProductsSection"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mTrustBar[0m } [36mfrom[0m [32m"@/components/home/TrustBar"[0m;
+  [90m13 |[0m [36mimport[0m { [33mWhyTapTapTap[0m } [36mfrom[0m [32m"@/components/home/WhyTapTapTap"[0m;
+  [90m14 |[0m [36mimport[0m { [33mFooter[0m } [36mfrom[0m [32m"@/components/layout/Footer"[0m;
+
+Import map: aliased to relative './components/home/ProductsSection' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-light.png received null
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-dark.png received null
+[browser] Image with src "/images/how-it-works/step-2-detect.jpg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-light.png received null
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-dark.png received null
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-dark.png received null
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-light.png received null
+⨯ The requested resource isn't a valid image for /images/branding/taptaptap-logo-dark.png received null
+⨯ ./app/api/analytics/event/route.ts:4:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+  [90m6 |[0m
+  [90m7 |[0m [36mconst[0m maxMetadataKeys = [35m12[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/api/analytics/event/route.ts:4:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+  [90m6 |[0m
+  [90m7 |[0m [36mconst[0m maxMetadataKeys = [35m12[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  App Route:
+    ./lib/admin-auth.ts
+    ./app/api/analytics/event/route.ts
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  App Route:
+    ./lib/admin-auth.ts
+    ./app/api/analytics/event/route.ts
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-analytics.ts:1:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m [36mtype[0m {
+  [90m3 |[0m   [33mAnalyticsDashboardData[0m,
+  [90m4 |[0m   [33mAnalyticsEventName[0m,
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-analytics.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-analytics.ts:1:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m [36mtype[0m {
+  [90m3 |[0m   [33mAnalyticsDashboardData[0m,
+  [90m4 |[0m   [33mAnalyticsEventName[0m,
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-analytics.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-auth.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabaseUserClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m adminAccessCookie = [32m"taptaptap-admin-access-token"[0m;
+  [90m6 |[0m [36mexport[0m [36mconst[0m adminRefreshCookie = [32m"taptaptap-admin-refresh-token"[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-auth.ts
+    ./app/admin/login/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+⨯ ./app/api/analytics/event/route.ts:2:1
+Error: Module not found: Can't resolve '@/lib/admin-auth'
+  [90m1 |[0m [36mimport[0m { [33mNextResponse[0m, [36mtype[0m [33mNextRequest[0m } [36mfrom[0m [32m"next/server"[0m;
+[31m[1m>[0m [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+  [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+
+Import map: aliased to relative './lib/admin-auth' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/api/analytics/event/route.ts:2:1
+Error: Module not found: Can't resolve '@/lib/admin-auth'
+  [90m1 |[0m [36mimport[0m { [33mNextResponse[0m, [36mtype[0m [33mNextRequest[0m } [36mfrom[0m [32m"next/server"[0m;
+[31m[1m>[0m [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+  [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+
+Import map: aliased to relative './lib/admin-auth' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/api/analytics/event/route.ts:4:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+  [90m6 |[0m
+  [90m7 |[0m [36mconst[0m maxMetadataKeys = [35m12[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/api/analytics/event/route.ts:4:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+  [90m6 |[0m
+  [90m7 |[0m [36mconst[0m maxMetadataKeys = [35m12[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/admin/login/page.tsx:3:1
+Error: Module not found: Can't resolve '@/lib/admin-auth'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m metadata: [33mMetadata[0m = {
+  [90m6 |[0m   title: [32m"Admin Login | TapTapTap"[0m,
+
+Import map: aliased to relative './lib/admin-auth' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/admin/login/page.tsx:3:1
+Error: Module not found: Can't resolve '@/lib/admin-auth'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m2 |[0m [36mimport[0m { redirect } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m metadata: [33mMetadata[0m = {
+  [90m6 |[0m   title: [32m"Admin Login | TapTapTap"[0m,
+
+Import map: aliased to relative './lib/admin-auth' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/admin/page.tsx:7:1
+Error: Module not found: Can't resolve '@/lib/admin-auth'
+  [90m 5 |[0m [36mimport[0m { [33mTrafficChart[0m } [36mfrom[0m [32m"@/components/admin/TrafficChart"[0m;
+  [90m 6 |[0m [36mimport[0m { getAnalyticsDashboardData } [36mfrom[0m [32m"@/lib/admin-analytics"[0m;
+[31m[1m>[0m [90m 7 |[0m [36mimport[0m { requireAdmin } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mexport[0m [36mdefault[0m [36masync[0m [36mfunction[0m [33mAdminDashboardPage[0m({ searchParams }: [33mPageProps[0m<[32m"/admin"[0m>) {
+  [90m10 |[0m   [36mconst[0m session = [36mawait[0m requireAdmin();
+
+Import map: aliased to relative './lib/admin-auth' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/admin/page.tsx:7:1
+Error: Module not found: Can't resolve '@/lib/admin-auth'
+  [90m 5 |[0m [36mimport[0m { [33mTrafficChart[0m } [36mfrom[0m [32m"@/components/admin/TrafficChart"[0m;
+  [90m 6 |[0m [36mimport[0m { getAnalyticsDashboardData } [36mfrom[0m [32m"@/lib/admin-analytics"[0m;
+[31m[1m>[0m [90m 7 |[0m [36mimport[0m { requireAdmin } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mexport[0m [36mdefault[0m [36masync[0m [36mfunction[0m [33mAdminDashboardPage[0m({ searchParams }: [33mPageProps[0m<[32m"/admin"[0m>) {
+  [90m10 |[0m   [36mconst[0m session = [36mawait[0m requireAdmin();
+
+Import map: aliased to relative './lib/admin-auth' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-analytics.ts:1:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m [36mtype[0m {
+  [90m3 |[0m   [33mAnalyticsDashboardData[0m,
+  [90m4 |[0m   [33mAnalyticsEventName[0m,
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-analytics.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-analytics.ts:1:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m [36mtype[0m {
+  [90m3 |[0m   [33mAnalyticsDashboardData[0m,
+  [90m4 |[0m   [33mAnalyticsEventName[0m,
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-analytics.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-analytics.ts:1:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m [36mtype[0m {
+  [90m3 |[0m   [33mAnalyticsDashboardData[0m,
+  [90m4 |[0m   [33mAnalyticsEventName[0m,
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-analytics.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/admin-analytics.ts:1:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m [36mtype[0m {
+  [90m3 |[0m   [33mAnalyticsDashboardData[0m,
+  [90m4 |[0m   [33mAnalyticsEventName[0m,
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/admin-analytics.ts
+    ./app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/api/analytics/event/route.ts:4:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+  [90m6 |[0m
+  [90m7 |[0m [36mconst[0m maxMetadataKeys = [35m12[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/api/analytics/event/route.ts:4:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m2 |[0m [36mimport[0m { getAdminSession } [36mfrom[0m [32m"@/lib/admin-auth"[0m;
+  [90m3 |[0m [36mimport[0m { allowedAnalyticsEvents } [36mfrom[0m [32m"@/lib/analytics"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mAnalyticsEventName[0m } [36mfrom[0m [32m"@/types/database"[0m;
+  [90m6 |[0m
+  [90m7 |[0m [36mconst[0m maxMetadataKeys = [35m12[0m;
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  1 | import type { Product } from "@/types/product";
+  2 | import type { ProductInput, ProductRow } from "@/types/database";
+> 3 | import { createSupabasePublicClient, createSupabaseServiceClient } from "@/lib/supabase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export const products: Product[] = [
+  6 |   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./lib/products.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./components/home/ProductsSection.tsx
+    ./app/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./components/home/ProductsSection.tsx [Server Component]
+    ./app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./lib/products.ts:3:1
+Error: Module not found: Can't resolve '@/lib/supabase'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mProduct[0m } [36mfrom[0m [32m"@/types/product"[0m;
+  [90m2 |[0m [36mimport[0m [36mtype[0m { [33mProductInput[0m, [33mProductRow[0m } [36mfrom[0m [32m"@/types/database"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createSupabasePublicClient, createSupabaseServiceClient } [36mfrom[0m [32m"@/lib/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36mconst[0m products: [33mProduct[0m[] = [
+  [90m6 |[0m   {
+
+Import map: aliased to relative './lib/supabase' inside of [project]/
+
+
+Import traces:
+  Server Component:
+    ./lib/products.ts
+    ./app/products/page.tsx
+
+  Client Component Browser:
+    ./lib/products.ts [Client Component Browser]
+    ./components/products/ProductDetailsModal.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Client Component Browser]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./lib/products.ts [Client Component SSR]
+    ./components/products/ProductDetailsModal.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Client Component SSR]
+    ./components/products/ProductGrid.tsx [Server Component]
+    ./app/products/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+

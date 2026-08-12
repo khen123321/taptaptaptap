@@ -19,7 +19,10 @@ export function FinalCTA() {
             <ShoppingBag className="h-4 w-4" aria-hidden />
             Shop NFC Products
           </Button>
-          <Button href="#contact" variant="secondary">
+          <Button
+            href="#contact"
+            variant="secondary"
+          >
             <Mail className="h-4 w-4" aria-hidden />
             Contact Us
           </Button>

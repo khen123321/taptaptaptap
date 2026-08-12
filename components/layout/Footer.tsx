@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const facebookUrl = "https://www.facebook.com/profile.php?id=61592859069891";
 const email = "taptaptap.official@outlook.com";
@@ -29,6 +30,7 @@ const columns = [
       { label: "Shipping", href: "/#contact" },
       { label: "Returns", href: "/#contact" },
       { label: "Privacy", href: "/#contact" },
+      { label: "Admin", href: "/admin/login" },
     ],
   },
   {
@@ -53,13 +55,15 @@ export function Footer() {
         <div className="grid gap-10 lg:grid-cols-[1.4fr_2fr]">
           <div>
             <div className="flex items-center gap-3">
-              <Image
-                src="/images/branding/taptaptap-logo.jpg"
-                alt="TapTapTap"
-                width={132}
-                height={132}
-                className="h-12 w-12 rounded-md object-cover"
-              />
+              <span className="brand-logo brand-logo-footer">
+                <Image
+                  src="/images/branding/taptaptap-logo-dark.png"
+                  alt="TapTapTap"
+                  fill
+                  sizes="48px"
+                  className="brand-logo-image brand-logo-dark"
+                />
+              </span>
               <span className="text-lg font-bold text-white">TapTapTap</span>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-6 theme-footer-muted">
@@ -82,15 +86,25 @@ export function Footer() {
                 <ul className="mt-4 space-y-3">
                   {column.links.map((link) => (
                     <li key={link.label}>
-                      <a
-                        href={link.href}
-                        target={link.external ? "_blank" : undefined}
-                        rel={link.external ? "noopener noreferrer" : undefined}
-                        aria-label={link.ariaLabel}
-                        className="text-sm theme-footer-muted transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
-                      >
-                        {link.label}
-                      </a>
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={link.ariaLabel}
+                          className="text-sm theme-footer-muted transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          aria-label={link.ariaLabel}
+                          className="text-sm theme-footer-muted transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00A8C0]"
+                        >
+                          {link.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

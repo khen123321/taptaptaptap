@@ -1,15 +1,19 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Palette, ShoppingBag } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/Button";
-import { formatProductPrice, getProductBySlug, products } from "@/lib/products";
+import {
+  formatProductPrice,
+  getPublishedProductBySlug,
+  getPublishedProducts,
+} from "@/lib/products";
 
 type ProductPageProps = PageProps<"/products/[slug]">;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const products = await getPublishedProducts();
   return products.map((product) => ({ slug: product.slug }));
 }
 
@@ -17,7 +21,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getPublishedProductBySlug(slug);
 
   if (!product) {
     return {
@@ -43,7 +47,7 @@ export async function generateMetadata({
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getPublishedProductBySlug(slug);
 
   if (!product) {
     notFound();
@@ -57,13 +61,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       <main className="theme-section px-4 pb-18 pt-28 sm:px-6 sm:pb-24 lg:px-8 lg:pt-32">
         <section className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1fr] lg:items-center">
           <div className="relative aspect-square overflow-hidden rounded-lg border theme-card">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={product.image}
               alt={product.name}
-              fill
-              priority
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
+              className="h-full w-full object-contain"
             />
           </div>
 

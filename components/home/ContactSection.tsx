@@ -52,7 +52,9 @@ export function ContactSection() {
           </div>
 
           <div className="grid gap-3 min-[430px]:grid-cols-2">
-            <Button href={`mailto:${email}`}>
+            <Button
+              href={`mailto:${email}`}
+            >
               <Mail className="h-4 w-4" aria-hidden />
               Email Us
             </Button>

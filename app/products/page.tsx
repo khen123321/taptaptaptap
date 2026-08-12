@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Palette } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
-import { ProductCard } from "@/components/products/ProductCard";
+import { ProductGrid } from "@/components/products/ProductGrid";
 import { Button } from "@/components/ui/Button";
-import { products } from "@/lib/products";
+import { getPublishedProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Products | TapTapTap",
@@ -12,7 +12,9 @@ export const metadata: Metadata = {
     "Browse TapTapTap ready-made NFC table signs and customize your own NFC sign design.",
 };
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getPublishedProducts();
+
   return (
     <div className="min-h-screen theme-page">
       <Navbar />
@@ -31,11 +33,7 @@ export default function ProductsPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <ProductGrid products={products} />
 
           <section className="mt-12 rounded-lg border p-6 theme-card-elevated sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-8">
             <div>

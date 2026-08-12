@@ -17,7 +17,9 @@ export type Product = {
   includedFeatures: string[];
   ctaLabel: string;
   ctaHref: string;
+  cardImage?: string;
   image: string;
+  mockupImage?: string;
   category: string;
   type: ProductType;
 };
