@@ -57,7 +57,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <span className="brand-logo brand-logo-footer">
                 <Image
-                  src="/images/branding/taptaptap-logo-dark.png"
+                  src="/images/branding/taptaptap-logo-dark.jpg"
                   alt="TapTapTap"
                   fill
                   sizes="48px"

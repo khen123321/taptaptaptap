@@ -52,7 +52,7 @@ export function Navbar() {
         >
           <span className="brand-logo brand-logo-theme">
             <Image
-              src="/images/branding/taptaptap-logo-light.png"
+              src="/images/branding/taptaptap-logo-light.jpg"
               alt="TapTapTap"
               fill
               sizes="48px"
@@ -60,7 +60,7 @@ export function Navbar() {
               className="brand-logo-image brand-logo-light"
             />
             <Image
-              src="/images/branding/taptaptap-logo-dark.png"
+              src="/images/branding/taptaptap-logo-dark.jpg"
               alt="TapTapTap"
               fill
               sizes="48px"
