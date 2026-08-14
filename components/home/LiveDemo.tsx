@@ -14,13 +14,13 @@ export function LiveDemo() {
   }, [active]);
 
   return (
-    <section className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section className="section-spacing theme-section-alt px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
           title="See how simple it is."
           description="A tap can move a customer from your counter to the exact digital action you want."
         />
-        <div className="mx-auto mt-12 max-w-4xl rounded-lg border p-5 theme-card-elevated sm:p-8">
+        <div className="section-content-gap mx-auto max-w-4xl rounded-lg border p-5 theme-card-elevated sm:p-8">
           <div className="grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
             <div className="flex justify-center">
               <div

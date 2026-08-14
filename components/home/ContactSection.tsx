@@ -6,7 +6,7 @@ const facebookUrl = "https://www.facebook.com/profile.php?id=61592859069891";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section id="contact" className="section-spacing theme-section-alt px-4 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-7xl gap-8 rounded-lg border p-6 theme-card-elevated sm:p-8 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:p-10">
         <div>
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] theme-accent">

@@ -6,7 +6,7 @@ const facebookUrl = "https://www.facebook.com/profile.php?id=61592859069891";
 
 export function FinalCTA() {
   return (
-    <section className="theme-section px-4 pb-20 pt-10 sm:px-6 sm:pb-24 lg:px-8">
+    <section className="section-spacing theme-section px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="text-3xl font-black tracking-normal theme-text sm:text-5xl">
           Ready to make every tap count?

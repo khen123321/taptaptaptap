@@ -3,9 +3,9 @@ import { CheckCircle2, Link2, Nfc, Settings2, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 const reassurance = [
-  { label: "No app required", icon: CheckCircle2 },
-  { label: "Programmed for you", icon: Settings2 },
-  { label: "Works with your link", icon: Link2 },
+  { label: "No App Needed", icon: CheckCircle2 },
+  { label: "Just Tap and Open", icon: Settings2 },
+  { label: "Works with your business link", icon: Link2 },
 ];
 
 export function Hero() {
@@ -27,9 +27,8 @@ export function Hero() {
             Instant Connection.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 theme-text-secondary sm:text-xl">
-            Connect customers instantly to reviews, social media, menus,
-            websites, contact details, and more with ready-to-use NFC products
-            from TapTapTap.
+            Let customers instantly review, follow, order, or connect with your
+            business — with just one tap.
           </p>
           <div className="mt-8 flex flex-col gap-3 min-[430px]:flex-row">
             <Button
@@ -37,14 +36,14 @@ export function Hero() {
               className="w-full min-[430px]:w-auto"
             >
               <ShoppingBag className="h-4 w-4" aria-hidden />
-              Shop NFC Products
+              Get Your TapTapTap
             </Button>
             <Button
               href="/customize"
               variant="secondary"
               className="w-full min-[430px]:w-auto"
             >
-              Create Custom NFC
+              Create Custom Design
             </Button>
           </div>
           <div className="mt-7 flex flex-col gap-3 text-sm theme-text-secondary sm:flex-row sm:flex-wrap">

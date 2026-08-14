@@ -51,7 +51,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
   return (
     <>
       {products.length ? (
-        <div className="mt-12">
+        <div className="section-content-gap">
           <div className="mb-4 flex justify-end gap-2">
             <CarouselButton label="Previous product" onClick={scrollPrev}>
               <ChevronLeft className="h-4 w-4" aria-hidden />
@@ -72,7 +72,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
           </div>
         </div>
       ) : (
-        <div className="mt-12 rounded-lg border p-8 text-center theme-card">
+        <div className="section-content-gap rounded-lg border p-8 text-center theme-card">
           <p className="font-bold theme-text">No published products yet.</p>
         </div>
       )}

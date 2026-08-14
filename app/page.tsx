@@ -1,7 +1,6 @@
 import { BusinessUses } from "@/components/home/BusinessUses";
 import { ContactSection } from "@/components/home/ContactSection";
 import { CustomOrderCTA } from "@/components/home/CustomOrderCTA";
-import { CustomizerPromo } from "@/components/home/CustomizerPromo";
 import { FAQ } from "@/components/home/FAQ";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { Hero } from "@/components/home/Hero";
@@ -27,7 +26,6 @@ export default function Home() {
         <LiveDemo />
         <WhyTapTapTap />
         <BusinessUses />
-        <CustomizerPromo />
         <CustomOrderCTA />
         <FAQ />
         <FinalCTA />

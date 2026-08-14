@@ -36,10 +36,10 @@ const features = [
 
 export function WhyTapTapTap() {
   return (
-    <section className="theme-section px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section className="section-spacing theme-section px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading title="Built to work. Simple to use." />
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="section-content-gap grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {features.map(({ title, description, icon: Icon }) => (
             <article key={title} className="rounded-lg border p-6 theme-card">
               <Icon className="h-7 w-7 theme-accent" aria-hidden />

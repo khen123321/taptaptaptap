@@ -27,10 +27,10 @@ export function BusinessUses() {
   const loopItems = [...uses, ...uses];
 
   return (
-    <section id="business" className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section id="business" className="section-spacing theme-section-alt px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading title="Made for businesses like yours." />
-        <div className="business-marquee mx-auto mt-12 max-w-7xl overflow-hidden">
+        <div className="business-marquee section-content-gap mx-auto max-w-7xl overflow-hidden">
           <div
             aria-label="Business types carousel"
             className="business-marquee-track flex w-max gap-3 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

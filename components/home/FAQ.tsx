@@ -46,10 +46,10 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" className="theme-section-alt px-4 py-18 sm:px-6 sm:py-24 lg:px-8">
+    <section id="faq" className="section-spacing theme-section-alt px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
         <SectionHeading title="Questions before you tap?" />
-        <div className="mt-10 divide-y divide-[var(--border)] rounded-lg border theme-card">
+        <div className="section-content-gap divide-y divide-[var(--border)] rounded-lg border theme-card">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
