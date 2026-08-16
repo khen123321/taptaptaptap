@@ -30,7 +30,7 @@ export function CustomOrderCTA() {
               data-analytics-source="custom-order-cta"
             >
               <Paintbrush className="h-4 w-4" aria-hidden />
-              Create My NFC
+              Create Custom Design
             </Button>
             <Button
               href={`mailto:${email}`}

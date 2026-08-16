@@ -32,6 +32,9 @@ const actionLabels: Partial<Record<AnalyticsEventName, string>> = {
   facebook_click: "Facebook Clicks",
   email_click: "Email Clicks",
   shop_click: "Shop Clicks",
+  reseller_modal_open: "Reseller Modal Opens",
+  reseller_email_click: "Reseller Email Clicks",
+  reseller_facebook_click: "Reseller Facebook Clicks",
 };
 
 export async function getAnalyticsDashboard(period: AnalyticsPeriod): Promise<AnalyticsDashboardData> {
@@ -204,7 +207,10 @@ function getFunnel(events: AnalyticsEventRow[]) {
       count: events.filter((event) =>
         event.event_name === "customizer_request" ||
         event.event_name === "shop_click" ||
-        event.event_name === "contact_click"
+        event.event_name === "contact_click" ||
+        event.event_name === "reseller_modal_open" ||
+        event.event_name === "reseller_email_click" ||
+        event.event_name === "reseller_facebook_click"
       ).length,
     },
   ];

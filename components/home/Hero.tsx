@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CheckCircle2, Link2, Nfc, Settings2, ShoppingBag } from "lucide-react";
+import { ResellerCTA } from "@/components/home/ResellerCTA";
 import { Button } from "@/components/ui/Button";
 
 const reassurance = [
@@ -30,21 +31,24 @@ export function Hero() {
             Let customers instantly review, follow, order, or connect with your
             business — with just one tap.
           </p>
-          <div className="mt-8 flex flex-col gap-3 min-[430px]:flex-row">
-            <Button
-              href="/products"
-              className="w-full min-[430px]:w-auto"
-            >
-              <ShoppingBag className="h-4 w-4" aria-hidden />
-              Get Your TapTapTap
-            </Button>
-            <Button
-              href="/customize"
-              variant="secondary"
-              className="w-full min-[430px]:w-auto"
-            >
-              Create Custom Design
-            </Button>
+          <div className="mt-8 flex max-w-xl flex-col gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                href="/products"
+                className="w-full sm:w-auto"
+              >
+                <ShoppingBag className="h-4 w-4" aria-hidden />
+                Get Your TapTapTap
+              </Button>
+              <Button
+                href="/customize"
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
+                Create Custom Design
+              </Button>
+            </div>
+            <ResellerCTA analyticsSource="hero" className="w-full sm:w-auto sm:self-start" />
           </div>
           <div className="mt-7 flex flex-col gap-3 text-sm theme-text-secondary sm:flex-row sm:flex-wrap">
             {reassurance.map(({ label, icon: Icon }) => (

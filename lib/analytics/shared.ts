@@ -11,6 +11,9 @@ export const analyticsEventNames = [
   "facebook_click",
   "email_click",
   "shop_click",
+  "reseller_modal_open",
+  "reseller_email_click",
+  "reseller_facebook_click",
 ] as const satisfies readonly AnalyticsEventName[];
 
 export const analyticsEventNameSet = new Set<string>(analyticsEventNames);
@@ -21,6 +24,9 @@ export const ctaEventNames: AnalyticsEventName[] = [
   "email_click",
   "shop_click",
   "customizer_request",
+  "reseller_modal_open",
+  "reseller_email_click",
+  "reseller_facebook_click",
 ];
 
 export function isAnalyticsEventName(value: unknown): value is AnalyticsEventName {

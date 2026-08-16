@@ -55,7 +55,10 @@ export type AnalyticsEventName =
   | "contact_click"
   | "facebook_click"
   | "email_click"
-  | "shop_click";
+  | "shop_click"
+  | "reseller_modal_open"
+  | "reseller_email_click"
+  | "reseller_facebook_click";
 
 export type AnalyticsPeriod = "today" | "7d" | "30d" | "all";
 

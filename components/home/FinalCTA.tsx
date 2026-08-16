@@ -18,11 +18,11 @@ export function FinalCTA() {
           <Button
             href="/products"
             data-analytics-event="shop_click"
-            data-analytics-cta="shop-nfc-products"
+            data-analytics-cta="get-your-taptaptap"
             data-analytics-source="final-cta"
           >
             <ShoppingBag className="h-4 w-4" aria-hidden />
-            Shop NFC Products
+            Get Your TapTapTap
           </Button>
           <Button
             href="#contact"
