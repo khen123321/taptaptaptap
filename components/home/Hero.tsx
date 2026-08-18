@@ -35,7 +35,7 @@ export function Hero() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 href="/products"
-                className="w-full sm:w-auto"
+                className="hero-cta-primary w-full sm:w-auto"
               >
                 <ShoppingBag className="h-4 w-4" aria-hidden />
                 Get Your TapTapTap
@@ -43,12 +43,12 @@ export function Hero() {
               <Button
                 href="/customize"
                 variant="secondary"
-                className="w-full sm:w-auto"
+                className="custom-design-cta w-full sm:w-auto"
               >
                 Create Custom Design
               </Button>
             </div>
-            <ResellerCTA analyticsSource="hero" className="w-full sm:w-auto sm:self-start" />
+            <ResellerCTA analyticsSource="hero" className="hero-cta-tertiary w-full sm:w-auto sm:self-start" />
           </div>
           <div className="mt-7 flex flex-col gap-3 text-sm theme-text-secondary sm:flex-row sm:flex-wrap">
             {reassurance.map(({ label, icon: Icon }) => (

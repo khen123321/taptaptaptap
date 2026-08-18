@@ -24,7 +24,7 @@ export function CustomOrderCTA() {
           <div className="flex flex-col gap-3 min-[430px]:flex-row lg:flex-col">
             <Button
               href="/customize"
-              className="border-[var(--accent)] bg-[var(--accent)] text-[var(--button-primary-text)] hover:bg-[var(--accent-hover)]"
+              className="custom-design-cta"
               data-analytics-event="shop_click"
               data-analytics-cta="create-custom-nfc"
               data-analytics-source="custom-order-cta"

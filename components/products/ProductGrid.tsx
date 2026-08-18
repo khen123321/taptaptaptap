@@ -11,12 +11,14 @@ import type { Product } from "@/types/product";
 
 export function ProductGrid({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const shouldAutoplay = useShouldAutoplay();
   const autoplay = useMemo(
     () =>
       Autoplay({
         delay: 4200,
+        playOnInit: false,
         stopOnInteraction: false,
-        stopOnMouseEnter: true,
+        stopOnMouseEnter: false,
       }),
     [],
   );
@@ -29,6 +31,16 @@ export function ProductGrid({ products }: { products: Product[] }) {
     [autoplay],
   );
 
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    if (products.length <= 1 || !shouldAutoplay) {
+      autoplay.stop();
+    } else {
+      autoplay.play();
+    }
+  }, [autoplay, emblaApi, products.length, shouldAutoplay]);
+
   const openProduct = (product: Product) => {
     trackEvent("product_details_open", {
       productId: product.id,
@@ -40,13 +52,13 @@ export function ProductGrid({ products }: { products: Product[] }) {
 
   const scrollPrev = useCallback(() => {
     emblaApi?.scrollPrev();
-    autoplay.reset();
-  }, [autoplay, emblaApi]);
+    if (shouldAutoplay) autoplay.reset();
+  }, [autoplay, emblaApi, shouldAutoplay]);
 
   const scrollNext = useCallback(() => {
     emblaApi?.scrollNext();
-    autoplay.reset();
-  }, [autoplay, emblaApi]);
+    if (shouldAutoplay) autoplay.reset();
+  }, [autoplay, emblaApi, shouldAutoplay]);
 
   return (
     <>
@@ -84,6 +96,26 @@ export function ProductGrid({ products }: { products: Product[] }) {
       />
     </>
   );
+}
+
+function useShouldAutoplay() {
+  const [shouldAutoplay, setShouldAutoplay] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => setShouldAutoplay(!mediaQuery.matches);
+
+    syncPreference();
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncPreference);
+      return () => mediaQuery.removeEventListener("change", syncPreference);
+    }
+
+    mediaQuery.addListener(syncPreference);
+    return () => mediaQuery.removeListener(syncPreference);
+  }, []);
+
+  return shouldAutoplay;
 }
 
 function ProductAnalyticsSlide({
