@@ -14,7 +14,7 @@ export function FinalCTA() {
         <p className="mx-auto mt-4 max-w-xl text-lg leading-8 theme-text-secondary">
           Connect your customers faster with TapTapTap.
         </p>
-        <div className="mt-8 flex flex-col justify-center gap-3 min-[430px]:flex-row">
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button
             href="/products"
             data-analytics-event="shop_click"
@@ -57,7 +57,7 @@ export function FinalCTA() {
             data-analytics-event="facebook_click"
             data-analytics-cta="final-facebook"
             data-analytics-source="final-cta"
-            className="mt-4 inline-flex items-center justify-center gap-2 rounded-md border px-4 py-2 font-semibold theme-text theme-border transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border px-4 py-2 font-semibold theme-text theme-border transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:w-auto"
           >
             <MessageCircle className="h-4 w-4 theme-accent" aria-hidden />
             Message us on Facebook

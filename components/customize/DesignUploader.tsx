@@ -67,7 +67,7 @@ export function DesignUploader({
           setDragging(false);
           void handleFile(event.dataTransfer.files[0]);
         }}
-        className={`mt-5 flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed p-6 text-center transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--accent)] ${
+        className={`mt-5 flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed p-5 text-center transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--accent)] sm:p-6 ${
           dragging
             ? "border-[var(--accent)] bg-[var(--accent-soft)]"
             : "theme-border bg-[var(--surface-secondary)] hover:border-[var(--accent)]"
@@ -112,7 +112,7 @@ export function DesignUploader({
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-semibold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-semibold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               <RotateCcw className="h-4 w-4" aria-hidden />
               Replace Design
@@ -120,7 +120,7 @@ export function DesignUploader({
             <button
               type="button"
               onClick={onRemove}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-semibold theme-text transition hover:border-red-400/60 hover:bg-red-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-semibold theme-text transition hover:border-red-400/60 hover:bg-red-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
             >
               <Trash2 className="h-4 w-4" aria-hidden />
               Remove

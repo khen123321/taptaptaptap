@@ -39,6 +39,15 @@ html[data-theme="light"] {
   --hero-cta-tertiary-active-bg: #eef7fa;
   --hero-cta-tertiary-text: #111827;
   --hero-cta-tertiary-border: #cbd5e1;
+  --promo-primary: #16a34a;
+  --promo-primary-strong: #15803d;
+  --promo-accent: #22a447;
+  --promo-banner-bg: #f0fdf4;
+  --promo-banner-border: #bbf7d0;
+  --promo-banner-text: #14532d;
+  --promo-savings-bg: #ecfdf3;
+  --promo-savings-text: #15803d;
+  --promo-savings-border: rgba(22, 163, 74, 0.2);
 }
 
 html[data-theme="dark"] {
@@ -79,6 +88,15 @@ html[data-theme="dark"] {
   --hero-cta-tertiary-active-bg: #10222b;
   --hero-cta-tertiary-text: #f8fafc;
   --hero-cta-tertiary-border: #374151;
+  --promo-primary: #16a34a;
+  --promo-primary-strong: #15803d;
+  --promo-accent: #22a447;
+  --promo-banner-bg: rgba(22, 163, 74, 0.08);
+  --promo-banner-border: rgba(22, 163, 74, 0.3);
+  --promo-banner-text: #f8f8f8;
+  --promo-savings-bg: rgba(22, 163, 74, 0.12);
+  --promo-savings-text: #4ade80;
+  --promo-savings-border: rgba(34, 164, 71, 0.35);
 }
 
 @theme inline {
@@ -350,6 +368,28 @@ html[data-theme="dark"] .theme-hero-glow {
 .hero-cta-tertiary:focus-visible {
   outline-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(0, 168, 192, 0.2);
+}
+
+.promo-banner {
+  background: var(--promo-banner-bg);
+  border-color: var(--promo-banner-border);
+  color: var(--promo-banner-text);
+}
+
+.promo-badge {
+  background: var(--promo-primary);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(21, 128, 61, 0.18);
+}
+
+.promo-savings-badge {
+  background: var(--promo-savings-bg);
+  border-color: var(--promo-savings-border);
+  color: var(--promo-savings-text);
+}
+
+.promo-savings-text {
+  color: var(--promo-savings-text);
 }
 
 .theme-media-frame {

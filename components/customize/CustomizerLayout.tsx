@@ -127,7 +127,7 @@ export function CustomizerLayout() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
-      <div className="space-y-5">
+      <div className="order-2 space-y-5 lg:order-1">
         <div className="rounded-lg border p-5 theme-card">
           <p className="text-xs font-bold uppercase tracking-[0.2em] theme-accent">
             Customize your NFC
@@ -188,21 +188,23 @@ export function CustomizerLayout() {
         />
       </div>
 
-      <MockupPreview
-        product={product}
-        uploadedImage={state.uploadedImage}
-        fitMode={state.fitMode}
-        zoom={state.zoom}
-        offsetX={state.offsetX}
-        offsetY={state.offsetY}
-        rotation={state.rotation}
-        onOffsetChange={({ x, y }) =>
-          setState((current) => ({ ...current, offsetX: x, offsetY: y }))
-        }
-        onFitModeChange={(fitMode) => setState((current) => ({ ...current, fitMode }))}
-        onCenter={centerDesign}
-        onReset={resetPreview}
-      />
+      <div className="order-1 lg:order-2">
+        <MockupPreview
+          product={product}
+          uploadedImage={state.uploadedImage}
+          fitMode={state.fitMode}
+          zoom={state.zoom}
+          offsetX={state.offsetX}
+          offsetY={state.offsetY}
+          rotation={state.rotation}
+          onOffsetChange={({ x, y }) =>
+            setState((current) => ({ ...current, offsetX: x, offsetY: y }))
+          }
+          onFitModeChange={(fitMode) => setState((current) => ({ ...current, fitMode }))}
+          onCenter={centerDesign}
+          onReset={resetPreview}
+        />
+      </div>
     </div>
   );
 }

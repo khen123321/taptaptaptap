@@ -58,8 +58,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   return (
     <div className="min-h-screen theme-page">
       <Navbar />
-      <main className="theme-section px-4 pb-18 pt-28 sm:px-6 sm:pb-24 lg:px-8 lg:pt-32">
-        <section className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1fr] lg:items-center">
+      <main className="theme-section px-4 pb-16 pt-24 sm:px-6 sm:pb-24 sm:pt-28 lg:px-8 lg:pt-32">
+        <section className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.95fr_1fr] lg:items-center lg:gap-10">
           <div className="relative aspect-square overflow-hidden rounded-lg border theme-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -73,10 +73,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <p className="text-xs font-bold uppercase tracking-[0.22em] theme-accent">
               {isCustom ? "Custom NFC Product" : "Ready-Made NFC Product"}
             </p>
-            <h1 className="mt-4 text-4xl font-black leading-tight tracking-normal theme-text sm:text-5xl">
+            <h1 className="mt-4 text-3xl font-black leading-tight tracking-normal theme-text sm:text-5xl">
               {product.name}
             </h1>
-            <p className="mt-5 text-lg leading-8 theme-text-secondary">
+            <p className="mt-4 text-base leading-7 theme-text-secondary sm:mt-5 sm:text-lg sm:leading-8">
               {product.description}
             </p>
             {isCustom ? (
@@ -94,12 +94,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <p className="mt-6 text-3xl font-black theme-text">
               {formatProductPrice(product)}
             </p>
-            <div className="mt-8 flex flex-col gap-3 min-[430px]:flex-row">
-              <Button href="/customize" className="w-full min-[430px]:w-auto">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button href="/customize" className="w-full sm:w-auto">
                 <Palette className="h-4 w-4" aria-hidden />
                 Customize This Product
               </Button>
-              <Button href="/products" variant="secondary" className="w-full min-[430px]:w-auto">
+              <Button href="/products" variant="secondary" className="w-full sm:w-auto">
                 <ShoppingBag className="h-4 w-4" aria-hidden />
                 View All Products
               </Button>

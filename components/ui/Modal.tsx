@@ -68,7 +68,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex items-center justify-center px-4 py-5"
+      className="fixed inset-0 z-[90] flex items-center justify-center px-2 py-2 sm:px-4 sm:py-5"
       style={{ background: "var(--overlay)" }}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -82,14 +82,14 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
-        className={`relative max-h-[calc(100vh-2.5rem)] w-full overflow-y-auto rounded-lg border theme-card-elevated ${className}`}
+        className={`relative max-h-[calc(100dvh-1rem)] w-full overflow-y-auto rounded-lg border theme-card-elevated sm:max-h-[calc(100dvh-2.5rem)] ${className}`}
       >
         <button
           ref={closeButtonRef}
           type="button"
           aria-label={closeLabel}
           onClick={onClose}
-          className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-md border theme-border bg-[var(--surface)] theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+          className="sticky left-[calc(100%-3.25rem)] top-3 z-20 inline-flex h-11 w-11 items-center justify-center rounded-md border theme-border bg-[var(--surface)] theme-text shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           <X className="h-5 w-5" aria-hidden />
         </button>

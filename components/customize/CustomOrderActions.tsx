@@ -61,14 +61,14 @@ export function CustomOrderActions({
 
       {modalOpen ? (
         <div
-          className="fixed inset-0 z-[80] flex items-center justify-center px-4"
+          className="fixed inset-0 z-[80] flex items-center justify-center px-2 py-2 sm:px-4"
           style={{ background: "var(--overlay)" }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="request-ready-title"
         >
-          <div className="w-full max-w-lg rounded-lg border p-6 theme-card-elevated">
-            <h2 id="request-ready-title" className="text-2xl font-black theme-text">
+          <div className="max-h-[calc(100dvh-1rem)] w-full max-w-lg overflow-y-auto rounded-lg border p-5 theme-card-elevated sm:p-6">
+            <h2 id="request-ready-title" className="text-xl font-black theme-text sm:text-2xl">
               Your customization preview is ready.
             </h2>
             <p className="mt-4 text-sm leading-6 theme-text-secondary">
@@ -81,7 +81,7 @@ export function CustomOrderActions({
                 data-analytics-event="email_click"
                 data-analytics-cta="customizer-email-order"
                 data-analytics-source="customizer"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 <Mail className="h-4 w-4" aria-hidden />
                 Email TapTapTap
@@ -94,7 +94,7 @@ export function CustomOrderActions({
                 data-analytics-event="facebook_click"
                 data-analytics-cta="customizer-facebook-order"
                 data-analytics-source="customizer"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border theme-border px-4 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border theme-border px-4 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden />
                 Message us on Facebook
@@ -103,7 +103,7 @@ export function CustomOrderActions({
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="mt-4 inline-flex min-h-10 w-full items-center justify-center rounded-md border theme-border px-4 text-sm font-bold theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-md border theme-border px-4 text-sm font-bold theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               Close
             </button>

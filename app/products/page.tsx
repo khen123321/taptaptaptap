@@ -18,16 +18,16 @@ export default async function ProductsPage() {
   return (
     <div className="min-h-screen theme-page">
       <Navbar />
-      <main className="theme-section px-4 pb-18 pt-28 sm:px-6 sm:pb-24 lg:px-8 lg:pt-32">
+      <main className="theme-section px-4 pb-16 pt-24 sm:px-6 sm:pb-24 sm:pt-28 lg:px-8 lg:pt-32">
         <section className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.22em] theme-accent">
               NFC Product Catalog
             </p>
-            <h1 className="text-4xl font-black leading-tight tracking-normal theme-text sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-black leading-tight tracking-normal theme-text sm:text-5xl lg:text-6xl">
               Ready-made signs and custom NFC products.
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 theme-text-secondary">
+            <p className="mt-4 max-w-2xl text-base leading-7 theme-text-secondary sm:mt-5 sm:text-lg sm:leading-8">
               Choose a finished TapTapTap design or upload your own artwork for
               a custom NFC table sign.
             </p>

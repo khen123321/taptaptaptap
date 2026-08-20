@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ResellerCTA } from "@/components/home/ResellerCTA";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 
@@ -14,6 +15,8 @@ const links = [
   { href: "/#business", label: "For Business" },
   { href: "/#faq", label: "FAQ" },
 ];
+
+const mobileLinks = [...links, { href: "/#contact", label: "Contact" }];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -33,6 +36,19 @@ export function Navbar() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition ${
@@ -42,7 +58,7 @@ export function Navbar() {
       }`}
     >
       <nav
-        className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
+        className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8"
         aria-label="Main navigation"
       >
         <Link
@@ -68,7 +84,7 @@ export function Navbar() {
               className="brand-logo-image brand-logo-dark"
             />
           </span>
-          <span className="ml-3 text-base font-bold theme-text">TapTapTap</span>
+          <span className="ml-2 text-base font-bold theme-text sm:ml-3">TapTapTap</span>
         </Link>
 
         <div className="hidden items-center gap-7 lg:flex">
@@ -119,9 +135,14 @@ export function Navbar() {
       </nav>
 
       {open ? (
-        <div className="border-t theme-border bg-[var(--surface)] px-4 pb-6 pt-2 lg:hidden">
+        <div
+          className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t theme-border bg-[var(--surface)] px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_24px_70px_rgba(0,0,0,0.18)] lg:hidden"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setOpen(false);
+          }}
+        >
           <div className="mx-auto flex max-w-7xl flex-col gap-2">
-            {links.map((link) => (
+            {mobileLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -135,27 +156,22 @@ export function Navbar() {
               <span className="text-sm font-semibold theme-text">Theme</span>
               <ThemeToggle onToggle={() => setOpen(false)} />
             </div>
-            <div className="mt-3 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
-              <Button
-                href="/#contact"
-                variant="secondary"
-                onClick={() => setOpen(false)}
-                data-analytics-event="contact_click"
-                data-analytics-cta="mobile-navbar-contact"
-                data-analytics-source="navbar"
-              >
-                Contact
-              </Button>
+            <div className="mt-3 grid grid-cols-1 gap-3">
               <Button
                 href="/products"
+                className="hero-cta-primary w-full"
                 onClick={() => setOpen(false)}
                 data-analytics-event="shop_click"
                 data-analytics-cta="mobile-navbar-shop-now"
                 data-analytics-source="navbar"
               >
                 <ShoppingBag className="h-4 w-4" aria-hidden />
-                Shop Now
+                Get Your TapTapTap
               </Button>
+              <ResellerCTA
+                analyticsSource="navbar"
+                className="hero-cta-tertiary w-full"
+              />
             </div>
           </div>
         </div>

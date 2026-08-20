@@ -7,12 +7,12 @@ export function CustomOrderCTA() {
   return (
     <section id="custom" className="section-spacing theme-section px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-lg border border-[var(--cta-border)] bg-[var(--cta-bg)] text-[var(--cta-text)] shadow-[var(--cta-shadow)]">
-        <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:p-10">
+        <div className="grid gap-6 p-5 sm:gap-8 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:p-10">
           <div>
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[var(--accent)]">
               Your Design. Your NFC.
             </p>
-            <h2 className="max-w-3xl text-3xl font-black tracking-normal sm:text-4xl">
+            <h2 className="max-w-3xl text-2xl font-black tracking-normal sm:text-4xl">
               Make every <span className="text-[var(--accent)]">tap work</span> for your business.
             </h2>
             <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--cta-muted)]">
@@ -21,7 +21,7 @@ export function CustomOrderCTA() {
               NFC product for you.
             </p>
           </div>
-          <div className="flex flex-col gap-3 min-[430px]:flex-row lg:flex-col">
+          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
             <Button
               href="/customize"
               className="custom-design-cta"

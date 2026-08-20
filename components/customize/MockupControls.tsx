@@ -41,7 +41,7 @@ export function MockupControls({
             key={mode}
             type="button"
             onClick={() => onFitModeChange(mode)}
-            className={`inline-flex min-h-10 items-center justify-center gap-2 rounded px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+            className={`inline-flex min-h-11 items-center justify-center gap-2 rounded px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
               fitMode === mode
                 ? "bg-[var(--accent)] text-[var(--button-primary-text)]"
                 : "theme-text hover:bg-[var(--accent-soft)]"
@@ -98,14 +98,14 @@ export function MockupControls({
         <button
           type="button"
           onClick={onCenter}
-          className="inline-flex min-h-10 items-center justify-center rounded-md border theme-border px-3 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+          className="inline-flex min-h-11 items-center justify-center rounded-md border theme-border px-3 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           Center Design
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border theme-border px-3 text-sm font-bold theme-text transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           <RotateCcw className="h-4 w-4" aria-hidden />
           Reset
@@ -150,7 +150,7 @@ function Slider({
         max={max}
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}
-        className="mt-3 w-full accent-[#00A8C0]"
+        className="mt-3 h-7 w-full accent-[#00A8C0]"
       />
     </div>
   );

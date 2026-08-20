@@ -7,11 +7,13 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductDetailsModal } from "@/components/products/ProductDetailsModal";
 import { trackEvent } from "@/lib/analytics/client";
+import { hasPromotionalProducts } from "@/lib/product-promos";
 import type { Product } from "@/types/product";
 
 export function ProductGrid({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const shouldAutoplay = useShouldAutoplay();
+  const hasPromo = hasPromotionalProducts(products);
   const autoplay = useMemo(
     () =>
       Autoplay({
@@ -64,6 +66,17 @@ export function ProductGrid({ products }: { products: Product[] }) {
     <>
       {products.length ? (
         <div className="section-content-gap">
+          {hasPromo ? (
+            <div className="promo-banner mb-4 rounded-lg border px-4 py-3 sm:flex sm:items-center sm:justify-between sm:gap-4">
+              <p className="text-sm font-bold">
+                Limited Time Offer
+              </p>
+              <p className="mt-1 text-sm leading-6 opacity-80 sm:mt-0 sm:text-right">
+                Save more when you order a bundle.
+              </p>
+            </div>
+          ) : null}
+
           <div className="mb-4 flex justify-end gap-2">
             <CarouselButton label="Previous product" onClick={scrollPrev}>
               <ChevronLeft className="h-4 w-4" aria-hidden />

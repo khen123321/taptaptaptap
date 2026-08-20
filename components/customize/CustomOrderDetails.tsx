@@ -72,13 +72,13 @@ export function CustomOrderDetails({
             type="button"
             aria-label="Decrease quantity"
             onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-            className="inline-flex h-10 w-10 items-center justify-center rounded theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             <Minus className="h-4 w-4" aria-hidden />
           </button>
           <output
             id="quantity-display"
-            className="flex h-10 min-w-14 items-center justify-center px-3 text-sm font-bold theme-text"
+            className="flex h-11 min-w-14 items-center justify-center px-3 text-sm font-bold theme-text"
           >
             {quantity}
           </output>
@@ -86,7 +86,7 @@ export function CustomOrderDetails({
             type="button"
             aria-label="Increase quantity"
             onClick={() => onQuantityChange(quantity + 1)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded theme-text transition hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             <Plus className="h-4 w-4" aria-hidden />
           </button>

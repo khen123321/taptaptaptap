@@ -54,7 +54,7 @@ export function ResellerCTA({
           onClose={() => setIsOpen(false)}
           className="max-w-3xl p-5 sm:p-7"
         >
-          <div className="pr-10">
+          <div className="-mt-6 pr-10 sm:mt-0">
             <p className="text-xs font-bold uppercase tracking-[0.2em] theme-accent">
               Reseller Program
             </p>
@@ -133,7 +133,7 @@ function ContactOption({
         data-analytics-event={analyticsEvent}
         data-analytics-cta={analyticsCta}
         data-analytics-source="reseller-modal"
-        className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+        className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
       >
         {buttonLabel}
       </a>

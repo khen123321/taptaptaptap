@@ -7,12 +7,12 @@ const facebookUrl = "https://www.facebook.com/profile.php?id=61592859069891";
 export function ContactSection() {
   return (
     <section id="contact" className="section-spacing theme-section-alt px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 rounded-lg border p-6 theme-card-elevated sm:p-8 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:p-10">
+      <div className="mx-auto grid max-w-7xl gap-6 rounded-lg border p-5 theme-card-elevated sm:gap-8 sm:p-8 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:p-10">
         <div>
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] theme-accent">
             Contact TapTapTap
           </p>
-          <h2 className="text-3xl font-black tracking-normal theme-text sm:text-4xl">
+          <h2 className="text-2xl font-black tracking-normal theme-text sm:text-4xl">
             Let&apos;s build something worth tapping.
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-7 theme-text-secondary">
@@ -57,7 +57,7 @@ export function ContactSection() {
             </a>
           </div>
 
-          <div className="grid gap-3 min-[430px]:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Button
               href={`mailto:${email}`}
               data-analytics-event="email_click"

@@ -109,7 +109,7 @@ export function MockupPreview({
   };
 
   return (
-    <section className="sticky top-24 rounded-lg border p-4 theme-card-elevated sm:p-6 lg:top-28">
+    <section className="rounded-lg border p-4 theme-card-elevated sm:p-6 lg:sticky lg:top-28">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] theme-accent">
@@ -124,7 +124,7 @@ export function MockupPreview({
 
       <div
         ref={mockupFrameRef}
-        className="relative mx-auto mt-6 w-full max-w-[680px] overflow-hidden bg-black"
+        className="relative mx-auto mt-5 w-full max-w-[680px] overflow-hidden bg-black sm:mt-6"
         style={{ aspectRatio: product.aspectRatio }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -179,7 +179,7 @@ export function MockupPreview({
         </div>
       ) : null}
 
-      <div className="mt-5 grid gap-2 min-[430px]:grid-cols-4">
+      <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <PreviewButton active={fitMode === "fit"} onClick={() => onFitModeChange("fit")}>
           Fit
         </PreviewButton>
@@ -195,7 +195,7 @@ export function MockupPreview({
 
       <button
         type="button"
-        disabled
+      disabled
         className="mt-3 inline-flex min-h-11 w-full cursor-not-allowed items-center justify-center gap-2 rounded-md border theme-border bg-[var(--surface-secondary)] px-4 text-sm font-semibold theme-text-muted"
       >
         <Download className="h-4 w-4" aria-hidden />
@@ -218,7 +218,7 @@ function PreviewButton({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-md border px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0] ${
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-3 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A8C0] ${
         active
           ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--button-primary-text)]"
           : "theme-border bg-[var(--surface-secondary)] theme-text hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]"
