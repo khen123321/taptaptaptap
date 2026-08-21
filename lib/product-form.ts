@@ -22,6 +22,10 @@ export function parseProductForm(formData: FormData): ProductInput {
   const priceBundle = toNumber(formData.get("price_bundle"));
   const bundleSavings = toNumber(formData.get("bundle_savings"));
   const displayOrder = toNumber(formData.get("display_order"));
+  const currentUnitCost = toNumber(formData.get("current_unit_cost"));
+  const lowStockThreshold = toNumber(formData.get("low_stock_threshold"));
+  const defaultOnlinePrice = toNullableNumber(formData.get("default_online_price"));
+  const defaultPhysicalPrice = toNullableNumber(formData.get("default_physical_price"));
   const shortDescription = String(formData.get("short_description") ?? "").trim();
   const cardImageUrl = String(formData.get("card_image_url") ?? "").trim();
   const detailImageUrl = String(formData.get("detail_image_url") ?? "").trim() || cardImageUrl;
@@ -36,7 +40,13 @@ export function parseProductForm(formData: FormData): ProductInput {
   if (priceSingle < 0 || priceBundle < 0 || bundleSavings < 0) {
     throw new Error("Prices cannot be negative.");
   }
+  if (currentUnitCost < 0 || (defaultOnlinePrice !== null && defaultOnlinePrice < 0) || (defaultPhysicalPrice !== null && defaultPhysicalPrice < 0)) {
+    throw new Error("Inventory costs and default prices cannot be negative.");
+  }
   if (!Number.isInteger(displayOrder)) throw new Error("Display order must be an integer.");
+  if (!Number.isInteger(lowStockThreshold) || lowStockThreshold < 0) {
+    throw new Error("Low-stock threshold must be a non-negative whole number.");
+  }
   if (status === "published" && (!shortDescription || !cardImageUrl)) {
     throw new Error("Published products require a short description and card image.");
   }
@@ -59,10 +69,23 @@ export function parseProductForm(formData: FormData): ProductInput {
     cta_href: String(formData.get("cta_href") ?? "").trim(),
     status,
     display_order: displayOrder,
+    sku: String(formData.get("sku") ?? "").trim(),
+    current_unit_cost: currentUnitCost,
+    low_stock_threshold: lowStockThreshold,
+    track_inventory: String(formData.get("track_inventory") ?? "") === "on",
+    default_online_price: defaultOnlinePrice,
+    default_physical_price: defaultPhysicalPrice,
   };
 }
 
 function toNumber(value: FormDataEntryValue | null) {
   const number = Number(value ?? 0);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function toNullableNumber(value: FormDataEntryValue | null) {
+  const text = String(value ?? "").trim();
+  if (!text) return null;
+  const number = Number(text);
   return Number.isFinite(number) ? number : 0;
 }

@@ -216,6 +216,66 @@ export function ProductForm({
 
       <section className="grid gap-5 rounded-lg border p-4 theme-card">
         <div>
+          <h2 className="text-sm font-black uppercase tracking-[0.18em] theme-accent">
+            Inventory / Business Settings
+          </h2>
+          <p className="mt-1 text-sm theme-text-muted">
+            Stock balance is read-only here. Use Add Stock or Adjust Stock to create movement history.
+          </p>
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-4">
+          <Field label="SKU" name="sku" defaultValue={product?.sku ?? ""} />
+          <ReadOnlyField label="Current Stock" value={String(product?.current_stock ?? 0)} />
+          <Field
+            label="Current Unit Cost"
+            name="current_unit_cost"
+            type="number"
+            min="0"
+            defaultValue={product?.current_unit_cost ?? 0}
+            prefix="₱"
+          />
+          <Field
+            label="Low-Stock Threshold"
+            name="low_stock_threshold"
+            type="number"
+            min="0"
+            step="1"
+            defaultValue={product?.low_stock_threshold ?? 5}
+          />
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-3">
+          <Field
+            label="Default Online Price"
+            name="default_online_price"
+            type="number"
+            min="0"
+            defaultValue={product?.default_online_price ?? product?.price_single ?? ""}
+            prefix="₱"
+          />
+          <Field
+            label="Default Physical Price"
+            name="default_physical_price"
+            type="number"
+            min="0"
+            defaultValue={product?.default_physical_price ?? product?.price_single ?? ""}
+            prefix="₱"
+          />
+          <label className="flex min-h-12 items-center gap-3 rounded-md border theme-border bg-[var(--surface-secondary)] px-4 text-sm font-bold theme-text lg:self-end">
+            <input
+              name="track_inventory"
+              type="checkbox"
+              defaultChecked={product?.track_inventory ?? true}
+              className="h-4 w-4 accent-[var(--accent)]"
+            />
+            Track inventory
+          </label>
+        </div>
+      </section>
+
+      <section className="grid gap-5 rounded-lg border p-4 theme-card">
+        <div>
           <h2 className="text-sm font-black uppercase tracking-[0.18em] theme-accent">Product Images</h2>
           <p className="mt-1 text-sm theme-text-muted">
             Upload images here. Storage URLs are generated and saved automatically.
@@ -331,6 +391,19 @@ function Field({
           className={`${fieldClass} w-full ${prefix ? "pl-8" : ""}`}
         />
       </span>
+    </label>
+  );
+}
+
+function ReadOnlyField({ label, value }: { label: string; value: string }) {
+  return (
+    <label className="grid gap-2 text-sm font-bold theme-text">
+      {label}
+      <input
+        value={value}
+        readOnly
+        className={`${fieldClass} w-full cursor-not-allowed opacity-75`}
+      />
     </label>
   );
 }

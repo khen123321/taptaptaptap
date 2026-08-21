@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type AdminSession = {
   userId: string;
+  profileId: string;
   email: string;
   role: "admin";
 };
@@ -27,7 +28,7 @@ export async function getAdminAccess(): Promise<AdminAccess> {
   const email = user.email ?? "";
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("email, role")
+    .select("id, email, role")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -39,6 +40,7 @@ export async function getAdminAccess(): Promise<AdminAccess> {
     status: "admin",
     session: {
       userId: user.id,
+      profileId: profile.id,
       email: profile.email ?? email,
       role: "admin",
     },

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ProductStatusActions } from "@/components/admin/ProductStatusActions";
 import { formatPhp } from "@/lib/format";
+import { getInventoryStatus, getInventoryStatusClass, getInventoryStatusLabel } from "@/lib/inventory-status";
 import type { ProductRow, ProductStatus } from "@/types/database";
 
 type SortValue = "newest" | "oldest" | "az" | "za" | "display";
@@ -72,13 +73,16 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
         </div>
       ) : (
         <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[960px] text-sm">
+          <table className="w-full min-w-[1120px] text-sm">
             <thead className="text-left theme-text-muted">
               <tr>
                 <th className="pb-3 font-semibold">Image</th>
                 <th className="pb-3 font-semibold">Name</th>
+                <th className="pb-3 font-semibold">SKU</th>
                 <th className="pb-3 font-semibold">Type</th>
                 <th className="pb-3 font-semibold">Status</th>
+                <th className="pb-3 font-semibold">Stock</th>
+                <th className="pb-3 font-semibold">Cost</th>
                 <th className="pb-3 font-semibold">Buy 1</th>
                 <th className="pb-3 font-semibold">Buy 2</th>
                 <th className="pb-3 font-semibold">Updated</th>
@@ -88,6 +92,7 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
             <tbody className="divide-y divide-[var(--border)]">
               {filteredProducts.map((product) => {
                 const image = product.card_image_url || product.detail_image_url;
+                const inventoryStatus = getInventoryStatus(product);
 
                 return (
                   <tr key={product.id}>
@@ -103,6 +108,7 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
                       <p className="font-bold theme-text">{product.name}</p>
                       <p className="mt-1 text-xs theme-text-muted">{product.slug}</p>
                     </td>
+                    <td className="py-3 theme-text-muted">{product.sku || "Not set"}</td>
                     <td className="py-3 capitalize theme-text-secondary">
                       {product.product_type === "custom" ? "Custom Branded" : "Standard"}
                     </td>
@@ -111,6 +117,15 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
                         {product.status}
                       </span>
                     </td>
+                    <td className="py-3">
+                      <div className="grid gap-1">
+                        <span className="font-bold theme-text">{product.current_stock ?? 0}</span>
+                        <span className={`w-fit rounded-md border px-2 py-1 text-[10px] font-black uppercase tracking-[0.08em] ${getInventoryStatusClass(inventoryStatus)}`}>
+                          {getInventoryStatusLabel(inventoryStatus)}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 theme-text">{formatPhp(Number(product.current_unit_cost ?? 0))}</td>
                     <td className="py-3 theme-text">{formatPhp(Number(product.price_single))}</td>
                     <td className="py-3 theme-text">{formatPhp(Number(product.price_bundle ?? 0))}</td>
                     <td className="py-3 theme-text-muted">

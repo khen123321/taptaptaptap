@@ -3,6 +3,7 @@ import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { getAnalyticsDashboard } from "@/lib/analytics/admin";
 import { requireAdmin } from "@/lib/admin-auth";
+import { formatInventoryValue, getInventoryDashboardData } from "@/lib/inventory";
 import { getAdminProductDashboard } from "@/lib/products";
 
 export default async function AdminDashboardPage() {
@@ -11,9 +12,10 @@ export default async function AdminDashboardPage() {
   if (access.status === "forbidden") {
     return <AdminDenied />;
   }
-  const [data, analytics] = await Promise.all([
+  const [data, analytics, inventory] = await Promise.all([
     getAdminProductDashboard(),
     getAnalyticsDashboard("7d"),
+    getInventoryDashboardData(),
   ]);
   const cards = [
     { label: "Total Products", value: data.total },
@@ -52,6 +54,28 @@ export default async function AdminDashboardPage() {
             { label: "Unique Visitors - last 7 days", value: analytics.summary.uniqueVisitors },
             { label: "Product Views - last 7 days", value: analytics.summary.productViews },
             { label: "Customizer Opens - last 7 days", value: analytics.summary.customizerOpens },
+          ].map((item) => (
+            <div key={item.label} className="rounded-md border p-4 theme-subtle">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
+              <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-lg border p-5 theme-card">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-black theme-text">Inventory Summary</h2>
+          <Link href="/admin/inventory" className="text-sm font-bold theme-accent">
+            Manage Inventory
+          </Link>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { label: "Units In Stock", value: inventory.summary.totalUnits.toLocaleString("en-PH") },
+            { label: "Inventory Value", value: formatInventoryValue(inventory.summary.inventoryValue) },
+            { label: "Low Stock Items", value: String(inventory.summary.lowStockProducts) },
+            { label: "Out of Stock", value: String(inventory.summary.outOfStockProducts) },
           ].map((item) => (
             <div key={item.label} className="rounded-md border p-4 theme-subtle">
               <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>

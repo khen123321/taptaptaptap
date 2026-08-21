@@ -8,6 +8,29 @@ import {
   hasSupabasePublicEnv,
 } from "@/lib/supabase/server";
 
+const publicProductColumns = [
+  "id",
+  "name",
+  "slug",
+  "short_description",
+  "description",
+  "product_type",
+  "category",
+  "price_single",
+  "price_bundle",
+  "bundle_savings",
+  "card_image_url",
+  "detail_image_url",
+  "mockup_image_url",
+  "included_features",
+  "cta_label",
+  "cta_href",
+  "status",
+  "display_order",
+  "created_at",
+  "updated_at",
+].join(",");
+
 export const products: Product[] = [
   {
     id: "google-review-sign",
@@ -158,7 +181,7 @@ export async function getPublishedProducts() {
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("products")
-      .select("*")
+      .select(publicProductColumns)
       .eq("status", "published")
       .order("display_order", { ascending: true })
       .order("created_at", { ascending: true });
@@ -168,7 +191,7 @@ export async function getPublishedProducts() {
       return [];
     }
 
-    return (data as ProductRow[]).map(mapProductRow);
+    return (data as unknown as ProductRow[]).map(mapProductRow);
   } catch {
     return [];
   }
@@ -181,13 +204,13 @@ export async function getPublishedProductBySlug(slug: string) {
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("products")
-      .select("*")
+      .select(publicProductColumns)
       .eq("slug", slug)
       .eq("status", "published")
       .maybeSingle();
 
     if (error || !data) return undefined;
-    return mapProductRow(data as ProductRow);
+    return mapProductRow(data as unknown as ProductRow);
   } catch {
     return undefined;
   }
@@ -265,6 +288,12 @@ export async function upsertAdminProduct(input: ProductInput, id?: string) {
     cta_href: input.cta_href,
     status: input.status,
     display_order: input.display_order,
+    sku: input.sku || null,
+    current_unit_cost: input.current_unit_cost,
+    low_stock_threshold: input.low_stock_threshold,
+    track_inventory: input.track_inventory,
+    default_online_price: input.default_online_price,
+    default_physical_price: input.default_physical_price,
   };
 
   const query = id
@@ -272,7 +301,7 @@ export async function upsertAdminProduct(input: ProductInput, id?: string) {
     : supabase.from("products").insert(payload).select("*").single();
 
   const { data, error } = await query;
-  if (error?.code === "23505") throw new Error("Product slug already exists.");
+  if (error?.code === "23505") throw new Error("Product slug or SKU already exists.");
   if (error) throw new Error("Failed to save product.");
   return data as ProductRow;
 }
