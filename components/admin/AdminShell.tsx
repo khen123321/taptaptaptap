@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, Boxes, ExternalLink, LayoutDashboard, LogOut, Package } from "lucide-react";
+import { BarChart3, Boxes, ExternalLink, LayoutDashboard, LogOut, Package, ReceiptText } from "lucide-react";
 import type { ReactNode } from "react";
 import type { AdminSession } from "@/lib/admin-auth";
 
@@ -7,6 +7,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/inventory", label: "Inventory", icon: Boxes },
+  { href: "/admin/sales", label: "Sales", icon: ReceiptText },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
 ];
 

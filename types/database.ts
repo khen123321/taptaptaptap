@@ -15,6 +15,11 @@ export type InventoryMovementType =
   | "sale_commit"
   | "sale_cancel_restore"
   | "refund_restore";
+export type SaleStatus = "completed" | "cancelled";
+export type SaleChannel = "physical";
+export type SalePackageType = "buy_1" | "buy_2" | "custom";
+export type PaymentMethod = "gcash" | "bank_transfer" | "cash" | "other";
+export type PaymentStatus = "paid";
 
 export type ProductRow = {
   id: string;
@@ -99,6 +104,54 @@ export type InventoryReceiptRow = {
   received_at: string;
   notes: string | null;
   actor_profile_id: string | null;
+  created_at: string;
+};
+
+export type SaleRow = {
+  id: string;
+  sale_number: string;
+  channel: SaleChannel;
+  handled_by_profile_id: string | null;
+  status: SaleStatus;
+  package_type: SalePackageType;
+  gross_product_amount: number;
+  discount_total: number;
+  total_amount: number;
+  notes: string | null;
+  idempotency_key: string | null;
+  created_at: string;
+  updated_at: string;
+  cancelled_at: string | null;
+  cancelled_by_profile_id: string | null;
+  cancellation_reason: string | null;
+};
+
+export type SaleItemRow = {
+  id: string;
+  sale_id: string;
+  product_id: string;
+  product_name_snapshot: string;
+  sku_snapshot: string | null;
+  package_label: string;
+  quantity: number;
+  unit_regular_price: number;
+  gross_amount: number;
+  discount_amount: number;
+  final_amount: number;
+  unit_cost_snapshot: number;
+  created_at: string;
+};
+
+export type PaymentRow = {
+  id: string;
+  sale_id: string;
+  payment_method: PaymentMethod;
+  amount_received: number;
+  reference_number: string | null;
+  normalized_reference_number: string | null;
+  payment_status: PaymentStatus;
+  verified_by_profile_id: string | null;
+  verified_at: string | null;
   created_at: string;
 };
 

@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { formatPhp } from "@/lib/format";
 import { getInventoryStatus, type InventoryStatus } from "@/lib/inventory-status";
+import { getProductSalesTotals, getSalesSummary, getTodaySales, type SaleListItem, type SalesSummary } from "@/lib/sales";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import type { InventoryMovementRow, InventoryMovementType, ProductRow } from "@/types/database";
 
@@ -8,6 +9,8 @@ export type InventoryOverviewItem = {
   product: ProductRow;
   inventoryValue: number;
   status: InventoryStatus;
+  soldToday: number;
+  totalSold: number;
 };
 
 export type InventorySummary = {
@@ -15,11 +18,13 @@ export type InventorySummary = {
   inventoryValue: number;
   lowStockProducts: number;
   outOfStockProducts: number;
+  sales: SalesSummary;
 };
 
 export type InventoryDashboardData = {
   items: InventoryOverviewItem[];
   summary: InventorySummary;
+  todaySales: SaleListItem[];
 };
 
 export type InventoryHistoryItem = InventoryMovementRow & {
@@ -72,11 +77,18 @@ export function getInventoryValue(product: Pick<ProductRow, "current_stock" | "c
 }
 
 export async function getInventoryDashboardData(): Promise<InventoryDashboardData> {
-  const products = await getInventoryProducts();
+  const [products, salesSummary, productSalesTotals, todaySales] = await Promise.all([
+    getInventoryProducts(),
+    getSalesSummary(),
+    getProductSalesTotals(),
+    getTodaySales(5),
+  ]);
   const items = products.map((product) => ({
     product,
     inventoryValue: getInventoryValue(product),
     status: getInventoryStatus(product),
+    soldToday: productSalesTotals[product.id]?.soldToday ?? 0,
+    totalSold: productSalesTotals[product.id]?.totalSold ?? 0,
   }));
   const trackedItems = items.filter((item) => item.status !== "not_tracked");
 
@@ -87,7 +99,9 @@ export async function getInventoryDashboardData(): Promise<InventoryDashboardDat
       inventoryValue: trackedItems.reduce((sum, item) => sum + item.inventoryValue, 0),
       lowStockProducts: trackedItems.filter((item) => item.status === "low").length,
       outOfStockProducts: trackedItems.filter((item) => item.status === "out").length,
+      sales: salesSummary,
     },
+    todaySales,
   };
 }
 

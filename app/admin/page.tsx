@@ -74,6 +74,9 @@ export default async function AdminDashboardPage() {
           {[
             { label: "Units In Stock", value: inventory.summary.totalUnits.toLocaleString("en-PH") },
             { label: "Inventory Value", value: formatInventoryValue(inventory.summary.inventoryValue) },
+            { label: "Sold Today", value: inventory.summary.sales.soldToday.toLocaleString("en-PH") },
+            { label: "Sales Today", value: formatInventoryValue(inventory.summary.sales.salesToday) },
+            { label: "Orders Today", value: inventory.summary.sales.ordersToday.toLocaleString("en-PH") },
             { label: "Low Stock Items", value: String(inventory.summary.lowStockProducts) },
             { label: "Out of Stock", value: String(inventory.summary.outOfStockProducts) },
           ].map((item) => (

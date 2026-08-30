@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/Button";
 import { formatPhp } from "@/lib/format";
 import { getProductSavingsLabel } from "@/lib/product-promos";
 import type { Product } from "@/types/product";
+import type { OrderContactDetails } from "@/components/products/OrderContactModal";
 
 type ProductDetailsModalProps = {
   product: Product | null;
   onClose: () => void;
+  onOrder: (order: OrderContactDetails) => void;
 };
 
 type PackageOption = "one" | "two";
@@ -17,7 +19,7 @@ type PackageOption = "one" | "two";
 const focusableSelector =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
-export function ProductDetailsModal({ product, onClose }: ProductDetailsModalProps) {
+export function ProductDetailsModal({ product, onClose, onOrder }: ProductDetailsModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -69,6 +71,9 @@ export function ProductDetailsModal({ product, onClose }: ProductDetailsModalPro
   const savingsLabel = getProductSavingsLabel(product);
   const selectedPrice =
     selectedPackage === "one" ? product.buyOnePrice : product.buyTwoPrice;
+  const selectedPackageLabel = selectedPackage === "one" ? "Buy 1" : "Buy 2";
+  const selectedQuantity = selectedPackage === "one" ? 1 : 2;
+  const opensCustomizer = product.ctaHref.startsWith("/customize");
   const packageOptions = [
     {
       id: "one" as const,
@@ -217,15 +222,37 @@ export function ProductDetailsModal({ product, onClose }: ProductDetailsModalPro
               </ul>
             </div>
 
-            <Button
-              href={product.ctaHref}
-              className="mt-7 w-full"
-              data-analytics-event="shop_click"
-              data-analytics-cta={product.ctaLabel}
-              data-analytics-source="product-details-modal"
-            >
-              {product.ctaLabel}
-            </Button>
+            {opensCustomizer ? (
+              <Button
+                href={product.ctaHref}
+                className="mt-7 w-full"
+                data-analytics-event="shop_click"
+                data-analytics-cta={product.ctaLabel}
+                data-analytics-source="product-details-modal"
+              >
+                {product.ctaLabel}
+              </Button>
+            ) : (
+              <button
+                type="button"
+                onClick={() =>
+                  onOrder({
+                    productId: product.id,
+                    productName: product.name,
+                    productType: product.type,
+                    packageLabel: selectedPackageLabel,
+                    quantity: selectedQuantity,
+                    price: selectedPrice,
+                  })
+                }
+                data-analytics-event="shop_click"
+                data-analytics-cta={product.ctaLabel}
+                data-analytics-source="product-details-modal"
+                className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md border border-[var(--accent)] bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--button-primary-text)] shadow-[0_0_28px_rgba(0,168,192,0.18)] transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              >
+                {product.ctaLabel}
+              </button>
+            )}
           </div>
         </div>
       </div>

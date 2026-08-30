@@ -4,6 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { OrderContactModal, type OrderContactDetails } from "@/components/products/OrderContactModal";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductDetailsModal } from "@/components/products/ProductDetailsModal";
 import { trackEvent } from "@/lib/analytics/client";
@@ -12,6 +13,7 @@ import type { Product } from "@/types/product";
 
 export function ProductGrid({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [orderContact, setOrderContact] = useState<OrderContactDetails | null>(null);
   const shouldAutoplay = useShouldAutoplay();
   const hasPromo = hasPromotionalProducts(products);
   const autoplay = useMemo(
@@ -50,6 +52,11 @@ export function ProductGrid({ products }: { products: Product[] }) {
       dedupeKey: `product_details_open:${product.id}:${Date.now()}`,
     });
     setSelectedProduct(product);
+  };
+
+  const openOrderContact = (order: OrderContactDetails) => {
+    setSelectedProduct(null);
+    setOrderContact(order);
   };
 
   const scrollPrev = useCallback(() => {
@@ -106,6 +113,11 @@ export function ProductGrid({ products }: { products: Product[] }) {
         key={selectedProduct?.id ?? "closed"}
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
+        onOrder={openOrderContact}
+      />
+      <OrderContactModal
+        order={orderContact}
+        onClose={() => setOrderContact(null)}
       />
     </>
   );
