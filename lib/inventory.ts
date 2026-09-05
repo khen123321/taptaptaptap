@@ -1,7 +1,13 @@
 import { revalidatePath } from "next/cache";
 import { formatPhp } from "@/lib/format";
 import { getInventoryStatus, type InventoryStatus } from "@/lib/inventory-status";
-import { getProductSalesTotals, getSalesSummary, getTodaySales, type SaleListItem, type SalesSummary } from "@/lib/sales";
+import {
+  deriveSalesDashboardMetrics,
+  getSalesList,
+  type SaleListItem,
+  type SalesDashboardMetrics,
+  type SalesSummary,
+} from "@/lib/sales";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import type { InventoryMovementRow, InventoryMovementType, ProductRow } from "@/types/database";
 
@@ -9,8 +15,8 @@ export type InventoryOverviewItem = {
   product: ProductRow;
   inventoryValue: number;
   status: InventoryStatus;
-  soldToday: number;
-  totalSold: number;
+  soldToday: number | null;
+  totalSold: number | null;
 };
 
 export type InventorySummary = {
@@ -18,13 +24,14 @@ export type InventorySummary = {
   inventoryValue: number;
   lowStockProducts: number;
   outOfStockProducts: number;
-  sales: SalesSummary;
+  sales: SalesSummary | null;
 };
 
 export type InventoryDashboardData = {
   items: InventoryOverviewItem[];
   summary: InventorySummary;
   todaySales: SaleListItem[];
+  salesError: boolean;
 };
 
 export type InventoryHistoryItem = InventoryMovementRow & {
@@ -77,18 +84,21 @@ export function getInventoryValue(product: Pick<ProductRow, "current_stock" | "c
 }
 
 export async function getInventoryDashboardData(): Promise<InventoryDashboardData> {
-  const [products, salesSummary, productSalesTotals, todaySales] = await Promise.all([
+  const [products, salesMetricsResult] = await Promise.all([
     getInventoryProducts(),
-    getSalesSummary(),
-    getProductSalesTotals(),
-    getTodaySales(5),
+    getSalesList({ date: "all", sort: "newest" }).then(
+      (sales) => ({ ok: true as const, value: deriveSalesDashboardMetrics(sales, 5) }),
+      () => ({ ok: false as const }),
+    ),
   ]);
+  const salesMetrics: SalesDashboardMetrics | null = salesMetricsResult.ok ? salesMetricsResult.value : null;
+  const productSalesTotals = salesMetrics?.productSalesTotals ?? {};
   const items = products.map((product) => ({
     product,
     inventoryValue: getInventoryValue(product),
     status: getInventoryStatus(product),
-    soldToday: productSalesTotals[product.id]?.soldToday ?? 0,
-    totalSold: productSalesTotals[product.id]?.totalSold ?? 0,
+    soldToday: salesMetrics ? productSalesTotals[product.id]?.soldToday ?? 0 : null,
+    totalSold: salesMetrics ? productSalesTotals[product.id]?.totalSold ?? 0 : null,
   }));
   const trackedItems = items.filter((item) => item.status !== "not_tracked");
 
@@ -99,9 +109,10 @@ export async function getInventoryDashboardData(): Promise<InventoryDashboardDat
       inventoryValue: trackedItems.reduce((sum, item) => sum + item.inventoryValue, 0),
       lowStockProducts: trackedItems.filter((item) => item.status === "low").length,
       outOfStockProducts: trackedItems.filter((item) => item.status === "out").length,
-      sales: salesSummary,
+      sales: salesMetrics?.summary ?? null,
     },
-    todaySales,
+    todaySales: salesMetrics?.todaySales ?? [],
+    salesError: !salesMetrics,
   };
 }
 

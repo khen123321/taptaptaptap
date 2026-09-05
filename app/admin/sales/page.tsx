@@ -3,7 +3,8 @@ import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { SalesManager } from "@/components/admin/SalesManager";
 import { requireAdmin } from "@/lib/admin-auth";
-import { getSalesList } from "@/lib/sales";
+import { formatPhp } from "@/lib/format";
+import { deriveSalesSummary, getSalesList } from "@/lib/sales";
 
 export default async function AdminSalesPage({
   searchParams,
@@ -24,7 +25,11 @@ export default async function AdminSalesPage({
     sortParam === "amount_asc"
       ? sortParam
       : "newest";
-  const sales = await getSalesList({ query, date, sort });
+  const salesResult = await getSalesList({ query, date, sort }).then(
+    (value) => ({ ok: true as const, value }),
+    () => ({ ok: false as const, value: [] }),
+  );
+  const summary = salesResult.ok ? deriveSalesSummary(salesResult.value) : null;
 
   return (
     <AdminShell session={access.session}>
@@ -76,8 +81,34 @@ export default async function AdminSalesPage({
         </form>
       </section>
 
+      {summary ? (
+        <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          {[
+            { label: "Sold Today", value: summary.soldToday.toLocaleString("en-PH") },
+            { label: "Sales Today", value: formatPhp(summary.salesToday) },
+            { label: "Orders Today", value: summary.ordersToday.toLocaleString("en-PH") },
+            { label: "Direct Deductions Today", value: formatPhp(summary.directDeductionsToday) },
+            { label: "Net After Deductions", value: formatPhp(summary.netAfterDirectDeductionsToday) },
+          ].map((item) => (
+            <div key={item.label} className="rounded-lg border p-4 theme-card">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
+              <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
+            </div>
+          ))}
+        </section>
+      ) : null}
+
       <div className="mt-6">
-        <SalesManager sales={sales} />
+        {salesResult.ok ? (
+          <SalesManager sales={salesResult.value} />
+        ) : (
+          <section className="rounded-lg border border-yellow-400/40 bg-yellow-500/10 p-5">
+            <h2 className="text-lg font-black text-yellow-200">Sales data could not be loaded.</h2>
+            <p className="mt-2 text-sm leading-6 text-yellow-100/90">
+              The sales page is available, but the sales query failed. Check the server logs for the exact Supabase error.
+            </p>
+          </section>
+        )}
       </div>
     </AdminShell>
   );

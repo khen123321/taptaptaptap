@@ -15,11 +15,18 @@ export type InventoryMovementType =
   | "sale_commit"
   | "sale_cancel_restore"
   | "refund_restore";
-export type SaleStatus = "completed" | "cancelled";
+export type SaleStatus = "pending" | "completed" | "cancelled";
 export type SaleChannel = "physical";
-export type SalePackageType = "buy_1" | "buy_2" | "custom";
+export type SalePackageType = "buy_1" | "buy_2" | "bulk" | "custom";
 export type PaymentMethod = "gcash" | "bank_transfer" | "cash" | "other";
-export type PaymentStatus = "paid";
+export type PaymentStatus = "pending" | "paid";
+export type SaleExpenseType =
+  | "gas_transportation"
+  | "shipping_delivery"
+  | "packaging"
+  | "printing_customization"
+  | "commission"
+  | "other";
 
 export type ProductRow = {
   id: string;
@@ -47,6 +54,12 @@ export type ProductRow = {
   track_inventory: boolean;
   default_online_price: number | null;
   default_physical_price: number | null;
+  bulk_enabled: boolean;
+  bulk_tier_1_min: number;
+  bulk_tier_1_max: number;
+  bulk_tier_1_unit_price: number | null;
+  bulk_tier_2_min: number;
+  bulk_tier_2_unit_price: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -75,6 +88,12 @@ export type ProductInput = {
   track_inventory: boolean;
   default_online_price: number | null;
   default_physical_price: number | null;
+  bulk_enabled: boolean;
+  bulk_tier_1_min: number;
+  bulk_tier_1_max: number;
+  bulk_tier_1_unit_price: number | null;
+  bulk_tier_2_min: number;
+  bulk_tier_2_unit_price: number | null;
 };
 
 export type InventoryMovementRow = {
@@ -121,6 +140,7 @@ export type SaleRow = {
   idempotency_key: string | null;
   created_at: string;
   updated_at: string;
+  completed_at: string | null;
   cancelled_at: string | null;
   cancelled_by_profile_id: string | null;
   cancellation_reason: string | null;
@@ -135,6 +155,8 @@ export type SaleItemRow = {
   package_label: string;
   quantity: number;
   unit_regular_price: number;
+  bulk_unit_price: number | null;
+  pricing_tier_label: string | null;
   gross_amount: number;
   discount_amount: number;
   final_amount: number;
@@ -152,6 +174,16 @@ export type PaymentRow = {
   payment_status: PaymentStatus;
   verified_by_profile_id: string | null;
   verified_at: string | null;
+  created_at: string;
+};
+
+export type SaleExpenseRow = {
+  id: string;
+  sale_id: string;
+  expense_type: SaleExpenseType;
+  amount: number;
+  description: string | null;
+  created_by_profile_id: string | null;
   created_at: string;
 };
 

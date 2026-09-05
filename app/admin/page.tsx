@@ -12,11 +12,17 @@ export default async function AdminDashboardPage() {
   if (access.status === "forbidden") {
     return <AdminDenied />;
   }
-  const [data, analytics, inventory] = await Promise.all([
+  const [dataResult, analyticsResult, inventoryResult] = await Promise.allSettled([
     getAdminProductDashboard(),
     getAnalyticsDashboard("7d"),
     getInventoryDashboardData(),
   ]);
+  const data =
+    dataResult.status === "fulfilled"
+      ? dataResult.value
+      : { total: "Unavailable", published: "Unavailable", draft: "Unavailable", archived: "Unavailable", recent: [] };
+  const analytics = analyticsResult.status === "fulfilled" ? analyticsResult.value : null;
+  const inventory = inventoryResult.status === "fulfilled" ? inventoryResult.value : null;
   const cards = [
     { label: "Total Products", value: data.total },
     { label: "Published", value: data.published },
@@ -49,17 +55,21 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {[
-            { label: "Views - last 7 days", value: analytics.summary.totalViews },
-            { label: "Unique Visitors - last 7 days", value: analytics.summary.uniqueVisitors },
-            { label: "Product Views - last 7 days", value: analytics.summary.productViews },
-            { label: "Customizer Opens - last 7 days", value: analytics.summary.customizerOpens },
-          ].map((item) => (
-            <div key={item.label} className="rounded-md border p-4 theme-subtle">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
-              <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
-            </div>
-          ))}
+          {analytics ? (
+            [
+              { label: "Views - last 7 days", value: analytics.summary.totalViews },
+              { label: "Unique Visitors - last 7 days", value: analytics.summary.uniqueVisitors },
+              { label: "Product Views - last 7 days", value: analytics.summary.productViews },
+              { label: "Customizer Opens - last 7 days", value: analytics.summary.customizerOpens },
+            ].map((item) => (
+              <div key={item.label} className="rounded-md border p-4 theme-subtle">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
+                <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
+              </div>
+            ))
+          ) : (
+            <UnavailablePanel label="Website analytics unavailable" />
+          )}
         </div>
       </section>
 
@@ -71,21 +81,32 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {[
-            { label: "Units In Stock", value: inventory.summary.totalUnits.toLocaleString("en-PH") },
-            { label: "Inventory Value", value: formatInventoryValue(inventory.summary.inventoryValue) },
-            { label: "Sold Today", value: inventory.summary.sales.soldToday.toLocaleString("en-PH") },
-            { label: "Sales Today", value: formatInventoryValue(inventory.summary.sales.salesToday) },
-            { label: "Orders Today", value: inventory.summary.sales.ordersToday.toLocaleString("en-PH") },
-            { label: "Low Stock Items", value: String(inventory.summary.lowStockProducts) },
-            { label: "Out of Stock", value: String(inventory.summary.outOfStockProducts) },
-          ].map((item) => (
-            <div key={item.label} className="rounded-md border p-4 theme-subtle">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
-              <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
-            </div>
-          ))}
+          {inventory ? (
+            [
+              { label: "Units In Stock", value: inventory.summary.totalUnits.toLocaleString("en-PH") },
+              { label: "Inventory Value", value: formatInventoryValue(inventory.summary.inventoryValue) },
+              { label: "Sold Today", value: inventory.summary.sales ? inventory.summary.sales.soldToday.toLocaleString("en-PH") : "Unavailable" },
+              { label: "Sales Today", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.salesToday) : "Unavailable" },
+              { label: "Orders Today", value: inventory.summary.sales ? inventory.summary.sales.ordersToday.toLocaleString("en-PH") : "Unavailable" },
+              { label: "Direct Deductions Today", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.directDeductionsToday) : "Unavailable" },
+              { label: "Net After Deductions", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.netAfterDirectDeductionsToday) : "Unavailable" },
+              { label: "Low Stock Items", value: String(inventory.summary.lowStockProducts) },
+              { label: "Out of Stock", value: String(inventory.summary.outOfStockProducts) },
+            ].map((item) => (
+              <div key={item.label} className="rounded-md border p-4 theme-subtle">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
+                <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
+              </div>
+            ))
+          ) : (
+            <UnavailablePanel label="Inventory data unavailable" />
+          )}
         </div>
+        {inventory?.salesError ? (
+          <p className="mt-4 rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">
+            Sales data unavailable.
+          </p>
+        ) : null}
       </section>
 
       <section className="mt-6 rounded-lg border p-5 theme-card">
@@ -118,5 +139,13 @@ export default async function AdminDashboardPage() {
         )}
       </section>
     </AdminShell>
+  );
+}
+
+function UnavailablePanel({ label }: { label: string }) {
+  return (
+    <div className="rounded-md border border-yellow-400/40 bg-yellow-500/10 p-4 text-sm font-semibold text-yellow-200 sm:col-span-2 xl:col-span-4">
+      {label}
+    </div>
   );
 }

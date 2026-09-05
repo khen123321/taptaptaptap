@@ -1,6 +1,12 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
-import type { PaymentMethod, SalePackageType, SaleRow } from "@/types/database";
+import type { PaymentMethod, SaleExpenseRow, SaleExpenseType, SalePackageType, SaleRow } from "@/types/database";
+
+export type SaleExpenseInput = {
+  expenseType: SaleExpenseType;
+  amount: number;
+  description?: string;
+};
 
 export type QuickSaleInput = {
   productId: string;
@@ -12,6 +18,8 @@ export type QuickSaleInput = {
   notes?: string;
   actorProfileId: string;
   idempotencyKey?: string;
+  saleStatus?: "pending" | "completed";
+  expenses?: SaleExpenseInput[];
 };
 
 export type SaleResult = {
@@ -21,23 +29,32 @@ export type SaleResult = {
   productId: string;
   productName: string;
   packageLabel: string;
+  pricingTierLabel: string | null;
   quantity: number;
+  regularUnitPrice: number;
+  bulkUnitPrice: number | null;
   grossAmount: number;
   discountAmount: number;
   finalAmount: number;
   unitCostSnapshot: number;
   paymentMethod: PaymentMethod;
   paymentReference: string | null;
-  previousStock: number;
-  newStock: number;
-  movementId: string;
+  previousStock: number | null;
+  newStock: number | null;
+  movementId: string | null;
+  totalDirectDeductions: number;
+  netAfterDeductions: number;
+  expenses: SaleExpenseRow[];
   createdAt: string;
+  completedAt: string | null;
 };
 
 export type SalesSummary = {
   soldToday: number;
   salesToday: number;
   ordersToday: number;
+  directDeductionsToday: number;
+  netAfterDirectDeductionsToday: number;
 };
 
 export type ProductSalesTotals = Record<string, { soldToday: number; totalSold: number }>;
@@ -48,7 +65,10 @@ export type SaleListItem = {
   productName: string;
   sku: string | null;
   packageLabel: string;
+  pricingTierLabel: string | null;
   quantity: number;
+  regularUnitPrice: number;
+  bulkUnitPrice: number | null;
   grossAmount: number;
   discountAmount: number;
   finalAmount: number;
@@ -57,12 +77,21 @@ export type SaleListItem = {
   paymentReference: string | null;
   handledByEmail: string | null;
   movementId: string | null;
+  expenses: SaleExpenseRow[];
+  totalDirectDeductions: number;
+  netAfterDeductions: number;
 };
 
 export type SalesFilters = {
   query?: string;
   date?: "today" | "all";
   sort?: "newest" | "oldest" | "amount_desc" | "amount_asc";
+};
+
+export type SalesDashboardMetrics = {
+  summary: SalesSummary;
+  productSalesTotals: ProductSalesTotals;
+  todaySales: SaleListItem[];
 };
 
 type SaleRecord = SaleRow & {
@@ -76,11 +105,15 @@ type SaleRecord = SaleRow & {
     discount_amount?: number | null;
     final_amount?: number | null;
     unit_cost_snapshot?: number | null;
+    unit_regular_price?: number | null;
+    bulk_unit_price?: number | null;
+    pricing_tier_label?: string | null;
   }[] | null;
   payment?: {
     payment_method?: PaymentMethod | null;
     reference_number?: string | null;
   }[] | null;
+  expenses?: SaleExpenseRow[] | null;
   handler?: { email?: string | null } | null;
   movement?: { id?: string | null }[] | null;
 };
@@ -99,10 +132,35 @@ export async function recordQuickPhysicalSale(input: QuickSaleInput) {
     p_notes: input.notes ?? null,
     p_actor_profile_id: input.actorProfileId,
     p_idempotency_key: input.idempotencyKey ?? null,
+    p_sale_status: input.saleStatus ?? "completed",
+    p_sale_expenses: input.expenses ?? [],
   });
 
   if (error) {
     console.error("Quick sale failed.", error);
+    throw new Error(mapSaleError(error.message));
+  }
+
+  revalidateSalesAdmin();
+  return data as unknown as SaleResult;
+}
+
+export async function completePendingQuickSale(input: {
+  saleId: string;
+  actorProfileId: string;
+  idempotencyKey?: string;
+}) {
+  const supabase = createSupabaseSecretClient();
+  if (!supabase) throw new Error("Missing Supabase secret key configuration.");
+
+  const { data, error } = await supabase.rpc("complete_pending_quick_sale", {
+    p_sale_id: input.saleId,
+    p_actor_profile_id: input.actorProfileId,
+    p_idempotency_key: input.idempotencyKey ?? null,
+  });
+
+  if (error) {
+    console.error("Pending sale completion failed.", error);
     throw new Error(mapSaleError(error.message));
   }
 
@@ -136,37 +194,55 @@ export async function cancelQuickSale(input: {
 }
 
 export async function getSalesSummary(): Promise<SalesSummary> {
-  const sales = await getSalesList({ date: "today", sort: "newest" });
-  const completed = sales.filter((item) => item.sale.status === "completed");
-  return {
-    soldToday: completed.reduce((sum, item) => sum + item.quantity, 0),
-    salesToday: completed.reduce((sum, item) => sum + Number(item.sale.total_amount ?? 0), 0),
-    ordersToday: completed.length,
-  };
+  return deriveSalesSummary(await getSalesList({ date: "today", sort: "newest" }));
 }
 
 export async function getProductSalesTotals(): Promise<ProductSalesTotals> {
-  const sales = await getSalesList({ date: "all", sort: "newest" });
+  return deriveProductSalesTotals(await getSalesList({ date: "all", sort: "newest" }));
+}
+
+export async function getTodaySales(limit = 5) {
+  return deriveTodaySales(await getSalesList({ date: "today", sort: "newest" }), limit);
+}
+
+export function deriveSalesDashboardMetrics(sales: SaleListItem[], todayLimit = 5): SalesDashboardMetrics {
+  return {
+    summary: deriveSalesSummary(sales),
+    productSalesTotals: deriveProductSalesTotals(sales),
+    todaySales: deriveTodaySales(sales, todayLimit),
+  };
+}
+
+export function deriveSalesSummary(sales: SaleListItem[]): SalesSummary {
+  const todayRange = getManilaTodayRange();
+  const completedToday = sales.filter((item) => isCompletedInRange(item, todayRange));
+  return {
+    soldToday: completedToday.reduce((sum, item) => sum + item.quantity, 0),
+    salesToday: completedToday.reduce((sum, item) => sum + Number(item.sale.total_amount ?? 0), 0),
+    ordersToday: completedToday.length,
+    directDeductionsToday: completedToday.reduce((sum, item) => sum + item.totalDirectDeductions, 0),
+    netAfterDirectDeductionsToday: completedToday.reduce((sum, item) => sum + item.netAfterDeductions, 0),
+  };
+}
+
+export function deriveProductSalesTotals(sales: SaleListItem[]): ProductSalesTotals {
+  const todayRange = getManilaTodayRange();
   return sales
     .filter((item) => item.sale.status === "completed")
     .reduce<ProductSalesTotals>((totals, item) => {
       const current = totals[item.productId] ?? { soldToday: 0, totalSold: 0 };
-      const todayRange = getManilaTodayRange();
-      const created = new Date(item.sale.created_at).getTime();
       totals[item.productId] = {
-        soldToday:
-          created >= todayRange.start.getTime() && created < todayRange.end.getTime()
-            ? current.soldToday + item.quantity
-            : current.soldToday,
+        soldToday: isCompletedInRange(item, todayRange) ? current.soldToday + item.quantity : current.soldToday,
         totalSold: current.totalSold + item.quantity,
       };
       return totals;
     }, {});
 }
 
-export async function getTodaySales(limit = 5) {
-  return (await getSalesList({ date: "today", sort: "newest" }))
-    .filter((item) => item.sale.status === "completed")
+export function deriveTodaySales(sales: SaleListItem[], limit = 5) {
+  const todayRange = getManilaTodayRange();
+  return sales
+    .filter((item) => isCompletedInRange(item, todayRange))
     .slice(0, limit);
 }
 
@@ -185,12 +261,24 @@ export async function getSalesList(filters: SalesFilters = {}) {
         sku_snapshot,
         package_label,
         quantity,
+        unit_regular_price,
+        bulk_unit_price,
+        pricing_tier_label,
         gross_amount,
         discount_amount,
         final_amount,
         unit_cost_snapshot
       ),
       payment:payments(payment_method, reference_number),
+      expenses:sale_expenses(
+        id,
+        sale_id,
+        expense_type,
+        amount,
+        description,
+        created_by_profile_id,
+        created_at
+      ),
       handler:profiles!sales_handled_by_profile_id_fkey(email),
       movement:inventory_movements(id)
     `)
@@ -198,7 +286,7 @@ export async function getSalesList(filters: SalesFilters = {}) {
 
   if (filters.date === "today") {
     const range = getManilaTodayRange();
-    query = query.gte("created_at", range.start.toISOString()).lt("created_at", range.end.toISOString());
+    query = query.gte("completed_at", range.start.toISOString()).lt("completed_at", range.end.toISOString());
   }
 
   if (sort === "oldest") query = query.order("created_at", { ascending: true });
@@ -207,7 +295,15 @@ export async function getSalesList(filters: SalesFilters = {}) {
   if (sort === "amount_desc") query = query.order("total_amount", { ascending: false });
 
   const { data, error } = await query;
-  if (error) throw new Error("Failed to load sales.");
+  if (error) {
+    console.error("Failed to load sales", {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+    });
+    throw new Error("Failed to load sales.");
+  }
 
   const rows = ((data ?? []) as unknown as SaleRecord[]).map(mapSaleRecord);
   const search = filters.query?.trim().toLowerCase();
@@ -256,6 +352,9 @@ function mapSaleRecord(record: SaleRecord): SaleListItem {
   const item = record.item?.[0];
   const payment = record.payment?.[0];
   const movement = record.movement?.find((entry) => Boolean(entry.id));
+  const expenses = record.expenses ?? [];
+  const totalDirectDeductions = expenses.reduce((sum, expense) => sum + Number(expense.amount ?? 0), 0);
+  const finalAmount = Number(item?.final_amount ?? record.total_amount ?? 0);
 
   return {
     sale: record,
@@ -263,26 +362,44 @@ function mapSaleRecord(record: SaleRecord): SaleListItem {
     productName: item?.product_name_snapshot ?? "Unknown product",
     sku: item?.sku_snapshot ?? null,
     packageLabel: item?.package_label ?? record.package_type,
+    pricingTierLabel: item?.pricing_tier_label ?? null,
     quantity: Number(item?.quantity ?? 0),
+    regularUnitPrice: Number(item?.unit_regular_price ?? 0),
+    bulkUnitPrice: item?.bulk_unit_price == null ? null : Number(item.bulk_unit_price),
     grossAmount: Number(item?.gross_amount ?? record.gross_product_amount ?? 0),
     discountAmount: Number(item?.discount_amount ?? record.discount_total ?? 0),
-    finalAmount: Number(item?.final_amount ?? record.total_amount ?? 0),
+    finalAmount,
     unitCostSnapshot: Number(item?.unit_cost_snapshot ?? 0),
     paymentMethod: payment?.payment_method ?? "other",
     paymentReference: payment?.reference_number ?? null,
     handledByEmail: record.handler?.email ?? null,
     movementId: movement?.id ?? null,
+    expenses,
+    totalDirectDeductions,
+    netAfterDeductions: finalAmount - totalDirectDeductions,
   };
+}
+
+function isCompletedInRange(item: SaleListItem, range: ReturnType<typeof getManilaTodayRange>) {
+  if (item.sale.status !== "completed") return false;
+  const completed = new Date(item.sale.completed_at ?? item.sale.created_at).getTime();
+  return completed >= range.start.getTime() && completed < range.end.getTime();
 }
 
 function mapSaleError(message: string) {
   const lower = message.toLowerCase();
   if (lower.includes("insufficient stock")) return "Insufficient stock for this sale.";
+  if (lower.includes("bulk pricing starts")) return "Bulk pricing starts at 10 units.";
+  if (lower.includes("bulk pricing is not enabled")) return "Bulk pricing is not enabled for this product.";
+  if (lower.includes("bulk pricing is not fully configured")) return "Bulk pricing is not fully configured for this product.";
+  if (lower.includes("bulk quantity")) return "Bulk quantity must be a positive whole number.";
+  if (lower.includes("cancelled sales cannot be marked sold")) return "Cancelled sales cannot be marked sold.";
   if (lower.includes("payment reference already exists")) return message;
   if (lower.includes("idempotency key")) return "This request key was already used for a different sale.";
   if (lower.includes("payment reference is required")) return "Payment reference is required for GCash or Bank Transfer.";
   if (lower.includes("inventory tracking is disabled")) return "Inventory tracking is disabled for this product.";
   if (lower.includes("invalid sale package")) return "Invalid sale package.";
+  if (lower.includes("invalid sale status")) return "Invalid sale status.";
   if (lower.includes("custom quantity")) return "Custom quantity must be a positive whole number.";
   if (lower.includes("custom amount")) return "Custom amount must be zero or greater.";
   if (lower.includes("product not found")) return "Product not found.";

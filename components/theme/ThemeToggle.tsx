@@ -2,11 +2,12 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useRef, useSyncExternalStore } from "react";
-
-type Theme = "light" | "dark";
-
-const storageKey = "taptaptap-theme";
-const themeChangeEvent = "taptaptap-theme-change";
+import {
+  getCurrentTheme,
+  setTheme,
+  themeChangeEvent,
+  type Theme,
+} from "@/components/theme/theme-store";
 
 function subscribe(onStoreChange: () => void) {
   window.addEventListener(themeChangeEvent, onStoreChange);
@@ -14,7 +15,7 @@ function subscribe(onStoreChange: () => void) {
 }
 
 function getSnapshot(): Theme {
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  return getCurrentTheme();
 }
 
 function getServerSnapshot(): Theme {
@@ -30,13 +31,7 @@ export function ThemeToggle({ onToggle }: { onToggle?: () => void }) {
     const button = buttonRef.current;
 
     const applyTheme = () => {
-      document.documentElement.dataset.theme = nextTheme;
-      try {
-        localStorage.setItem(storageKey, nextTheme);
-      } catch {
-        // Theme switching should still work when storage is blocked.
-      }
-      window.dispatchEvent(new Event(themeChangeEvent));
+      setTheme(nextTheme);
     };
 
     const prefersReducedMotion = window.matchMedia(

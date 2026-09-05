@@ -272,6 +272,66 @@ export function ProductForm({
             Track inventory
           </label>
         </div>
+
+        <div className="grid gap-5 rounded-md border theme-border p-4">
+          <div>
+            <h3 className="text-sm font-bold theme-text">Bulk / Reseller Pricing</h3>
+            <p className="mt-1 text-xs leading-5 theme-text-muted">
+              Enable only for products that should use official card reseller rates.
+            </p>
+          </div>
+          <label className="flex min-h-12 items-center gap-3 rounded-md border theme-border bg-[var(--surface-secondary)] px-4 text-sm font-bold theme-text">
+            <input
+              name="bulk_enabled"
+              type="checkbox"
+              defaultChecked={product?.bulk_enabled ?? false}
+              className="h-4 w-4 accent-[var(--accent)]"
+            />
+            Bulk pricing enabled
+          </label>
+          <div className="grid gap-5 lg:grid-cols-5">
+            <Field
+              label="Tier 1 Min"
+              name="bulk_tier_1_min"
+              type="number"
+              min="1"
+              step="1"
+              defaultValue={product?.bulk_tier_1_min ?? 10}
+            />
+            <Field
+              label="Tier 1 Max"
+              name="bulk_tier_1_max"
+              type="number"
+              min="1"
+              step="1"
+              defaultValue={product?.bulk_tier_1_max ?? 24}
+            />
+            <Field
+              label="Tier 1 Price"
+              name="bulk_tier_1_unit_price"
+              type="number"
+              min="0"
+              defaultValue={product?.bulk_tier_1_unit_price ?? 599}
+              prefix="₱"
+            />
+            <Field
+              label="Tier 2 Min"
+              name="bulk_tier_2_min"
+              type="number"
+              min="1"
+              step="1"
+              defaultValue={product?.bulk_tier_2_min ?? 25}
+            />
+            <Field
+              label="Tier 2 Price"
+              name="bulk_tier_2_unit_price"
+              type="number"
+              min="0"
+              defaultValue={product?.bulk_tier_2_unit_price ?? 499}
+              prefix="₱"
+            />
+          </div>
+        </div>
       </section>
 
       <section className="grid gap-5 rounded-lg border p-4 theme-card">

@@ -26,6 +26,12 @@ export function parseProductForm(formData: FormData): ProductInput {
   const lowStockThreshold = toNumber(formData.get("low_stock_threshold"));
   const defaultOnlinePrice = toNullableNumber(formData.get("default_online_price"));
   const defaultPhysicalPrice = toNullableNumber(formData.get("default_physical_price"));
+  const bulkEnabled = String(formData.get("bulk_enabled") ?? "") === "on";
+  const bulkTier1Min = toInteger(formData.get("bulk_tier_1_min"), 10);
+  const bulkTier1Max = toInteger(formData.get("bulk_tier_1_max"), 24);
+  const bulkTier1UnitPrice = toNullableNumber(formData.get("bulk_tier_1_unit_price"));
+  const bulkTier2Min = toInteger(formData.get("bulk_tier_2_min"), 25);
+  const bulkTier2UnitPrice = toNullableNumber(formData.get("bulk_tier_2_unit_price"));
   const shortDescription = String(formData.get("short_description") ?? "").trim();
   const cardImageUrl = String(formData.get("card_image_url") ?? "").trim();
   const detailImageUrl = String(formData.get("detail_image_url") ?? "").trim() || cardImageUrl;
@@ -46,6 +52,18 @@ export function parseProductForm(formData: FormData): ProductInput {
   if (!Number.isInteger(displayOrder)) throw new Error("Display order must be an integer.");
   if (!Number.isInteger(lowStockThreshold) || lowStockThreshold < 0) {
     throw new Error("Low-stock threshold must be a non-negative whole number.");
+  }
+  if (
+    bulkTier1Min <= 0 ||
+    bulkTier1Max < bulkTier1Min ||
+    bulkTier2Min <= bulkTier1Max ||
+    (bulkTier1UnitPrice !== null && bulkTier1UnitPrice < 0) ||
+    (bulkTier2UnitPrice !== null && bulkTier2UnitPrice < 0)
+  ) {
+    throw new Error("Bulk pricing tiers are invalid.");
+  }
+  if (bulkEnabled && (bulkTier1UnitPrice === null || bulkTier2UnitPrice === null)) {
+    throw new Error("Bulk-enabled products require both bulk unit prices.");
   }
   if (status === "published" && (!shortDescription || !cardImageUrl)) {
     throw new Error("Published products require a short description and card image.");
@@ -75,6 +93,12 @@ export function parseProductForm(formData: FormData): ProductInput {
     track_inventory: String(formData.get("track_inventory") ?? "") === "on",
     default_online_price: defaultOnlinePrice,
     default_physical_price: defaultPhysicalPrice,
+    bulk_enabled: bulkEnabled,
+    bulk_tier_1_min: bulkTier1Min,
+    bulk_tier_1_max: bulkTier1Max,
+    bulk_tier_1_unit_price: bulkTier1UnitPrice,
+    bulk_tier_2_min: bulkTier2Min,
+    bulk_tier_2_unit_price: bulkTier2UnitPrice,
   };
 }
 
@@ -88,4 +112,9 @@ function toNullableNumber(value: FormDataEntryValue | null) {
   if (!text) return null;
   const number = Number(text);
   return Number.isFinite(number) ? number : 0;
+}
+
+function toInteger(value: FormDataEntryValue | null, fallback: number) {
+  const number = Number(value ?? fallback);
+  return Number.isInteger(number) ? number : fallback;
 }

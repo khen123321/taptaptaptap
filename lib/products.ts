@@ -294,6 +294,12 @@ export async function upsertAdminProduct(input: ProductInput, id?: string) {
     track_inventory: input.track_inventory,
     default_online_price: input.default_online_price,
     default_physical_price: input.default_physical_price,
+    bulk_enabled: input.bulk_enabled,
+    bulk_tier_1_min: input.bulk_tier_1_min,
+    bulk_tier_1_max: input.bulk_tier_1_max,
+    bulk_tier_1_unit_price: input.bulk_tier_1_unit_price,
+    bulk_tier_2_min: input.bulk_tier_2_min,
+    bulk_tier_2_unit_price: input.bulk_tier_2_unit_price,
   };
 
   const query = id

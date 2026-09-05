@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type FormEvent } from "react";
+import { Fragment, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { formatPhp } from "@/lib/format";
 import {
@@ -9,7 +9,7 @@ import {
   getInventoryStatusLabel,
 } from "@/lib/inventory-status";
 import type { InventoryDashboardData } from "@/lib/inventory";
-import type { SalePackageType } from "@/types/database";
+import type { SaleExpenseType, SalePackageType } from "@/types/database";
 import type { SaleResult } from "@/lib/sales";
 
 const adjustmentReasons = [
@@ -23,6 +23,22 @@ const adjustmentReasons = [
   { value: "other", label: "Other" },
 ] as const;
 
+const saleDeductionTypes: Array<{ value: SaleExpenseType; label: string }> = [
+  { value: "gas_transportation", label: "Gas / Transportation" },
+  { value: "shipping_delivery", label: "Shipping / Delivery" },
+  { value: "packaging", label: "Packaging" },
+  { value: "printing_customization", label: "Printing / Customization" },
+  { value: "commission", label: "Commission" },
+  { value: "other", label: "Other" },
+];
+
+type DeductionDraft = {
+  id: string;
+  expenseType: SaleExpenseType;
+  amount: string;
+  description: string;
+};
+
 export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const router = useRouter();
   const [selectedProductId, setSelectedProductId] = useState(data.items[0]?.product.id ?? "");
@@ -35,7 +51,9 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const [salePackage, setSalePackage] = useState<SalePackageType>("buy_1");
   const [customQuantity, setCustomQuantity] = useState(1);
   const [customAmount, setCustomAmount] = useState("");
+  const [bulkQuantity, setBulkQuantity] = useState(10);
   const [saleResult, setSaleResult] = useState<SaleResult | null>(null);
+  const [deductions, setDeductions] = useState<DeductionDraft[]>([]);
 
   const selectedProduct = useMemo(
     () => data.items.find((item) => item.product.id === selectedProductId)?.product,
@@ -45,9 +63,73 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const singlePrice = Number(selectedProduct?.default_physical_price ?? selectedProduct?.price_single ?? 0);
   const bundlePrice = Number(selectedProduct?.price_bundle ?? singlePrice * 2);
   const bundleSavings = Math.max(singlePrice * 2 - bundlePrice, 0);
-  const saleQuantity = salePackage === "buy_1" ? 1 : salePackage === "buy_2" ? 2 : customQuantity;
-  const saleAmount = salePackage === "buy_1" ? singlePrice : salePackage === "buy_2" ? bundlePrice : Number(customAmount || 0);
+  const bulkEnabled = selectedProduct?.bulk_enabled ?? false;
+  const bulkTier1Min = Number(selectedProduct?.bulk_tier_1_min ?? 10);
+  const bulkTier1Max = Number(selectedProduct?.bulk_tier_1_max ?? 24);
+  const bulkTier1UnitPrice = selectedProduct?.bulk_tier_1_unit_price == null ? null : Number(selectedProduct.bulk_tier_1_unit_price);
+  const bulkTier2Min = Number(selectedProduct?.bulk_tier_2_min ?? 25);
+  const bulkTier2UnitPrice = selectedProduct?.bulk_tier_2_unit_price == null ? null : Number(selectedProduct.bulk_tier_2_unit_price);
+  const bulkTier =
+    bulkQuantity >= bulkTier2Min
+      ? { label: `${bulkTier2Min}+ Cards`, unitPrice: bulkTier2UnitPrice }
+      : bulkQuantity >= bulkTier1Min && bulkQuantity <= bulkTier1Max
+        ? { label: `${bulkTier1Min}-${bulkTier1Max} Cards`, unitPrice: bulkTier1UnitPrice }
+        : null;
+  const bulkRegularValue = singlePrice * bulkQuantity;
+  const bulkTotal = bulkTier?.unitPrice == null ? 0 : bulkQuantity * bulkTier.unitPrice;
+  const bulkSavings = Math.max(bulkRegularValue - bulkTotal, 0);
+  const bulkQuantityMessage =
+    bulkQuantity === 1
+      ? "Use Buy 1 instead."
+      : bulkQuantity === 2
+        ? "Use Buy 2 instead."
+        : bulkQuantity >= 3 && bulkQuantity < bulkTier1Min
+          ? "Bulk pricing starts at 10 units."
+          : "";
+  const bulkReady = bulkEnabled && bulkTier?.unitPrice != null && bulkQuantity >= bulkTier1Min;
+  const saleQuantity = salePackage === "buy_1" ? 1 : salePackage === "buy_2" ? 2 : salePackage === "bulk" ? bulkQuantity : customQuantity;
+  const saleAmount =
+    salePackage === "buy_1"
+      ? singlePrice
+      : salePackage === "buy_2"
+        ? bundlePrice
+        : salePackage === "bulk"
+          ? bulkTotal
+          : Number(customAmount || 0);
+  const grossValue =
+    salePackage === "buy_1"
+      ? singlePrice
+      : salePackage === "buy_2"
+        ? singlePrice * 2
+        : salePackage === "bulk"
+          ? bulkRegularValue
+          : singlePrice * customQuantity;
+  const saleDiscount = Math.max(grossValue - saleAmount, 0);
+  const totalDirectDeductions = deductions.reduce((sum, deduction) => {
+    const amount = Number(deduction.amount || 0);
+    return Number.isFinite(amount) ? sum + amount : sum;
+  }, 0);
+  const netAfterDeductions = saleAmount - totalDirectDeductions;
   const hasSaleStock = selectedTracked && Boolean(selectedProduct) && Number(selectedProduct?.current_stock ?? 0) >= saleQuantity;
+  const canSaveSale = selectedTracked && Boolean(selectedProduct) && (salePackage !== "bulk" || bulkReady);
+  const canMarkSold = canSaveSale && hasSaleStock && (salePackage !== "custom" || saleAmount >= 0);
+
+  const addDeduction = () => {
+    setDeductions((current) => [
+      ...current,
+      { id: crypto.randomUUID(), expenseType: "gas_transportation", amount: "", description: "" },
+    ]);
+  };
+
+  const updateDeduction = (id: string, changes: Partial<Omit<DeductionDraft, "id">>) => {
+    setDeductions((current) =>
+      current.map((deduction) => (deduction.id === id ? { ...deduction, ...changes } : deduction)),
+    );
+  };
+
+  const removeDeduction = (id: string) => {
+    setDeductions((current) => current.filter((deduction) => deduction.id !== id));
+  };
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -91,8 +173,10 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     setSaleResult(null);
 
     const formData = new FormData(event.currentTarget);
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     formData.set("product_id", selectedProductId);
     formData.set("package_type", salePackage);
+    formData.set("sale_status", submitter?.value === "pending" ? "pending" : "completed");
 
     const response = await fetch("/api/admin/sales/quick", {
       method: "POST",
@@ -111,6 +195,8 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     setSalePackage("buy_1");
     setCustomQuantity(1);
     setCustomAmount("");
+    setBulkQuantity(10);
+    setDeductions([]);
     setSaleResult(result.sale);
     router.refresh();
   };
@@ -131,22 +217,34 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard label="Total Units In Stock" value={data.summary.totalUnits.toLocaleString("en-PH")} />
         <SummaryCard label="Inventory Value" value={formatPhp(data.summary.inventoryValue)} />
-        <SummaryCard label="Sold Today" value={data.summary.sales.soldToday.toLocaleString("en-PH")} />
-        <SummaryCard label="Sales Today" value={formatPhp(data.summary.sales.salesToday)} />
-        <SummaryCard label="Orders Today" value={data.summary.sales.ordersToday.toLocaleString("en-PH")} />
+        <SummaryCard label="Sold Today" value={data.summary.sales ? data.summary.sales.soldToday.toLocaleString("en-PH") : "Unavailable"} />
+        <SummaryCard label="Sales Today" value={data.summary.sales ? formatPhp(data.summary.sales.salesToday) : "Unavailable"} />
+        <SummaryCard label="Orders Today" value={data.summary.sales ? data.summary.sales.ordersToday.toLocaleString("en-PH") : "Unavailable"} />
+        <SummaryCard label="Direct Deductions Today" value={data.summary.sales ? formatPhp(data.summary.sales.directDeductionsToday) : "Unavailable"} />
+        <SummaryCard label="Net After Deductions Today" value={data.summary.sales ? formatPhp(data.summary.sales.netAfterDirectDeductionsToday) : "Unavailable"} />
         <SummaryCard label="Low Stock Products" value={String(data.summary.lowStockProducts)} />
         <SummaryCard label="Out of Stock Products" value={String(data.summary.outOfStockProducts)} />
       </section>
+      {data.salesError ? (
+        <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">
+          Sales data unavailable. Inventory stock data is still shown.
+        </p>
+      ) : null}
 
       {saleResult ? (
         <section className="rounded-lg border border-green-400/40 bg-green-500/10 p-4">
-          <p className="text-sm font-black text-green-300">Sale Recorded</p>
+          <p className="text-sm font-black text-green-300">
+            {saleResult.status === "pending" ? "Pending Sale Saved" : "Sale Recorded"}
+          </p>
           <p className="mt-2 text-xl font-black theme-text">Sale #{saleResult.saleNumber}</p>
           <p className="mt-1 text-sm theme-text-secondary">
             {saleResult.productName} • {saleResult.packageLabel} × {saleResult.quantity} units • {formatPhp(Number(saleResult.finalAmount))}
           </p>
           <p className="mt-1 text-sm theme-text-muted">
-            Stock: {saleResult.previousStock} → {saleResult.newStock} • Payment: {paymentLabel(saleResult.paymentMethod)}
+            Deductions: {formatPhp(Number(saleResult.totalDirectDeductions))} • Net: {formatPhp(Number(saleResult.netAfterDeductions))}
+          </p>
+          <p className="mt-1 text-sm theme-text-muted">
+            Stock: {saleResult.previousStock == null || saleResult.newStock == null ? "No change" : `${saleResult.previousStock} → ${saleResult.newStock}`} • Payment: {paymentLabel(saleResult.paymentMethod)}
           </p>
         </section>
       ) : null}
@@ -234,6 +332,13 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
 
           <form onSubmit={submitSale} className="rounded-lg border p-4 theme-subtle">
             <input type="hidden" name="idempotency_key" value={saleKey} />
+            {deductions.map((deduction) => (
+              <Fragment key={`${deduction.id}-inputs`}>
+                <input type="hidden" name="expense_type" value={deduction.expenseType} />
+                <input type="hidden" name="expense_amount" value={deduction.amount} />
+                <input type="hidden" name="expense_description" value={deduction.description} />
+              </Fragment>
+            ))}
             <h3 className="text-sm font-black uppercase tracking-[0.14em] theme-accent">Quick Sale</h3>
             <p className="mt-3 text-xs font-semibold theme-text-muted">
               Available Stock: {selectedProduct?.current_stock ?? 0}
@@ -253,12 +358,49 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                 onClick={() => setSalePackage("buy_2")}
               />
               <PackageButton
+                label="Bulk / Reseller"
+                detail={bulkEnabled ? "Official card tier pricing" : "Not enabled for this product"}
+                selected={salePackage === "bulk"}
+                onClick={() => setSalePackage("bulk")}
+                disabled={!bulkEnabled}
+              />
+              <PackageButton
                 label="Custom"
                 detail="Negotiated quantity and amount"
                 selected={salePackage === "custom"}
                 onClick={() => setSalePackage("custom")}
               />
             </div>
+
+            {salePackage === "bulk" ? (
+              <div className="mt-4 grid gap-3 rounded-md border theme-border p-3">
+                <label className="grid gap-2 text-sm font-bold theme-text">
+                  Quantity
+                  <input
+                    name="bulk_quantity"
+                    type="number"
+                    min="1"
+                    value={bulkQuantity}
+                    onChange={(event) => setBulkQuantity(Number(event.target.value || 1))}
+                    className={fieldClass}
+                    required
+                  />
+                </label>
+                <div className="grid gap-2 text-sm">
+                  <PriceRow label="Pricing Tier" value={bulkTier?.label ?? "Not eligible"} />
+                  <PriceRow label="Bulk Price" value={bulkTier?.unitPrice == null ? "-" : `${formatPhp(bulkTier.unitPrice)} / card`} />
+                  <PriceRow label="Regular Value" value={formatPhp(bulkRegularValue)} />
+                  <PriceRow label="Bulk Total" value={bulkReady ? formatPhp(bulkTotal) : "-"} strong />
+                  <PriceRow label="Savings" value={bulkReady ? formatPhp(bulkSavings) : "-"} />
+                  <PriceRow label="Available Stock" value={String(selectedProduct?.current_stock ?? 0)} />
+                </div>
+                {bulkQuantityMessage ? (
+                  <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">
+                    {bulkQuantityMessage}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
 
             {salePackage === "custom" ? (
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -305,12 +447,93 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               <Field label="Reference" name="reference_number" />
             </div>
             <TextArea label="Notes" name="notes" />
+            <div className="mt-4 rounded-md border theme-border p-3">
+              <div className="flex items-center justify-between gap-3">
+                <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Sale Deductions</h4>
+                <button
+                  type="button"
+                  onClick={addDeduction}
+                  className="rounded-md border theme-border px-3 py-2 text-xs font-bold theme-text hover:border-[var(--accent)]"
+                >
+                  + Add Deduction
+                </button>
+              </div>
+              {deductions.length ? (
+                <div className="mt-3 grid gap-3">
+                  {deductions.map((deduction) => (
+                    <div key={deduction.id} className="grid gap-2 rounded-md border theme-border p-3">
+                      <label className="grid gap-2 text-xs font-bold theme-text">
+                        Type
+                        <select
+                          value={deduction.expenseType}
+                          onChange={(event) => updateDeduction(deduction.id, { expenseType: event.target.value as SaleExpenseType })}
+                          className={fieldClass}
+                        >
+                          {saleDeductionTypes.map((type) => (
+                            <option key={type.value} value={type.value}>
+                              {type.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="grid gap-2 text-xs font-bold theme-text">
+                        Amount
+                        <span className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 theme-text-muted">₱</span>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={deduction.amount}
+                            onChange={(event) => updateDeduction(deduction.id, { amount: event.target.value })}
+                            className={`${fieldClass} w-full pl-8`}
+                            required
+                          />
+                        </span>
+                      </label>
+                      <label className="grid gap-2 text-xs font-bold theme-text">
+                        Notes
+                        <input
+                          value={deduction.description}
+                          onChange={(event) => updateDeduction(deduction.id, { description: event.target.value })}
+                          className={fieldClass}
+                          placeholder="Optional"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => removeDeduction(deduction.id)}
+                        className="justify-self-start rounded-md border border-red-400/50 px-3 py-2 text-xs font-bold text-red-300"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 rounded-md border theme-border p-3 text-sm theme-text-muted">No deductions</p>
+              )}
+            </div>
+            <div className="mt-4 grid gap-2 rounded-md border theme-border p-3 text-sm">
+              <PriceRow label="Gross Value" value={formatPhp(grossValue)} />
+              <PriceRow label="Discount" value={formatPhp(saleDiscount)} />
+              <PriceRow label="Customer Pays" value={formatPhp(saleAmount)} strong />
+              <PriceRow label="Direct Deductions" value={formatPhp(totalDirectDeductions)} />
+              <PriceRow label="Net After Deductions" value={formatPhp(netAfterDeductions)} strong />
+            </div>
             {!hasSaleStock ? (
               <p className="mt-3 text-sm font-semibold text-red-300">
                 {selectedTracked ? `Insufficient stock for ${salePackage === "buy_2" ? "Buy 2" : "this sale"}.` : "Inventory is not tracked for this product."}
               </p>
             ) : null}
-            <SubmitButton saving={saving} disabled={!hasSaleStock || (salePackage === "custom" && saleAmount < 0)} label="Record Sale" />
+            {salePackage === "bulk" ? (
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" value="pending" />
+                <SubmitButton saving={saving} disabled={!canMarkSold} label="Mark as Sold Now" value="completed" />
+              </div>
+            ) : (
+              <SubmitButton saving={saving} disabled={!canMarkSold} label="Record Sale" value="completed" />
+            )}
           </form>
         </div>
       </section>
@@ -323,12 +546,18 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
           </Link>
         </div>
         <div className="mt-4 grid gap-3">
-          {data.todaySales.length ? data.todaySales.map((sale) => (
+          {data.salesError ? (
+            <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 p-4 text-sm font-semibold text-yellow-200">
+              Sales data unavailable.
+            </p>
+          ) : data.todaySales.length ? data.todaySales.map((sale) => (
             <div key={sale.sale.id} className="grid gap-2 rounded-md border p-3 theme-subtle sm:grid-cols-[90px_1fr_auto_auto] sm:items-center">
               <p className="text-sm font-bold theme-text-muted">{formatSaleTime(sale.sale.created_at)}</p>
               <p className="font-bold theme-text">{sale.productName}</p>
               <p className="text-sm theme-text-secondary">×{sale.quantity}</p>
-              <p className="font-black theme-accent">{formatPhp(sale.finalAmount)} · {paymentLabel(sale.paymentMethod)}</p>
+              <p className="font-black theme-accent">
+                {formatPhp(sale.finalAmount)} · Net {formatPhp(sale.netAfterDeductions)} · {paymentLabel(sale.paymentMethod)}
+              </p>
             </div>
           )) : (
             <p className="rounded-md border theme-border p-4 text-sm theme-text-muted">No completed sales today.</p>
@@ -359,8 +588,8 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                   <td className="py-3 font-bold theme-text">{item.product.name}</td>
                   <td className="py-3 theme-text-muted">{item.product.sku || "Not set"}</td>
                   <td className="py-3 theme-text">{item.product.current_stock ?? 0}</td>
-                  <td className="py-3 theme-text">{item.soldToday}</td>
-                  <td className="py-3 theme-text">{item.totalSold}</td>
+                  <td className="py-3 theme-text">{item.soldToday ?? "Unavailable"}</td>
+                  <td className="py-3 theme-text">{item.totalSold ?? "Unavailable"}</td>
                   <td className="py-3 theme-text">{formatPhp(Number(item.product.current_unit_cost ?? 0))}</td>
                   <td className="py-3 theme-text">{formatPhp(item.inventoryValue)}</td>
                   <td className="py-3 theme-text-muted">{item.product.low_stock_threshold ?? 0}</td>
@@ -388,26 +617,40 @@ function SummaryCard({ label, value }: { label: string; value: string }) {
   );
 }
 
+function PriceRow({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="font-semibold theme-text-muted">{label}</span>
+      <span className={strong ? "text-base font-black theme-accent" : "font-bold theme-text"}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
 function PackageButton({
   label,
   detail,
   selected,
   onClick,
+  disabled,
 }: {
   label: string;
   detail: string;
   selected: boolean;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       className={`min-h-12 rounded-md border px-3 py-2 text-left transition ${
         selected
           ? "border-[var(--accent)] bg-[var(--accent-soft)]"
           : "theme-border bg-[var(--surface-secondary)] hover:border-[var(--accent)]"
-      }`}
+      } disabled:cursor-not-allowed disabled:opacity-55`}
     >
       <span className="block text-sm font-black theme-text">{label}</span>
       <span className="mt-1 block text-xs font-semibold theme-text-muted">{detail}</span>
@@ -463,10 +706,11 @@ function TextArea({ label, name }: { label: string; name: string }) {
   );
 }
 
-function SubmitButton({ saving, disabled, label }: { saving: boolean; disabled?: boolean; label: string }) {
+function SubmitButton({ saving, disabled, label, value }: { saving: boolean; disabled?: boolean; label: string; value?: string }) {
   return (
     <button
       disabled={saving || disabled}
+      value={value}
       className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {saving ? "Saving..." : label}
