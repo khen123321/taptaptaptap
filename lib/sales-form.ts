@@ -21,6 +21,10 @@ export function parseQuickSaleForm(formData: FormData, actorProfileId: string): 
   const notes = String(formData.get("notes") ?? "").trim();
   const idempotencyKey = String(formData.get("idempotency_key") ?? "").trim();
   const saleStatus = String(formData.get("sale_status") ?? "completed").trim();
+  const completedAt =
+    saleStatus === "completed"
+      ? parseManilaCompletedAt(formData.get("sold_date"), formData.get("sold_time"))
+      : null;
 
   if (!productId) throw new Error("Product is required.");
   if (!packageTypes.has(packageType)) throw new Error("Invalid sale package.");
@@ -43,6 +47,7 @@ export function parseQuickSaleForm(formData: FormData, actorProfileId: string): 
     actorProfileId,
     idempotencyKey,
     saleStatus: saleStatus as "pending" | "completed",
+    completedAt,
     expenses: parseSaleExpenses(formData),
   };
 }
@@ -65,6 +70,58 @@ export function parseCompleteSaleForm(formData: FormData, actorProfileId: string
 
   return {
     saleId,
+    actorProfileId,
+    idempotencyKey: String(formData.get("idempotency_key") ?? "").trim(),
+    completedAt: parseManilaCompletedAt(formData.get("sold_date"), formData.get("sold_time")),
+  };
+}
+
+export function parseUpdateSaleForm(formData: FormData, actorProfileId: string) {
+  const saleId = String(formData.get("sale_id") ?? "").trim();
+  const status = String(formData.get("sale_status") ?? "").trim();
+  const paymentMethod = String(formData.get("payment_method") ?? "cash") as PaymentMethod;
+  const packageType = String(formData.get("package_type") ?? "buy_1") as SalePackageType;
+  if (!saleId) throw new Error("Sale is required.");
+  if (!paymentMethods.has(paymentMethod)) throw new Error("Invalid payment method.");
+  if (status === "pending" && !packageTypes.has(packageType)) throw new Error("Invalid sale package.");
+
+  const productId = status === "pending" ? String(formData.get("product_id") ?? "").trim() : null;
+  if (status === "pending" && !productId) throw new Error("Product is required.");
+
+  return {
+    saleId,
+    productId,
+    packageType: status === "pending" ? packageType : null,
+    customQuantity:
+      status === "pending" && packageType === "custom"
+        ? positiveInteger(formData.get("custom_quantity"), "Custom quantity")
+        : status === "pending" && packageType === "bulk"
+          ? positiveInteger(formData.get("bulk_quantity"), "Bulk quantity")
+          : null,
+    customAmount:
+      status === "pending" && packageType === "custom"
+        ? nonNegativeNumber(formData.get("custom_amount"), "Custom amount")
+        : null,
+    paymentMethod,
+    referenceNumber: String(formData.get("reference_number") ?? "").trim(),
+    notes: String(formData.get("notes") ?? "").trim(),
+    actorProfileId,
+    idempotencyKey: String(formData.get("idempotency_key") ?? "").trim(),
+    completedAt:
+      status === "completed"
+        ? parseManilaCompletedAt(formData.get("sold_date"), formData.get("sold_time"))
+        : null,
+    expenses: parseSaleExpenses(formData),
+  };
+}
+
+export function parseDeleteSaleForm(formData: FormData, actorProfileId: string) {
+  const saleId = String(formData.get("sale_id") ?? "").trim();
+  if (!saleId) throw new Error("Sale is required.");
+
+  return {
+    saleId,
+    reason: String(formData.get("reason") ?? "").trim(),
     actorProfileId,
     idempotencyKey: String(formData.get("idempotency_key") ?? "").trim(),
   };
@@ -104,4 +161,17 @@ function parseSaleExpenses(formData: FormData) {
     const amount = nonNegativeNumber(amountValue, "Deduction amount");
     return [{ expenseType, amount, description }];
   });
+}
+
+function parseManilaCompletedAt(dateValue: FormDataEntryValue | null, timeValue: FormDataEntryValue | null) {
+  const date = String(dateValue ?? "").trim();
+  const time = String(timeValue ?? "").trim();
+  if (!date || !time) throw new Error("Sold date and time are required.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Sold date is invalid.");
+  if (!/^\d{2}:\d{2}$/.test(time)) throw new Error("Sold time is invalid.");
+
+  const completedAt = new Date(`${date}T${time}:00+08:00`);
+  if (Number.isNaN(completedAt.getTime())) throw new Error("Sold date and time are invalid.");
+  if (completedAt.getTime() > Date.now()) throw new Error("Sold date and time cannot be in the future.");
+  return completedAt.toISOString();
 }

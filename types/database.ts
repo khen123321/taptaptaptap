@@ -14,6 +14,7 @@ export type InventoryMovementType =
   | "other"
   | "sale_commit"
   | "sale_cancel_restore"
+  | "sale_delete_restore"
   | "refund_restore";
 export type SaleStatus = "pending" | "completed" | "cancelled";
 export type SaleChannel = "physical";
@@ -144,6 +145,9 @@ export type SaleRow = {
   cancelled_at: string | null;
   cancelled_by_profile_id: string | null;
   cancellation_reason: string | null;
+  deleted_at: string | null;
+  deleted_by_profile_id: string | null;
+  delete_reason: string | null;
 };
 
 export type SaleItemRow = {

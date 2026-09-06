@@ -49,6 +49,9 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const [adjustmentKey, setAdjustmentKey] = useState(() => crypto.randomUUID());
   const [saleKey, setSaleKey] = useState(() => crypto.randomUUID());
   const [salePackage, setSalePackage] = useState<SalePackageType>("buy_1");
+  const [saleStatus, setSaleStatus] = useState<"pending" | "completed">("completed");
+  const [soldDate, setSoldDate] = useState(() => getManilaDateTimeParts().date);
+  const [soldTime, setSoldTime] = useState(() => getManilaDateTimeParts().time);
   const [customQuantity, setCustomQuantity] = useState(1);
   const [customAmount, setCustomAmount] = useState("");
   const [bulkQuantity, setBulkQuantity] = useState(10);
@@ -173,10 +176,9 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     setSaleResult(null);
 
     const formData = new FormData(event.currentTarget);
-    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     formData.set("product_id", selectedProductId);
     formData.set("package_type", salePackage);
-    formData.set("sale_status", submitter?.value === "pending" ? "pending" : "completed");
+    formData.set("sale_status", saleStatus);
 
     const response = await fetch("/api/admin/sales/quick", {
       method: "POST",
@@ -193,6 +195,10 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     event.currentTarget.reset();
     setSaleKey(crypto.randomUUID());
     setSalePackage("buy_1");
+    setSaleStatus("completed");
+    const manilaNow = getManilaDateTimeParts();
+    setSoldDate(manilaNow.date);
+    setSoldTime(manilaNow.time);
     setCustomQuantity(1);
     setCustomAmount("");
     setBulkQuantity(10);
@@ -242,6 +248,9 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
           </p>
           <p className="mt-1 text-sm theme-text-muted">
             Deductions: {formatPhp(Number(saleResult.totalDirectDeductions))} • Net: {formatPhp(Number(saleResult.netAfterDeductions))}
+          </p>
+          <p className="mt-1 text-sm theme-text-muted">
+            Created: {formatSaleDateTime(saleResult.createdAt)} • Sold: {saleResult.completedAt ? formatSaleDateTime(saleResult.completedAt) : "-"}
           </p>
           <p className="mt-1 text-sm theme-text-muted">
             Stock: {saleResult.previousStock == null || saleResult.newStock == null ? "No change" : `${saleResult.previousStock} → ${saleResult.newStock}`} • Payment: {paymentLabel(saleResult.paymentMethod)}
@@ -343,6 +352,51 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
             <p className="mt-3 text-xs font-semibold theme-text-muted">
               Available Stock: {selectedProduct?.current_stock ?? 0}
             </p>
+
+            <div className="mt-4 grid gap-2">
+              <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Sale Status</h4>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <PackageButton
+                  label="Pending"
+                  detail="Save without stock or sales metrics"
+                  selected={saleStatus === "pending"}
+                  onClick={() => setSaleStatus("pending")}
+                />
+                <PackageButton
+                  label="Sold"
+                  detail="Deduct stock using selected sold time"
+                  selected={saleStatus === "completed"}
+                  onClick={() => setSaleStatus("completed")}
+                />
+              </div>
+            </div>
+
+            {saleStatus === "completed" ? (
+              <div className="mt-4 grid gap-3 rounded-md border theme-border p-3 sm:grid-cols-2">
+                <label className="grid gap-2 text-sm font-bold theme-text">
+                  Sold Date
+                  <input
+                    name="sold_date"
+                    type="date"
+                    value={soldDate}
+                    onChange={(event) => setSoldDate(event.target.value)}
+                    className={fieldClass}
+                    required
+                  />
+                </label>
+                <label className="grid gap-2 text-sm font-bold theme-text">
+                  Sold Time
+                  <input
+                    name="sold_time"
+                    type="time"
+                    value={soldTime}
+                    onChange={(event) => setSoldTime(event.target.value)}
+                    className={fieldClass}
+                    required
+                  />
+                </label>
+              </div>
+            ) : null}
 
             <div className="mt-4 grid gap-2">
               <PackageButton
@@ -521,18 +575,23 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               <PriceRow label="Direct Deductions" value={formatPhp(totalDirectDeductions)} />
               <PriceRow label="Net After Deductions" value={formatPhp(netAfterDeductions)} strong />
             </div>
-            {!hasSaleStock ? (
+            {saleStatus === "completed" && !hasSaleStock ? (
               <p className="mt-3 text-sm font-semibold text-red-300">
                 {selectedTracked ? `Insufficient stock for ${salePackage === "buy_2" ? "Buy 2" : "this sale"}.` : "Inventory is not tracked for this product."}
               </p>
             ) : null}
             {salePackage === "bulk" ? (
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" value="pending" />
-                <SubmitButton saving={saving} disabled={!canMarkSold} label="Mark as Sold Now" value="completed" />
+                {saleStatus === "pending" ? (
+                  <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" />
+                ) : (
+                  <SubmitButton saving={saving} disabled={!canMarkSold} label="Record as Sold" />
+                )}
               </div>
+            ) : saleStatus === "pending" ? (
+              <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" />
             ) : (
-              <SubmitButton saving={saving} disabled={!canMarkSold} label="Record Sale" value="completed" />
+              <SubmitButton saving={saving} disabled={!canMarkSold} label="Record as Sold" />
             )}
           </form>
         </div>
@@ -552,7 +611,9 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
             </p>
           ) : data.todaySales.length ? data.todaySales.map((sale) => (
             <div key={sale.sale.id} className="grid gap-2 rounded-md border p-3 theme-subtle sm:grid-cols-[90px_1fr_auto_auto] sm:items-center">
-              <p className="text-sm font-bold theme-text-muted">{formatSaleTime(sale.sale.created_at)}</p>
+              <p className="text-sm font-bold theme-text-muted">
+                {sale.sale.completed_at ? formatSaleTime(sale.sale.completed_at) : "-"}
+              </p>
               <p className="font-bold theme-text">{sale.productName}</p>
               <p className="text-sm theme-text-secondary">×{sale.quantity}</p>
               <p className="font-black theme-accent">
@@ -731,4 +792,31 @@ function formatSaleTime(value: string) {
     hour: "numeric",
     minute: "2-digit",
   });
+}
+
+function formatSaleDateTime(value: string) {
+  return new Date(value).toLocaleString("en-PH", {
+    timeZone: "Asia/Manila",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
+function getManilaDateTimeParts(value = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(value);
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((entry) => entry.type === type)?.value ?? "";
+
+  return {
+    date: `${part("year")}-${part("month")}-${part("day")}`,
+    time: `${part("hour")}:${part("minute")}`,
+  };
 }

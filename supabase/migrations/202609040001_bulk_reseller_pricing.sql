@@ -57,12 +57,41 @@ add constraint sales_package_type_check check (package_type in ('buy_1', 'buy_2'
 alter table public.sales
 add column if not exists completed_at timestamptz;
 
+alter table public.sales
+add column if not exists deleted_at timestamptz,
+add column if not exists deleted_by_profile_id uuid references public.profiles(id) on delete set null,
+add column if not exists delete_reason text;
+
 update public.sales
 set completed_at = coalesce(completed_at, created_at)
 where status = 'completed';
 
 create index if not exists sales_completed_at_idx
 on public.sales(completed_at desc);
+
+create index if not exists sales_deleted_at_idx
+on public.sales(deleted_at);
+
+alter table public.inventory_movements
+drop constraint if exists inventory_movements_type_check,
+add constraint inventory_movements_type_check check (
+  movement_type in (
+    'initial_stock',
+    'restock',
+    'manual_adjustment',
+    'damage',
+    'lost',
+    'promotional_giveaway',
+    'sample_unit',
+    'inventory_correction',
+    'returned_item',
+    'other',
+    'sale_commit',
+    'sale_cancel_restore',
+    'sale_delete_restore',
+    'refund_restore'
+  )
+);
 
 alter table public.payments
 drop constraint if exists payments_status_check,
@@ -124,6 +153,7 @@ grant select, insert, update, delete on public.sale_expenses to service_role;
 drop function if exists public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text);
 drop function if exists public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text);
 drop function if exists public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text, jsonb);
+drop function if exists public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text, timestamptz, jsonb);
 
 create or replace function public.record_quick_physical_sale(
   p_product_id uuid,
@@ -136,6 +166,7 @@ create or replace function public.record_quick_physical_sale(
   p_actor_profile_id uuid default null,
   p_idempotency_key text default null,
   p_sale_status text default 'completed',
+  p_completed_at timestamptz default null,
   p_sale_expenses jsonb default '[]'::jsonb
 )
 returns jsonb
@@ -168,6 +199,7 @@ declare
   v_payment_method text;
   v_normalized_reference text;
   v_sale_status text;
+  v_completed_at timestamptz;
   v_requested_package text;
   v_effective_package text;
   v_expense jsonb;
@@ -183,6 +215,15 @@ begin
   v_sale_status := lower(btrim(coalesce(p_sale_status, 'completed')));
   if v_sale_status not in ('pending', 'completed') then
     raise exception 'Invalid sale status.';
+  end if;
+
+  v_completed_at := case
+    when v_sale_status = 'completed' then coalesce(p_completed_at, now())
+    else null
+  end;
+
+  if v_completed_at is not null and v_completed_at > now() then
+    raise exception 'Sold date and time cannot be in the future.';
   end if;
 
   v_requested_package := lower(btrim(coalesce(p_package_type, 'buy_1')));
@@ -225,6 +266,7 @@ begin
         or v_existing_item.product_id <> p_product_id
         or v_existing_sale.package_type <> v_effective_package
         or v_existing_sale.status <> v_sale_status
+        or (p_completed_at is not null and v_existing_sale.completed_at is distinct from v_completed_at)
         or v_existing_payment.payment_method is distinct from v_payment_method
         or v_existing_payment.normalized_reference_number is distinct from v_normalized_reference
         or ((v_effective_package = 'custom' or v_effective_package = 'bulk') and (
@@ -381,7 +423,7 @@ begin
     v_final,
     nullif(btrim(coalesce(p_notes, '')), ''),
     nullif(btrim(coalesce(p_idempotency_key, '')), ''),
-    case when v_sale_status = 'completed' then now() else null end
+    v_completed_at
   )
   returning * into v_sale;
 
@@ -559,6 +601,7 @@ exception
           or v_existing_item.product_id <> p_product_id
           or v_existing_sale.package_type <> v_effective_package
           or v_existing_sale.status <> v_sale_status
+          or (p_completed_at is not null and v_existing_sale.completed_at is distinct from v_completed_at)
           or v_existing_payment.payment_method is distinct from v_payment_method
           or v_existing_payment.normalized_reference_number is distinct from v_normalized_reference
           or ((v_effective_package = 'custom' or v_effective_package = 'bulk') and (
@@ -575,10 +618,14 @@ exception
 end;
 $$;
 
+drop function if exists public.complete_pending_quick_sale(uuid, uuid, text);
+drop function if exists public.complete_pending_quick_sale(uuid, uuid, text, timestamptz);
+
 create or replace function public.complete_pending_quick_sale(
   p_sale_id uuid,
   p_actor_profile_id uuid default null,
-  p_idempotency_key text default null
+  p_idempotency_key text default null,
+  p_completed_at timestamptz default null
 )
 returns jsonb
 language plpgsql
@@ -591,9 +638,16 @@ declare
   v_item public.sale_items%rowtype;
   v_product public.products%rowtype;
   v_existing_commit public.inventory_movements%rowtype;
+  v_completed_at timestamptz;
   v_previous integer;
   v_new integer;
 begin
+  v_completed_at := coalesce(p_completed_at, now());
+
+  if v_completed_at > now() then
+    raise exception 'Sold date and time cannot be in the future.';
+  end if;
+
   select *
   into v_actor
   from public.profiles
@@ -657,7 +711,7 @@ begin
     update public.sales
     set
       status = 'completed',
-      completed_at = coalesce(completed_at, now())
+      completed_at = coalesce(completed_at, v_completed_at)
     where id = v_sale.id;
 
     update public.payments
@@ -714,7 +768,7 @@ begin
   update public.sales
   set
     status = 'completed',
-    completed_at = coalesce(completed_at, now())
+    completed_at = coalesce(completed_at, v_completed_at)
   where id = v_sale.id;
 
   update public.payments
@@ -880,6 +934,332 @@ begin
 end;
 $$;
 
+create or replace function public.replace_sale_expenses(
+  p_sale_id uuid,
+  p_actor_profile_id uuid,
+  p_sale_expenses jsonb default '[]'::jsonb
+)
+returns void
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_expense jsonb;
+  v_expense_type text;
+  v_expense_amount numeric(10,2);
+  v_expense_description text;
+begin
+  if p_sale_expenses is not null and jsonb_typeof(p_sale_expenses) <> 'array' then
+    raise exception 'Sale deductions must be an array.';
+  end if;
+
+  delete from public.sale_expenses
+  where sale_id = p_sale_id;
+
+  for v_expense in
+    select value from jsonb_array_elements(coalesce(p_sale_expenses, '[]'::jsonb))
+  loop
+    v_expense_type := lower(btrim(coalesce(v_expense ->> 'expenseType', v_expense ->> 'expense_type', '')));
+    v_expense_description := nullif(btrim(coalesce(v_expense ->> 'description', '')), '');
+
+    if v_expense_type not in (
+      'gas_transportation',
+      'shipping_delivery',
+      'packaging',
+      'printing_customization',
+      'commission',
+      'other'
+    ) then
+      raise exception 'Invalid sale deduction type.';
+    end if;
+
+    if nullif(btrim(coalesce(v_expense ->> 'amount', '')), '') is null then
+      raise exception 'Sale deduction amount is required.';
+    end if;
+
+    v_expense_amount := (v_expense ->> 'amount')::numeric;
+    if v_expense_amount < 0 then
+      raise exception 'Sale deduction amount must be zero or greater.';
+    end if;
+
+    insert into public.sale_expenses (
+      sale_id,
+      expense_type,
+      amount,
+      description,
+      created_by_profile_id
+    )
+    values (
+      p_sale_id,
+      v_expense_type,
+      v_expense_amount,
+      v_expense_description,
+      p_actor_profile_id
+    );
+  end loop;
+end;
+$$;
+
+create or replace function public.update_quick_sale(
+  p_sale_id uuid,
+  p_product_id uuid default null,
+  p_package_type text default null,
+  p_custom_quantity integer default null,
+  p_custom_amount numeric default null,
+  p_payment_method text default null,
+  p_reference_number text default null,
+  p_notes text default null,
+  p_actor_profile_id uuid default null,
+  p_idempotency_key text default null,
+  p_completed_at timestamptz default null,
+  p_sale_expenses jsonb default '[]'::jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_actor public.profiles%rowtype;
+  v_sale public.sales%rowtype;
+  v_item public.sale_items%rowtype;
+  v_product public.products%rowtype;
+  v_payment public.payments%rowtype;
+  v_duplicate_payment record;
+  v_payment_method text;
+  v_normalized_reference text;
+  v_package_type text;
+  v_effective_package text;
+  v_quantity integer;
+  v_single_price numeric(10,2);
+  v_bundle_price numeric(10,2);
+  v_bulk_unit_price numeric(10,2);
+  v_gross numeric(10,2);
+  v_discount numeric(10,2);
+  v_final numeric(10,2);
+  v_package_label text;
+  v_pricing_tier_label text;
+begin
+  select * into v_actor from public.profiles where id = p_actor_profile_id and role = 'admin';
+  if not found then raise exception 'Sale update requires an admin profile.'; end if;
+
+  select * into v_sale from public.sales where id = p_sale_id for update;
+  if not found then raise exception 'Sale not found.'; end if;
+  if v_sale.deleted_at is not null then raise exception 'Deleted sales cannot be edited.'; end if;
+
+  select * into v_item from public.sale_items where sale_id = v_sale.id limit 1;
+  if not found then raise exception 'Sale item not found.'; end if;
+
+  select * into v_payment from public.payments where sale_id = v_sale.id limit 1;
+  if not found then raise exception 'Payment not found.'; end if;
+
+  v_payment_method := lower(btrim(coalesce(p_payment_method, v_payment.payment_method)));
+  if v_payment_method not in ('gcash', 'bank_transfer', 'cash', 'other') then
+    raise exception 'Invalid payment method.';
+  end if;
+
+  if v_payment_method in ('gcash', 'bank_transfer') and nullif(btrim(coalesce(p_reference_number, '')), '') is not null then
+    v_normalized_reference := public.normalize_payment_reference(p_reference_number);
+
+    select s.sale_number
+    into v_duplicate_payment
+    from public.payments p
+    join public.sales s on s.id = p.sale_id
+    where p.payment_method = v_payment_method
+      and p.normalized_reference_number = v_normalized_reference
+      and p.id <> v_payment.id
+    limit 1;
+
+    if found then
+      raise exception 'Payment reference already exists under Sale #%.' , v_duplicate_payment.sale_number;
+    end if;
+  end if;
+
+  if v_sale.status = 'pending' then
+    v_package_type := lower(btrim(coalesce(p_package_type, v_sale.package_type)));
+    if v_package_type not in ('buy_1', 'buy_2', 'bulk', 'custom') then
+      raise exception 'Invalid sale package.';
+    end if;
+
+    v_effective_package := v_package_type;
+    if v_package_type = 'bulk' and p_custom_quantity = 1 then
+      v_effective_package := 'buy_1';
+    elsif v_package_type = 'bulk' and p_custom_quantity = 2 then
+      v_effective_package := 'buy_2';
+    end if;
+
+    select * into v_product from public.products where id = coalesce(p_product_id, v_item.product_id) for update;
+    if not found then raise exception 'Product not found.'; end if;
+    if not v_product.track_inventory then raise exception 'Inventory tracking is disabled for this product.'; end if;
+
+    v_single_price := coalesce(v_product.default_physical_price, v_product.price_single, 0);
+
+    if v_effective_package = 'buy_1' then
+      v_quantity := 1; v_package_label := 'Buy 1'; v_gross := v_single_price; v_discount := 0; v_final := v_single_price;
+    elsif v_effective_package = 'buy_2' then
+      v_quantity := 2; v_package_label := 'Buy 2'; v_bundle_price := coalesce(v_product.price_bundle, v_single_price * 2);
+      v_gross := v_single_price * 2; v_final := v_bundle_price; v_discount := greatest(v_gross - v_final, 0);
+    elsif v_effective_package = 'bulk' then
+      if not v_product.bulk_enabled then raise exception 'Bulk pricing is not enabled for this product.'; end if;
+      if p_custom_quantity is null or p_custom_quantity <= 0 then raise exception 'Bulk quantity must be a positive whole number.'; end if;
+      if p_custom_quantity < v_product.bulk_tier_1_min then raise exception 'Bulk pricing starts at 10 units.'; end if;
+      v_quantity := p_custom_quantity; v_gross := v_single_price * v_quantity; v_package_label := 'Bulk / Reseller';
+      if v_quantity >= v_product.bulk_tier_2_min then
+        v_bulk_unit_price := v_product.bulk_tier_2_unit_price; v_pricing_tier_label := '25+ Cards';
+      elsif v_quantity between v_product.bulk_tier_1_min and v_product.bulk_tier_1_max then
+        v_bulk_unit_price := v_product.bulk_tier_1_unit_price; v_pricing_tier_label := '10-24 Cards';
+      else
+        raise exception 'Bulk pricing starts at 10 units.';
+      end if;
+      if v_bulk_unit_price is null then raise exception 'Bulk pricing is not fully configured for this product.'; end if;
+      v_final := v_quantity * v_bulk_unit_price; v_discount := greatest(v_gross - v_final, 0);
+    else
+      if p_custom_quantity is null or p_custom_quantity <= 0 then raise exception 'Custom quantity must be a positive whole number.'; end if;
+      if p_custom_amount is null or p_custom_amount < 0 then raise exception 'Custom amount must be zero or greater.'; end if;
+      v_quantity := p_custom_quantity; v_package_label := 'Custom'; v_gross := v_single_price * v_quantity;
+      v_final := p_custom_amount; v_discount := greatest(v_gross - v_final, 0);
+    end if;
+
+    update public.sales
+    set package_type = v_effective_package,
+        gross_product_amount = v_gross,
+        discount_total = v_discount,
+        total_amount = v_final,
+        completed_at = null,
+        notes = nullif(btrim(coalesce(p_notes, '')), '')
+    where id = v_sale.id;
+
+    update public.sale_items
+    set product_id = v_product.id,
+        product_name_snapshot = v_product.name,
+        sku_snapshot = v_product.sku,
+        package_label = v_package_label,
+        quantity = v_quantity,
+        unit_regular_price = v_single_price,
+        bulk_unit_price = v_bulk_unit_price,
+        pricing_tier_label = v_pricing_tier_label,
+        gross_amount = v_gross,
+        discount_amount = v_discount,
+        final_amount = v_final,
+        unit_cost_snapshot = v_product.current_unit_cost
+    where id = v_item.id;
+
+    update public.payments
+    set payment_method = v_payment_method,
+        amount_received = v_final,
+        reference_number = nullif(btrim(coalesce(p_reference_number, '')), ''),
+        normalized_reference_number = v_normalized_reference,
+        payment_status = 'pending',
+        verified_by_profile_id = null,
+        verified_at = null
+    where id = v_payment.id;
+  elsif v_sale.status = 'completed' then
+    if p_completed_at is not null and p_completed_at > now() then
+      raise exception 'Sold date and time cannot be in the future.';
+    end if;
+
+    update public.sales
+    set completed_at = coalesce(p_completed_at, completed_at),
+        notes = nullif(btrim(coalesce(p_notes, '')), '')
+    where id = v_sale.id;
+
+    update public.payments
+    set payment_method = v_payment_method,
+        reference_number = nullif(btrim(coalesce(p_reference_number, '')), ''),
+        normalized_reference_number = v_normalized_reference
+    where id = v_payment.id;
+  elsif v_sale.status = 'cancelled' then
+    update public.sales
+    set notes = nullif(btrim(coalesce(p_notes, '')), '')
+    where id = v_sale.id;
+  else
+    raise exception 'Invalid sale status.';
+  end if;
+
+  if v_sale.status <> 'cancelled' then
+    perform public.replace_sale_expenses(v_sale.id, p_actor_profile_id, p_sale_expenses);
+  end if;
+  return public.sale_result_json(v_sale.id);
+end;
+$$;
+
+create or replace function public.soft_delete_quick_sale(
+  p_sale_id uuid,
+  p_reason text default null,
+  p_actor_profile_id uuid default null,
+  p_idempotency_key text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_actor public.profiles%rowtype;
+  v_sale public.sales%rowtype;
+  v_item public.sale_items%rowtype;
+  v_product public.products%rowtype;
+  v_existing_commit public.inventory_movements%rowtype;
+  v_existing_cancel_restore public.inventory_movements%rowtype;
+  v_existing_delete_restore public.inventory_movements%rowtype;
+  v_previous integer;
+  v_new integer;
+begin
+  select * into v_actor from public.profiles where id = p_actor_profile_id and role = 'admin';
+  if not found then raise exception 'Sale deletion requires an admin profile.'; end if;
+
+  select * into v_sale from public.sales where id = p_sale_id for update;
+  if not found then raise exception 'Sale not found.'; end if;
+  if v_sale.deleted_at is not null then return public.sale_result_json(v_sale.id); end if;
+
+  select * into v_item from public.sale_items where sale_id = v_sale.id limit 1;
+  if not found then raise exception 'Sale item not found.'; end if;
+
+  if v_sale.status = 'completed' then
+    select * into v_existing_commit from public.inventory_movements
+    where related_sale_id = v_sale.id and movement_type = 'sale_commit' limit 1;
+
+    select * into v_existing_cancel_restore from public.inventory_movements
+    where related_sale_id = v_sale.id and movement_type = 'sale_cancel_restore' limit 1;
+
+    select * into v_existing_delete_restore from public.inventory_movements
+    where related_sale_id = v_sale.id and movement_type = 'sale_delete_restore' limit 1;
+
+    if found then
+      null;
+    elsif v_existing_commit.id is not null and v_existing_cancel_restore.id is null then
+      select * into v_product from public.products where id = v_item.product_id for update;
+      if not found then raise exception 'Product not found.'; end if;
+
+      v_previous := v_product.current_stock;
+      v_new := v_previous + v_item.quantity;
+
+      update public.products set current_stock = v_new where id = v_product.id;
+
+      insert into public.inventory_movements (
+        product_id, movement_type, quantity_change, previous_quantity, new_quantity,
+        reason, notes, actor_profile_id, related_sale_id, reference_id, idempotency_key
+      )
+      values (
+        v_product.id, 'sale_delete_restore', v_item.quantity, v_previous, v_new,
+        'Sale soft delete', nullif(btrim(coalesce(p_reason, '')), ''),
+        p_actor_profile_id, v_sale.id, v_sale.sale_number,
+        case when p_idempotency_key is null then null else nullif(btrim(p_idempotency_key), '') || ':inventory' end
+      );
+    end if;
+  end if;
+
+  update public.sales
+  set deleted_at = now(),
+      deleted_by_profile_id = p_actor_profile_id,
+      delete_reason = nullif(btrim(coalesce(p_reason, '')), '')
+  where id = v_sale.id;
+
+  return public.sale_result_json(v_sale.id);
+end;
+$$;
+
 create or replace function public.sale_result_json(p_sale_id uuid)
 returns jsonb
 language sql
@@ -951,13 +1331,19 @@ $$;
 
 revoke all on function public.normalize_payment_reference(text) from public;
 revoke all on function public.sale_result_json(uuid) from public;
-revoke all on function public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text, jsonb) from public;
-revoke all on function public.complete_pending_quick_sale(uuid, uuid, text) from public;
+revoke all on function public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text, timestamptz, jsonb) from public;
+revoke all on function public.complete_pending_quick_sale(uuid, uuid, text, timestamptz) from public;
 revoke all on function public.cancel_quick_sale(uuid, text, uuid, text) from public;
+revoke all on function public.replace_sale_expenses(uuid, uuid, jsonb) from public;
+revoke all on function public.update_quick_sale(uuid, uuid, text, integer, numeric, text, text, text, uuid, text, timestamptz, jsonb) from public;
+revoke all on function public.soft_delete_quick_sale(uuid, text, uuid, text) from public;
 
-grant execute on function public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text, jsonb) to service_role;
-grant execute on function public.complete_pending_quick_sale(uuid, uuid, text) to service_role;
+grant execute on function public.record_quick_physical_sale(uuid, text, integer, numeric, text, text, text, uuid, text, text, timestamptz, jsonb) to service_role;
+grant execute on function public.complete_pending_quick_sale(uuid, uuid, text, timestamptz) to service_role;
 grant execute on function public.cancel_quick_sale(uuid, text, uuid, text) to service_role;
+grant execute on function public.replace_sale_expenses(uuid, uuid, jsonb) to service_role;
+grant execute on function public.update_quick_sale(uuid, uuid, text, integer, numeric, text, text, text, uuid, text, timestamptz, jsonb) to service_role;
+grant execute on function public.soft_delete_quick_sale(uuid, text, uuid, text) to service_role;
 grant execute on function public.sale_result_json(uuid) to service_role;
 
 commit;

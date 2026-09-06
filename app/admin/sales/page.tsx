@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { SalesManager } from "@/components/admin/SalesManager";
 import { requireAdmin } from "@/lib/admin-auth";
 import { formatPhp } from "@/lib/format";
+import { getInventoryProducts } from "@/lib/inventory";
 import { deriveSalesSummary, getSalesList } from "@/lib/sales";
 
 export default async function AdminSalesPage({
@@ -25,10 +26,13 @@ export default async function AdminSalesPage({
     sortParam === "amount_asc"
       ? sortParam
       : "newest";
-  const salesResult = await getSalesList({ query, date, sort }).then(
-    (value) => ({ ok: true as const, value }),
-    () => ({ ok: false as const, value: [] }),
-  );
+  const [salesResult, products] = await Promise.all([
+    getSalesList({ query, date, sort }).then(
+      (value) => ({ ok: true as const, value }),
+      () => ({ ok: false as const, value: [] }),
+    ),
+    getInventoryProducts(),
+  ]);
   const summary = salesResult.ok ? deriveSalesSummary(salesResult.value) : null;
 
   return (
@@ -100,7 +104,7 @@ export default async function AdminSalesPage({
 
       <div className="mt-6">
         {salesResult.ok ? (
-          <SalesManager sales={salesResult.value} />
+          <SalesManager sales={salesResult.value} products={products} />
         ) : (
           <section className="rounded-lg border border-yellow-400/40 bg-yellow-500/10 p-5">
             <h2 className="text-lg font-black text-yellow-200">Sales data could not be loaded.</h2>

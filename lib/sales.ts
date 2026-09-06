@@ -19,7 +19,30 @@ export type QuickSaleInput = {
   actorProfileId: string;
   idempotencyKey?: string;
   saleStatus?: "pending" | "completed";
+  completedAt?: string | null;
   expenses?: SaleExpenseInput[];
+};
+
+export type UpdateSaleInput = {
+  saleId: string;
+  productId?: string | null;
+  packageType?: SalePackageType | null;
+  customQuantity?: number | null;
+  customAmount?: number | null;
+  paymentMethod?: PaymentMethod | null;
+  referenceNumber?: string;
+  notes?: string;
+  actorProfileId: string;
+  idempotencyKey?: string;
+  completedAt?: string | null;
+  expenses?: SaleExpenseInput[];
+};
+
+export type DeleteSaleInput = {
+  saleId: string;
+  reason?: string;
+  actorProfileId: string;
+  idempotencyKey?: string;
 };
 
 export type SaleResult = {
@@ -133,6 +156,7 @@ export async function recordQuickPhysicalSale(input: QuickSaleInput) {
     p_actor_profile_id: input.actorProfileId,
     p_idempotency_key: input.idempotencyKey ?? null,
     p_sale_status: input.saleStatus ?? "completed",
+    p_completed_at: input.completedAt ?? null,
     p_sale_expenses: input.expenses ?? [],
   });
 
@@ -149,6 +173,7 @@ export async function completePendingQuickSale(input: {
   saleId: string;
   actorProfileId: string;
   idempotencyKey?: string;
+  completedAt?: string | null;
 }) {
   const supabase = createSupabaseSecretClient();
   if (!supabase) throw new Error("Missing Supabase secret key configuration.");
@@ -157,6 +182,7 @@ export async function completePendingQuickSale(input: {
     p_sale_id: input.saleId,
     p_actor_profile_id: input.actorProfileId,
     p_idempotency_key: input.idempotencyKey ?? null,
+    p_completed_at: input.completedAt ?? null,
   });
 
   if (error) {
@@ -186,6 +212,54 @@ export async function cancelQuickSale(input: {
 
   if (error) {
     console.error("Sale cancellation failed.", error);
+    throw new Error(mapSaleError(error.message));
+  }
+
+  revalidateSalesAdmin();
+  return data as unknown as SaleResult;
+}
+
+export async function updateQuickSale(input: UpdateSaleInput) {
+  const supabase = createSupabaseSecretClient();
+  if (!supabase) throw new Error("Missing Supabase secret key configuration.");
+
+  const { data, error } = await supabase.rpc("update_quick_sale", {
+    p_sale_id: input.saleId,
+    p_product_id: input.productId ?? null,
+    p_package_type: input.packageType ?? null,
+    p_custom_quantity: input.customQuantity ?? null,
+    p_custom_amount: input.customAmount ?? null,
+    p_payment_method: input.paymentMethod ?? null,
+    p_reference_number: input.referenceNumber ?? null,
+    p_notes: input.notes ?? null,
+    p_actor_profile_id: input.actorProfileId,
+    p_idempotency_key: input.idempotencyKey ?? null,
+    p_completed_at: input.completedAt ?? null,
+    p_sale_expenses: input.expenses ?? [],
+  });
+
+  if (error) {
+    console.error("Sale update failed.", error);
+    throw new Error(mapSaleError(error.message));
+  }
+
+  revalidateSalesAdmin();
+  return data as unknown as SaleResult;
+}
+
+export async function softDeleteQuickSale(input: DeleteSaleInput) {
+  const supabase = createSupabaseSecretClient();
+  if (!supabase) throw new Error("Missing Supabase secret key configuration.");
+
+  const { data, error } = await supabase.rpc("soft_delete_quick_sale", {
+    p_sale_id: input.saleId,
+    p_reason: input.reason ?? null,
+    p_actor_profile_id: input.actorProfileId,
+    p_idempotency_key: input.idempotencyKey ?? null,
+  });
+
+  if (error) {
+    console.error("Sale delete failed.", error);
     throw new Error(mapSaleError(error.message));
   }
 
@@ -284,6 +358,8 @@ export async function getSalesList(filters: SalesFilters = {}) {
     `)
     .limit(200);
 
+  query = query.is("deleted_at", null);
+
   if (filters.date === "today") {
     const range = getManilaTodayRange();
     query = query.gte("completed_at", range.start.toISOString()).lt("completed_at", range.end.toISOString());
@@ -306,6 +382,14 @@ export async function getSalesList(filters: SalesFilters = {}) {
   }
 
   const rows = ((data ?? []) as unknown as SaleRecord[]).map(mapSaleRecord);
+  if (sort === "newest" || sort === "oldest") {
+    rows.sort((a, b) => {
+      const aTime = getSaleSortTime(a);
+      const bTime = getSaleSortTime(b);
+      return sort === "newest" ? bTime - aTime : aTime - bTime;
+    });
+  }
+
   const search = filters.query?.trim().toLowerCase();
   if (!search) return rows;
 
@@ -382,8 +466,14 @@ function mapSaleRecord(record: SaleRecord): SaleListItem {
 
 function isCompletedInRange(item: SaleListItem, range: ReturnType<typeof getManilaTodayRange>) {
   if (item.sale.status !== "completed") return false;
-  const completed = new Date(item.sale.completed_at ?? item.sale.created_at).getTime();
+  if (!item.sale.completed_at) return false;
+  const completed = new Date(item.sale.completed_at).getTime();
   return completed >= range.start.getTime() && completed < range.end.getTime();
+}
+
+function getSaleSortTime(item: SaleListItem) {
+  const value = item.sale.status === "completed" ? item.sale.completed_at : item.sale.created_at;
+  return new Date(value ?? item.sale.created_at).getTime();
 }
 
 function mapSaleError(message: string) {
@@ -394,6 +484,7 @@ function mapSaleError(message: string) {
   if (lower.includes("bulk pricing is not fully configured")) return "Bulk pricing is not fully configured for this product.";
   if (lower.includes("bulk quantity")) return "Bulk quantity must be a positive whole number.";
   if (lower.includes("cancelled sales cannot be marked sold")) return "Cancelled sales cannot be marked sold.";
+  if (lower.includes("future")) return "Sold date and time cannot be in the future.";
   if (lower.includes("payment reference already exists")) return message;
   if (lower.includes("idempotency key")) return "This request key was already used for a different sale.";
   if (lower.includes("payment reference is required")) return "Payment reference is required for GCash or Bank Transfer.";
