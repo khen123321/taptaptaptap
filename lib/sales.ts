@@ -103,6 +103,19 @@ export type SalesSummary = {
   netAfterDirectDeductionsToday: number;
 };
 
+export type SalesOverallMetrics = {
+  totalSold: number;
+  totalOrders: number;
+  totalSales: number;
+  totalDeductions: number;
+  totalNetAfterDeductions: number;
+};
+
+export type SalesMetrics = {
+  today: SalesSummary;
+  overall: SalesOverallMetrics;
+};
+
 export type ProductSalesTotals = Record<string, { soldToday: number; totalSold: number }>;
 
 export type SaleLineItem = {
@@ -178,6 +191,11 @@ type SaleRecord = SaleRow & {
   expenses?: SaleExpenseRow[] | null;
   handler?: { email?: string | null } | null;
   movement?: { id?: string | null }[] | null;
+};
+
+type SaleMetricsRecord = Pick<SaleRow, "status" | "total_amount" | "completed_at"> & {
+  item?: { quantity?: number | null }[] | null;
+  expenses?: { amount?: number | null }[] | null;
 };
 
 export async function recordQuickPhysicalSale(input: QuickSaleInput) {
@@ -312,18 +330,33 @@ export async function getSalesSummary(): Promise<SalesSummary> {
   return deriveSalesSummary(await getSalesList({ date: "today", sort: "newest" }));
 }
 
-export async function getTotalSales() {
-  const supabase = createSupabaseSecretClient();
-  if (!supabase) return 0;
+export async function getOverallSalesMetrics() {
+  return (await getSalesMetrics()).overall;
+}
 
-  let totalSales = 0;
+export async function getSalesMetrics(): Promise<SalesMetrics> {
+  const supabase = createSupabaseSecretClient();
+  if (!supabase) {
+    return {
+      today: emptySalesSummary(),
+      overall: emptyOverallSalesMetrics(),
+    };
+  }
+
+  const records: SaleMetricsRecord[] = [];
   let from = 0;
   const pageSize = 1000;
 
   while (true) {
     const { data, error } = await supabase
       .from("sales")
-      .select("total_amount")
+      .select(`
+        status,
+        total_amount,
+        completed_at,
+        item:sale_items(quantity),
+        expenses:sale_expenses(amount)
+      `)
       .eq("status", "completed")
       .is("deleted_at", null)
       .order("created_at", { ascending: true })
@@ -339,13 +372,13 @@ export async function getTotalSales() {
       throw new Error("Failed to load total sales.");
     }
 
-    const rows = data ?? [];
-    totalSales += rows.reduce((sum, sale) => sum + Number(sale.total_amount ?? 0), 0);
+    const rows = (data ?? []) as unknown as SaleMetricsRecord[];
+    records.push(...rows);
     if (rows.length < pageSize) break;
     from += pageSize;
   }
 
-  return totalSales;
+  return deriveSalesMetrics(records);
 }
 
 export async function getProductSalesTotals(): Promise<ProductSalesTotals> {
@@ -373,6 +406,57 @@ export function deriveSalesSummary(sales: SaleListItem[]): SalesSummary {
     ordersToday: completedToday.length,
     directDeductionsToday: completedToday.reduce((sum, item) => sum + item.totalDirectDeductions, 0),
     netAfterDirectDeductionsToday: completedToday.reduce((sum, item) => sum + item.netAfterDeductions, 0),
+  };
+}
+
+function deriveSalesMetrics(records: SaleMetricsRecord[]): SalesMetrics {
+  const todayRange = getManilaTodayRange();
+  const overall = records.reduce<SalesOverallMetrics>((totals, sale) => {
+    const totalSales = Number(sale.total_amount ?? 0);
+    const totalDeductions = (sale.expenses ?? []).reduce((sum, expense) => sum + Number(expense.amount ?? 0), 0);
+
+    totals.totalSold += (sale.item ?? []).reduce((sum, item) => sum + Number(item.quantity ?? 0), 0);
+    totals.totalOrders += 1;
+    totals.totalSales += totalSales;
+    totals.totalDeductions += totalDeductions;
+    totals.totalNetAfterDeductions += totalSales - totalDeductions;
+    return totals;
+  }, emptyOverallSalesMetrics());
+
+  const today = records
+    .filter((sale) => isCompletedAtInRange(sale.completed_at, todayRange))
+    .reduce<SalesSummary>((totals, sale) => {
+      const salesToday = Number(sale.total_amount ?? 0);
+      const directDeductionsToday = (sale.expenses ?? []).reduce((sum, expense) => sum + Number(expense.amount ?? 0), 0);
+
+      totals.soldToday += (sale.item ?? []).reduce((sum, item) => sum + Number(item.quantity ?? 0), 0);
+      totals.salesToday += salesToday;
+      totals.ordersToday += 1;
+      totals.directDeductionsToday += directDeductionsToday;
+      totals.netAfterDirectDeductionsToday += salesToday - directDeductionsToday;
+      return totals;
+    }, emptySalesSummary());
+
+  return { today, overall };
+}
+
+function emptySalesSummary(): SalesSummary {
+  return {
+    soldToday: 0,
+    salesToday: 0,
+    ordersToday: 0,
+    directDeductionsToday: 0,
+    netAfterDirectDeductionsToday: 0,
+  };
+}
+
+function emptyOverallSalesMetrics(): SalesOverallMetrics {
+  return {
+    totalSold: 0,
+    totalOrders: 0,
+    totalSales: 0,
+    totalDeductions: 0,
+    totalNetAfterDeductions: 0,
   };
 }
 
@@ -573,8 +657,12 @@ function productSummary(items: SaleLineItem[]) {
 
 function isCompletedInRange(item: SaleListItem, range: ReturnType<typeof getManilaTodayRange>) {
   if (item.sale.status !== "completed") return false;
-  if (!item.sale.completed_at) return false;
-  const completed = new Date(item.sale.completed_at).getTime();
+  return isCompletedAtInRange(item.sale.completed_at, range);
+}
+
+function isCompletedAtInRange(completedAt: string | null, range: ReturnType<typeof getManilaTodayRange>) {
+  if (!completedAt) return false;
+  const completed = new Date(completedAt).getTime();
   return completed >= range.start.getTime() && completed < range.end.getTime();
 }
 
