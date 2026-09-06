@@ -62,6 +62,10 @@ export type ProductRow = {
   bulk_tier_1_unit_price: number | null;
   bulk_tier_2_min: number;
   bulk_tier_2_unit_price: number | null;
+  mix_match_bundle_enabled: boolean;
+  mix_match_bundle_group: string | null;
+  mix_match_bundle_size: number;
+  mix_match_bundle_price: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -96,6 +100,10 @@ export type ProductInput = {
   bulk_tier_1_unit_price: number | null;
   bulk_tier_2_min: number;
   bulk_tier_2_unit_price: number | null;
+  mix_match_bundle_enabled: boolean;
+  mix_match_bundle_group: string;
+  mix_match_bundle_size: number;
+  mix_match_bundle_price: number | null;
 };
 
 export type InventoryMovementRow = {

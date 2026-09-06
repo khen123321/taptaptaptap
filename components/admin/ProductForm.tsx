@@ -332,6 +332,47 @@ export function ProductForm({
             />
           </div>
         </div>
+
+        <div className="grid gap-5 rounded-md border theme-border p-4">
+          <div>
+            <h3 className="text-sm font-bold theme-text">Mix & Match Bundle</h3>
+            <p className="mt-1 text-xs leading-5 theme-text-muted">
+              Enable only for products that can share the same two-item bundle price.
+            </p>
+          </div>
+          <label className="flex min-h-12 items-center gap-3 rounded-md border theme-border bg-[var(--surface-secondary)] px-4 text-sm font-bold theme-text">
+            <input
+              name="mix_match_bundle_enabled"
+              type="checkbox"
+              defaultChecked={product?.mix_match_bundle_enabled ?? false}
+              className="h-4 w-4 accent-[var(--accent)]"
+            />
+            Mix & Match enabled
+          </label>
+          <div className="grid gap-5 lg:grid-cols-3">
+            <Field
+              label="Bundle Group"
+              name="mix_match_bundle_group"
+              defaultValue={product?.mix_match_bundle_group ?? "standard_nfc_card"}
+            />
+            <Field
+              label="Bundle Size"
+              name="mix_match_bundle_size"
+              type="number"
+              min="2"
+              step="1"
+              defaultValue={product?.mix_match_bundle_size ?? 2}
+            />
+            <Field
+              label="Bundle Price"
+              name="mix_match_bundle_price"
+              type="number"
+              min="0"
+              defaultValue={product?.mix_match_bundle_price ?? 1499}
+              prefix="₱"
+            />
+          </div>
+        </div>
       </section>
 
       <section className="grid gap-5 rounded-lg border p-4 theme-card">

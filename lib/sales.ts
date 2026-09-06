@@ -537,6 +537,7 @@ function mapSaleRecord(record: SaleRecord): SaleListItem {
   const discountAmount = Number(record.discount_total ?? items.reduce((sum, entry) => sum + entry.discountAmount, 0));
   const quantity = items.reduce((sum, entry) => sum + entry.quantity, 0);
   const isCombo = items.length > 1 || record.package_type === "combo";
+  const isMixMatch = isCombo && items.length > 1 && items.every((entry) => entry.packageLabel === "Mix & Match");
 
   return {
     sale: record,
@@ -544,8 +545,8 @@ function mapSaleRecord(record: SaleRecord): SaleListItem {
     productId: item?.productId ?? "",
     productName: isCombo ? productSummary(items) : item?.productName ?? "Unknown product",
     sku: isCombo ? null : item?.sku ?? null,
-    packageLabel: isCombo ? "Combo" : item?.packageLabel ?? record.package_type,
-    pricingTierLabel: isCombo ? null : item?.pricingTierLabel ?? null,
+    packageLabel: isMixMatch ? "Mix & Match" : isCombo ? "Combo" : item?.packageLabel ?? record.package_type,
+    pricingTierLabel: isMixMatch ? item?.pricingTierLabel ?? null : isCombo ? null : item?.pricingTierLabel ?? null,
     quantity,
     regularUnitPrice: isCombo ? 0 : item?.regularUnitPrice ?? 0,
     bulkUnitPrice: isCombo ? null : item?.bulkUnitPrice ?? null,

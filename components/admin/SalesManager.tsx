@@ -36,6 +36,8 @@ type SaleItemDraft = {
   customAmount: string;
 };
 
+type SaleItemSummary = ReturnType<typeof summarizeSaleItem>;
+
 export function SalesManager({ sales, products }: SalesManagerProps) {
   const router = useRouter();
   const [expandedSaleId, setExpandedSaleId] = useState<string | null>(null);
@@ -57,9 +59,10 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
   const [message, setMessage] = useState("");
 
   const editSummaries = editSaleItems.map((item) => summarizeSaleItem(item, products.find((product) => product.id === item.productId)));
+  const editMixMatchBundle = getMixMatchBundle(editSummaries);
   const editQuantity = editSummaries.reduce((sum, item) => sum + item.quantity, 0);
   const editGross = editSummaries.reduce((sum, item) => sum + item.gross, 0);
-  const editAmount = editSummaries.reduce((sum, item) => sum + item.amount, 0);
+  const editAmount = editMixMatchBundle?.bundlePrice ?? editSummaries.reduce((sum, item) => sum + item.amount, 0);
   const editDeductionsTotal = editDeductions.reduce((sum, deduction) => {
     const amount = Number(deduction.amount || 0);
     return Number.isFinite(amount) ? sum + amount : sum;
@@ -550,8 +553,14 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
 
             {editingSale.sale.status === "pending" ? (
               <div className="mt-4 grid gap-2 rounded-md border theme-border p-3 text-sm">
+                {editMixMatchBundle ? (
+                  <div className="mb-2 rounded-md border border-green-400/40 bg-green-500/10 p-3">
+                    <p className="text-xs font-black uppercase tracking-[0.14em] text-green-300">Mix & Match Bundle</p>
+                    <p className="mt-1 text-sm font-bold theme-text">{editMixMatchBundle.label}</p>
+                  </div>
+                ) : null}
                 <SummaryLine label="Gross Value" value={formatPhp(editGross)} />
-                <SummaryLine label="Discount" value={formatPhp(Math.max(editGross - editAmount, 0))} />
+                <SummaryLine label={editMixMatchBundle ? "Mix & Match Discount" : "Discount"} value={formatPhp(Math.max(editGross - editAmount, 0))} />
                 <SummaryLine label="Customer Pays" value={formatPhp(editAmount)} strong />
                 <SummaryLine label="Direct Deductions" value={formatPhp(editDeductionsTotal)} />
                 <SummaryLine label="Net After Deductions" value={formatPhp(editAmount - editDeductionsTotal)} strong />
@@ -838,6 +847,43 @@ function summarizeSaleItem(draft: SaleItemDraft, product: ProductRow | undefined
     amount,
     bulkMessage: bulk.message,
   };
+}
+
+function getMixMatchBundle(summaries: SaleItemSummary[]) {
+  if (summaries.length !== 2) return null;
+
+  let group: string | null = null;
+  let bundlePrice: number | null = null;
+  const eligible = summaries.every((summary) => {
+    const product = summary.product;
+    if (!product) return false;
+    if (summary.draft.packageType !== "buy_1" || summary.quantity !== 1) return false;
+    if (!product.mix_match_bundle_enabled || product.mix_match_bundle_size !== 2) return false;
+    if (!product.mix_match_bundle_group || product.mix_match_bundle_price == null) return false;
+
+    const productBundlePrice = Number(product.mix_match_bundle_price);
+    if (group == null) group = product.mix_match_bundle_group;
+    if (bundlePrice == null) bundlePrice = productBundlePrice;
+
+    return group === product.mix_match_bundle_group && bundlePrice === productBundlePrice;
+  });
+
+  if (!eligible || bundlePrice == null) return null;
+
+  const regularValue = summaries.reduce((sum, summary) => sum + summary.amount, 0);
+  if (bundlePrice >= regularValue) return null;
+
+  return {
+    label: `${summaries.length} ${formatBundleGroup(group)}`,
+    regularValue,
+    bundlePrice,
+    discount: regularValue - bundlePrice,
+  };
+}
+
+function formatBundleGroup(group: string | null) {
+  if (group === "standard_nfc_card") return "Standard NFC Cards";
+  return "Mix & Match Products";
 }
 
 function getBulkPricing(product: ProductRow, quantity: number) {

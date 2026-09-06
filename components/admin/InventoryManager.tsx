@@ -74,6 +74,13 @@ type SaleItemSummary = {
   bulkUnitPrice: number | null;
 };
 
+type MixMatchSummary = {
+  label: string;
+  regularValue: number;
+  bundlePrice: number;
+  discount: number;
+};
+
 type QuickSaleResponse = {
   ok?: boolean;
   sale?: SaleResult;
@@ -110,9 +117,10 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     () => saleItems.map((item) => summarizeSaleItem(item, productById.get(item.productId))),
     [productById, saleItems],
   );
-  const saleAmount = saleItemSummaries.reduce((sum, item) => sum + item.amount, 0);
+  const mixMatchBundle = getMixMatchBundle(saleItemSummaries);
+  const saleAmount = mixMatchBundle?.bundlePrice ?? saleItemSummaries.reduce((sum, item) => sum + item.amount, 0);
   const grossValue = saleItemSummaries.reduce((sum, item) => sum + item.gross, 0);
-  const saleDiscount = saleItemSummaries.reduce((sum, item) => sum + item.discount, 0);
+  const saleDiscount = mixMatchBundle?.discount ?? saleItemSummaries.reduce((sum, item) => sum + item.discount, 0);
   const totalDirectDeductions = deductions.reduce((sum, deduction) => {
     const amount = Number(deduction.amount || 0);
     return Number.isFinite(amount) ? sum + amount : sum;
@@ -809,17 +817,28 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
             </AdminFormSection>
 
             <AdminFormSection title={saleItems.length > 1 ? "Sale Summary · Combo Sale" : "Sale Summary"}>
+              {mixMatchBundle ? (
+                <div className="mb-4 rounded-md border border-green-400/40 bg-green-500/10 p-3">
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-green-300">Mix & Match Bundle</p>
+                  <p className="mt-1 text-sm font-bold theme-text">{mixMatchBundle.label}</p>
+                  <div className="mt-3 grid gap-2 text-sm">
+                    <PriceRow label="Regular Price" value={formatPhp(mixMatchBundle.regularValue)} />
+                    <PriceRow label="Bundle Price" value={formatPhp(mixMatchBundle.bundlePrice)} strong />
+                    <PriceRow label="You Save" value={formatPhp(mixMatchBundle.discount)} />
+                  </div>
+                </div>
+              ) : null}
               <div className="grid gap-2 text-sm">
                 {saleItemSummaries.map((summary, index) => (
                   <PriceRow key={summary.draft.id} label={`${index + 1}. ${summary.product?.name ?? "Product"} (${summary.quantity})`} value={formatPhp(summary.amount)} />
                 ))}
               </div>
               <div className="mt-4 grid gap-2 border-t theme-border pt-4 text-sm">
-              <PriceRow label="Gross Value" value={formatPhp(grossValue)} />
-              <PriceRow label="Discount" value={formatPhp(saleDiscount)} />
-              <PriceRow label="Customer Pays" value={formatPhp(saleAmount)} strong />
-              <PriceRow label="Direct Deductions" value={formatPhp(totalDirectDeductions)} />
-              <PriceRow label="Net After Deductions" value={formatPhp(netAfterDeductions)} strong />
+                <PriceRow label="Gross Value" value={formatPhp(grossValue)} />
+                <PriceRow label={mixMatchBundle ? "Mix & Match Discount" : "Discount"} value={formatPhp(saleDiscount)} />
+                <PriceRow label="Customer Pays" value={formatPhp(saleAmount)} strong />
+                <PriceRow label="Direct Deductions" value={formatPhp(totalDirectDeductions)} />
+                <PriceRow label="Net After Deductions" value={formatPhp(netAfterDeductions)} strong />
               </div>
             {saleStatus === "completed" && !hasSaleStock ? (
               <p className="mt-3 text-sm font-semibold text-red-300">
@@ -1104,6 +1123,43 @@ function normalizeSaleItems(drafts: SaleItemDraft[]) {
     errors,
     valid: items.length > 0 && Object.values(errors).every((itemErrors) => Object.keys(itemErrors).length === 0),
   };
+}
+
+function getMixMatchBundle(summaries: SaleItemSummary[]): MixMatchSummary | null {
+  if (summaries.length !== 2) return null;
+
+  let group: string | null = null;
+  let bundlePrice: number | null = null;
+  const eligible = summaries.every((summary) => {
+    const product = summary.product;
+    if (!product) return false;
+    if (summary.draft.packageType !== "buy_1" || summary.quantity !== 1) return false;
+    if (!product.mix_match_bundle_enabled || product.mix_match_bundle_size !== 2) return false;
+    if (!product.mix_match_bundle_group || product.mix_match_bundle_price == null) return false;
+
+    const productBundlePrice = Number(product.mix_match_bundle_price);
+    if (group == null) group = product.mix_match_bundle_group;
+    if (bundlePrice == null) bundlePrice = productBundlePrice;
+
+    return group === product.mix_match_bundle_group && bundlePrice === productBundlePrice;
+  });
+
+  if (!eligible || bundlePrice == null) return null;
+
+  const regularValue = summaries.reduce((sum, summary) => sum + summary.amount, 0);
+  if (bundlePrice >= regularValue) return null;
+
+  return {
+    label: `${summaries.length} ${formatBundleGroup(group)}`,
+    regularValue,
+    bundlePrice,
+    discount: regularValue - bundlePrice,
+  };
+}
+
+function formatBundleGroup(group: string | null) {
+  if (group === "standard_nfc_card") return "Standard NFC Cards";
+  return "Mix & Match Products";
 }
 
 function getSinglePrice(product: ProductRow) {

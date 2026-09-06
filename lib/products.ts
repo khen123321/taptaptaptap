@@ -300,6 +300,10 @@ export async function upsertAdminProduct(input: ProductInput, id?: string) {
     bulk_tier_1_unit_price: input.bulk_tier_1_unit_price,
     bulk_tier_2_min: input.bulk_tier_2_min,
     bulk_tier_2_unit_price: input.bulk_tier_2_unit_price,
+    mix_match_bundle_enabled: input.mix_match_bundle_enabled,
+    mix_match_bundle_group: input.mix_match_bundle_group || null,
+    mix_match_bundle_size: input.mix_match_bundle_size,
+    mix_match_bundle_price: input.mix_match_bundle_price,
   };
 
   const query = id

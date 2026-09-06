@@ -32,6 +32,10 @@ export function parseProductForm(formData: FormData): ProductInput {
   const bulkTier1UnitPrice = toNullableNumber(formData.get("bulk_tier_1_unit_price"));
   const bulkTier2Min = toInteger(formData.get("bulk_tier_2_min"), 25);
   const bulkTier2UnitPrice = toNullableNumber(formData.get("bulk_tier_2_unit_price"));
+  const mixMatchBundleEnabled = String(formData.get("mix_match_bundle_enabled") ?? "") === "on";
+  const mixMatchBundleGroup = String(formData.get("mix_match_bundle_group") ?? "").trim();
+  const mixMatchBundleSize = toInteger(formData.get("mix_match_bundle_size"), 2);
+  const mixMatchBundlePrice = toNullableNumber(formData.get("mix_match_bundle_price"));
   const shortDescription = String(formData.get("short_description") ?? "").trim();
   const cardImageUrl = String(formData.get("card_image_url") ?? "").trim();
   const detailImageUrl = String(formData.get("detail_image_url") ?? "").trim() || cardImageUrl;
@@ -64,6 +68,12 @@ export function parseProductForm(formData: FormData): ProductInput {
   }
   if (bulkEnabled && (bulkTier1UnitPrice === null || bulkTier2UnitPrice === null)) {
     throw new Error("Bulk-enabled products require both bulk unit prices.");
+  }
+  if (mixMatchBundleSize < 2 || (mixMatchBundlePrice !== null && mixMatchBundlePrice < 0)) {
+    throw new Error("Mix & Match bundle settings are invalid.");
+  }
+  if (mixMatchBundleEnabled && (!mixMatchBundleGroup || mixMatchBundlePrice === null)) {
+    throw new Error("Mix & Match products require a group and bundle price.");
   }
   if (status === "published" && (!shortDescription || !cardImageUrl)) {
     throw new Error("Published products require a short description and card image.");
@@ -99,6 +109,10 @@ export function parseProductForm(formData: FormData): ProductInput {
     bulk_tier_1_unit_price: bulkTier1UnitPrice,
     bulk_tier_2_min: bulkTier2Min,
     bulk_tier_2_unit_price: bulkTier2UnitPrice,
+    mix_match_bundle_enabled: mixMatchBundleEnabled,
+    mix_match_bundle_group: mixMatchBundleGroup,
+    mix_match_bundle_size: mixMatchBundleSize,
+    mix_match_bundle_price: mixMatchBundlePrice,
   };
 }
 
