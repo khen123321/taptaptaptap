@@ -6,7 +6,7 @@ import { SalesManager } from "@/components/admin/SalesManager";
 import { requireAdmin } from "@/lib/admin-auth";
 import { formatPhp } from "@/lib/format";
 import { getInventoryProducts } from "@/lib/inventory";
-import { deriveSalesSummary, getSalesList } from "@/lib/sales";
+import { deriveSalesSummary, getSalesList, getTotalSales } from "@/lib/sales";
 
 export default async function AdminSalesPage({
   searchParams,
@@ -27,12 +27,16 @@ export default async function AdminSalesPage({
     sortParam === "amount_asc"
       ? sortParam
       : "newest";
-  const [salesResult, products] = await Promise.all([
+  const [salesResult, products, totalSalesResult] = await Promise.all([
     getSalesList({ query, date, sort }).then(
       (value) => ({ ok: true as const, value }),
       () => ({ ok: false as const, value: [] }),
     ),
     getInventoryProducts(),
+    getTotalSales().then(
+      (value) => ({ ok: true as const, value }),
+      () => ({ ok: false as const, value: 0 }),
+    ),
   ]);
   const summary = salesResult.ok ? deriveSalesSummary(salesResult.value) : null;
 
@@ -86,15 +90,26 @@ export default async function AdminSalesPage({
       </section>
 
       {summary ? (
-        <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {[
             { label: "Sold Today", value: summary.soldToday.toLocaleString("en-PH") },
             { label: "Sales Today", value: formatPhp(summary.salesToday) },
             { label: "Orders Today", value: summary.ordersToday.toLocaleString("en-PH") },
+            {
+              label: "Total Sales",
+              value: totalSalesResult.ok ? formatPhp(totalSalesResult.value) : "Unavailable",
+              description: "All completed sales",
+            },
             { label: "Direct Deductions Today", value: formatPhp(summary.directDeductionsToday) },
             { label: "Net After Deductions", value: formatPhp(summary.netAfterDirectDeductionsToday) },
           ].map((item) => (
-            <AdminMetricCard key={item.label} label={item.label} value={item.value} tone={item.label.includes("Sales") || item.label.includes("Net") ? "green" : "neutral"} />
+            <AdminMetricCard
+              key={item.label}
+              label={item.label}
+              value={item.value}
+              description={item.description}
+              tone={item.label.includes("Sales") || item.label.includes("Net") ? "green" : "neutral"}
+            />
           ))}
         </section>
       ) : null}

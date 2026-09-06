@@ -312,6 +312,42 @@ export async function getSalesSummary(): Promise<SalesSummary> {
   return deriveSalesSummary(await getSalesList({ date: "today", sort: "newest" }));
 }
 
+export async function getTotalSales() {
+  const supabase = createSupabaseSecretClient();
+  if (!supabase) return 0;
+
+  let totalSales = 0;
+  let from = 0;
+  const pageSize = 1000;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("sales")
+      .select("total_amount")
+      .eq("status", "completed")
+      .is("deleted_at", null)
+      .order("created_at", { ascending: true })
+      .range(from, from + pageSize - 1);
+
+    if (error) {
+      console.error("Failed to load total sales", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      throw new Error("Failed to load total sales.");
+    }
+
+    const rows = data ?? [];
+    totalSales += rows.reduce((sum, sale) => sum + Number(sale.total_amount ?? 0), 0);
+    if (rows.length < pageSize) break;
+    from += pageSize;
+  }
+
+  return totalSales;
+}
+
 export async function getProductSalesTotals(): Promise<ProductSalesTotals> {
   return deriveProductSalesTotals(await getSalesList({ date: "all", sort: "newest" }));
 }
