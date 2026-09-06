@@ -9,7 +9,7 @@ import {
   getInventoryStatusLabel,
 } from "@/lib/inventory-status";
 import type { InventoryDashboardData } from "@/lib/inventory";
-import type { SaleExpenseType, SalePackageType } from "@/types/database";
+import type { ProductRow, SaleExpenseType, SaleItemPackageType } from "@/types/database";
 import type { SaleResult } from "@/lib/sales";
 
 const adjustmentReasons = [
@@ -39,6 +39,27 @@ type DeductionDraft = {
   description: string;
 };
 
+type SaleItemDraft = {
+  id: string;
+  productId: string;
+  packageType: SaleItemPackageType;
+  quantity: number;
+  customAmount: string;
+};
+
+type SaleItemSummary = {
+  draft: SaleItemDraft;
+  product: ProductRow | undefined;
+  quantity: number;
+  gross: number;
+  discount: number;
+  amount: number;
+  bulkReady: boolean;
+  bulkMessage: string;
+  bulkTierLabel: string;
+  bulkUnitPrice: number | null;
+};
+
 export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const router = useRouter();
   const [selectedProductId, setSelectedProductId] = useState(data.items[0]?.product.id ?? "");
@@ -48,13 +69,12 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const [restockKey, setRestockKey] = useState(() => crypto.randomUUID());
   const [adjustmentKey, setAdjustmentKey] = useState(() => crypto.randomUUID());
   const [saleKey, setSaleKey] = useState(() => crypto.randomUUID());
-  const [salePackage, setSalePackage] = useState<SalePackageType>("buy_1");
+  const [saleItems, setSaleItems] = useState<SaleItemDraft[]>(() => [
+    createSaleItemDraft(data.items[0]?.product.id ?? ""),
+  ]);
   const [saleStatus, setSaleStatus] = useState<"pending" | "completed">("completed");
   const [soldDate, setSoldDate] = useState(() => getManilaDateTimeParts().date);
   const [soldTime, setSoldTime] = useState(() => getManilaDateTimeParts().time);
-  const [customQuantity, setCustomQuantity] = useState(1);
-  const [customAmount, setCustomAmount] = useState("");
-  const [bulkQuantity, setBulkQuantity] = useState(10);
   const [saleResult, setSaleResult] = useState<SaleResult | null>(null);
   const [deductions, setDeductions] = useState<DeductionDraft[]>([]);
 
@@ -63,59 +83,48 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     [data.items, selectedProductId],
   );
   const selectedTracked = selectedProduct?.track_inventory ?? true;
-  const singlePrice = Number(selectedProduct?.default_physical_price ?? selectedProduct?.price_single ?? 0);
-  const bundlePrice = Number(selectedProduct?.price_bundle ?? singlePrice * 2);
-  const bundleSavings = Math.max(singlePrice * 2 - bundlePrice, 0);
-  const bulkEnabled = selectedProduct?.bulk_enabled ?? false;
-  const bulkTier1Min = Number(selectedProduct?.bulk_tier_1_min ?? 10);
-  const bulkTier1Max = Number(selectedProduct?.bulk_tier_1_max ?? 24);
-  const bulkTier1UnitPrice = selectedProduct?.bulk_tier_1_unit_price == null ? null : Number(selectedProduct.bulk_tier_1_unit_price);
-  const bulkTier2Min = Number(selectedProduct?.bulk_tier_2_min ?? 25);
-  const bulkTier2UnitPrice = selectedProduct?.bulk_tier_2_unit_price == null ? null : Number(selectedProduct.bulk_tier_2_unit_price);
-  const bulkTier =
-    bulkQuantity >= bulkTier2Min
-      ? { label: `${bulkTier2Min}+ Cards`, unitPrice: bulkTier2UnitPrice }
-      : bulkQuantity >= bulkTier1Min && bulkQuantity <= bulkTier1Max
-        ? { label: `${bulkTier1Min}-${bulkTier1Max} Cards`, unitPrice: bulkTier1UnitPrice }
-        : null;
-  const bulkRegularValue = singlePrice * bulkQuantity;
-  const bulkTotal = bulkTier?.unitPrice == null ? 0 : bulkQuantity * bulkTier.unitPrice;
-  const bulkSavings = Math.max(bulkRegularValue - bulkTotal, 0);
-  const bulkQuantityMessage =
-    bulkQuantity === 1
-      ? "Use Buy 1 instead."
-      : bulkQuantity === 2
-        ? "Use Buy 2 instead."
-        : bulkQuantity >= 3 && bulkQuantity < bulkTier1Min
-          ? "Bulk pricing starts at 10 units."
-          : "";
-  const bulkReady = bulkEnabled && bulkTier?.unitPrice != null && bulkQuantity >= bulkTier1Min;
-  const saleQuantity = salePackage === "buy_1" ? 1 : salePackage === "buy_2" ? 2 : salePackage === "bulk" ? bulkQuantity : customQuantity;
-  const saleAmount =
-    salePackage === "buy_1"
-      ? singlePrice
-      : salePackage === "buy_2"
-        ? bundlePrice
-        : salePackage === "bulk"
-          ? bulkTotal
-          : Number(customAmount || 0);
-  const grossValue =
-    salePackage === "buy_1"
-      ? singlePrice
-      : salePackage === "buy_2"
-        ? singlePrice * 2
-        : salePackage === "bulk"
-          ? bulkRegularValue
-          : singlePrice * customQuantity;
-  const saleDiscount = Math.max(grossValue - saleAmount, 0);
+  const productById = useMemo(() => new Map(data.items.map((item) => [item.product.id, item.product])), [data.items]);
+  const saleItemSummaries = useMemo(
+    () => saleItems.map((item) => summarizeSaleItem(item, productById.get(item.productId))),
+    [productById, saleItems],
+  );
+  const saleAmount = saleItemSummaries.reduce((sum, item) => sum + item.amount, 0);
+  const grossValue = saleItemSummaries.reduce((sum, item) => sum + item.gross, 0);
+  const saleDiscount = saleItemSummaries.reduce((sum, item) => sum + item.discount, 0);
   const totalDirectDeductions = deductions.reduce((sum, deduction) => {
     const amount = Number(deduction.amount || 0);
     return Number.isFinite(amount) ? sum + amount : sum;
   }, 0);
   const netAfterDeductions = saleAmount - totalDirectDeductions;
-  const hasSaleStock = selectedTracked && Boolean(selectedProduct) && Number(selectedProduct?.current_stock ?? 0) >= saleQuantity;
-  const canSaveSale = selectedTracked && Boolean(selectedProduct) && (salePackage !== "bulk" || bulkReady);
-  const canMarkSold = canSaveSale && hasSaleStock && (salePackage !== "custom" || saleAmount >= 0);
+  const stockRequiredByProduct = saleItemSummaries.reduce<Map<string, number>>((totals, item) => {
+    if (!item.product) return totals;
+    totals.set(item.product.id, (totals.get(item.product.id) ?? 0) + item.quantity);
+    return totals;
+  }, new Map());
+  const hasSaleStock = [...stockRequiredByProduct].every(([productId, quantity]) => {
+    const product = productById.get(productId);
+    return Boolean(product?.track_inventory) && Number(product?.current_stock ?? 0) >= quantity;
+  });
+  const canSaveSale =
+    saleItems.length > 0 &&
+    saleItemSummaries.every((item) =>
+      Boolean(item.product?.track_inventory) &&
+      (item.draft.packageType !== "bulk" || item.bulkReady) &&
+      (item.draft.packageType !== "custom" || item.amount >= 0),
+    );
+  const canMarkSold = canSaveSale && hasSaleStock;
+
+  const updateSaleItem = (id: string, changes: Partial<Omit<SaleItemDraft, "id">>) => {
+    setSaleItems((current) => current.map((item) => (item.id === id ? { ...item, ...changes } : item)));
+  };
+
+  const addSaleItem = () => {
+    setSaleItems((current) => [...current, createSaleItemDraft(data.items[0]?.product.id ?? "")]);
+  };
+
+  const removeSaleItem = (id: string) => {
+    setSaleItems((current) => current.length > 1 ? current.filter((item) => item.id !== id) : current);
+  };
 
   const addDeduction = () => {
     setDeductions((current) => [
@@ -176,8 +185,15 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     setSaleResult(null);
 
     const formData = new FormData(event.currentTarget);
-    formData.set("product_id", selectedProductId);
-    formData.set("package_type", salePackage);
+    const firstItem = saleItems[0];
+    formData.set("product_id", firstItem?.productId ?? selectedProductId);
+    formData.set("package_type", firstItem?.packageType ?? "buy_1");
+    formData.set("sale_items", JSON.stringify(saleItems.map((item) => ({
+      productId: item.productId,
+      packageType: item.packageType,
+      quantity: item.packageType === "buy_1" ? 1 : item.packageType === "buy_2" ? 2 : item.quantity,
+      customAmount: item.packageType === "custom" ? Number(item.customAmount || 0) : null,
+    }))));
     formData.set("sale_status", saleStatus);
 
     const response = await fetch("/api/admin/sales/quick", {
@@ -194,14 +210,11 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
 
     event.currentTarget.reset();
     setSaleKey(crypto.randomUUID());
-    setSalePackage("buy_1");
+    setSaleItems([createSaleItemDraft(data.items[0]?.product.id ?? "")]);
     setSaleStatus("completed");
     const manilaNow = getManilaDateTimeParts();
     setSoldDate(manilaNow.date);
     setSoldTime(manilaNow.time);
-    setCustomQuantity(1);
-    setCustomAmount("");
-    setBulkQuantity(10);
     setDeductions([]);
     setSaleResult(result.sale);
     router.refresh();
@@ -244,7 +257,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
           </p>
           <p className="mt-2 text-xl font-black theme-text">Sale #{saleResult.saleNumber}</p>
           <p className="mt-1 text-sm theme-text-secondary">
-            {saleResult.productName} • {saleResult.packageLabel} × {saleResult.quantity} units • {formatPhp(Number(saleResult.finalAmount))}
+            {saleResult.items?.length > 1 ? "Combo sale" : saleResult.productName} • {saleResult.quantity} units • {formatPhp(Number(saleResult.finalAmount))}
           </p>
           <p className="mt-1 text-sm theme-text-muted">
             Deductions: {formatPhp(Number(saleResult.totalDirectDeductions))} • Net: {formatPhp(Number(saleResult.netAfterDeductions))}
@@ -349,9 +362,6 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               </Fragment>
             ))}
             <h3 className="text-sm font-black uppercase tracking-[0.14em] theme-accent">Quick Sale</h3>
-            <p className="mt-3 text-xs font-semibold theme-text-muted">
-              Available Stock: {selectedProduct?.current_stock ?? 0}
-            </p>
 
             <div className="mt-4 grid gap-2">
               <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Sale Status</h4>
@@ -398,95 +408,126 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               </div>
             ) : null}
 
-            <div className="mt-4 grid gap-2">
-              <PackageButton
-                label="Buy 1"
-                detail={formatPhp(singlePrice)}
-                selected={salePackage === "buy_1"}
-                onClick={() => setSalePackage("buy_1")}
-              />
-              <PackageButton
-                label="Buy 2"
-                detail={`${formatPhp(bundlePrice)}${bundleSavings > 0 ? ` • Save ${formatPhp(bundleSavings)}` : ""}`}
-                selected={salePackage === "buy_2"}
-                onClick={() => setSalePackage("buy_2")}
-              />
-              <PackageButton
-                label="Bulk / Reseller"
-                detail={bulkEnabled ? "Official card tier pricing" : "Not enabled for this product"}
-                selected={salePackage === "bulk"}
-                onClick={() => setSalePackage("bulk")}
-                disabled={!bulkEnabled}
-              />
-              <PackageButton
-                label="Custom"
-                detail="Negotiated quantity and amount"
-                selected={salePackage === "custom"}
-                onClick={() => setSalePackage("custom")}
-              />
+            <div className="mt-4 rounded-md border theme-border p-3">
+              <div className="flex items-center justify-between gap-3">
+                <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Products</h4>
+                <button
+                  type="button"
+                  onClick={addSaleItem}
+                  className="rounded-md border theme-border px-3 py-2 text-xs font-bold theme-text hover:border-[var(--accent)]"
+                >
+                  + Add Another Product
+                </button>
+              </div>
+              <div className="mt-3 grid gap-3">
+                {saleItemSummaries.map((summary, index) => (
+                  <div key={summary.draft.id} className="grid gap-3 rounded-md border theme-border p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs font-black uppercase tracking-[0.12em] theme-text-muted">
+                        Item {index + 1}
+                      </p>
+                      {saleItems.length > 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => removeSaleItem(summary.draft.id)}
+                          className="rounded-md border border-red-400/50 px-3 py-2 text-xs font-bold text-red-300"
+                        >
+                          Remove
+                        </button>
+                      ) : null}
+                    </div>
+                    <label className="grid gap-2 text-sm font-bold theme-text">
+                      Product
+                      <select
+                        value={summary.draft.productId}
+                        onChange={(event) => updateSaleItem(summary.draft.id, { productId: event.target.value })}
+                        className={fieldClass}
+                      >
+                        {data.items.map((item) => (
+                          <option key={item.product.id} value={item.product.id}>
+                            {item.product.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <div className="grid gap-2">
+                      <PackageButton
+                        label="Buy 1"
+                        detail={summary.product ? formatPhp(getSinglePrice(summary.product)) : "-"}
+                        selected={summary.draft.packageType === "buy_1"}
+                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "buy_1", quantity: 1 })}
+                      />
+                      <PackageButton
+                        label="Buy 2"
+                        detail={summary.product ? `${formatPhp(getBundlePrice(summary.product))}${getBundleSavings(summary.product) > 0 ? ` • Save ${formatPhp(getBundleSavings(summary.product))}` : ""}` : "-"}
+                        selected={summary.draft.packageType === "buy_2"}
+                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "buy_2", quantity: 2 })}
+                      />
+                      <PackageButton
+                        label="Bulk / Reseller"
+                        detail={summary.product?.bulk_enabled ? "Official card tier pricing" : "Not enabled for this product"}
+                        selected={summary.draft.packageType === "bulk"}
+                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "bulk", quantity: Math.max(summary.draft.quantity, 10) })}
+                        disabled={!summary.product?.bulk_enabled}
+                      />
+                      <PackageButton
+                        label="Custom"
+                        detail="Negotiated quantity and amount"
+                        selected={summary.draft.packageType === "custom"}
+                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "custom", quantity: Math.max(summary.draft.quantity, 1) })}
+                      />
+                    </div>
+                    {summary.draft.packageType === "bulk" || summary.draft.packageType === "custom" ? (
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <label className="grid gap-2 text-sm font-bold theme-text">
+                          Quantity
+                          <input
+                            type="number"
+                            min="1"
+                            value={summary.draft.quantity}
+                            onChange={(event) => updateSaleItem(summary.draft.id, { quantity: Number(event.target.value || 1) })}
+                            className={fieldClass}
+                            required
+                          />
+                        </label>
+                        {summary.draft.packageType === "custom" ? (
+                          <label className="grid gap-2 text-sm font-bold theme-text">
+                            Amount
+                            <span className="relative">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 theme-text-muted">₱</span>
+                              <input
+                                type="number"
+                                min="0"
+                                value={summary.draft.customAmount}
+                                onChange={(event) => updateSaleItem(summary.draft.id, { customAmount: event.target.value })}
+                                className={`${fieldClass} w-full pl-8`}
+                                required
+                              />
+                            </span>
+                          </label>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    <div className="grid gap-2 text-sm">
+                      {summary.draft.packageType === "bulk" ? (
+                        <>
+                          <PriceRow label="Pricing Tier" value={summary.bulkTierLabel} />
+                          <PriceRow label="Bulk Price" value={summary.bulkUnitPrice == null ? "-" : `${formatPhp(summary.bulkUnitPrice)} / card`} />
+                        </>
+                      ) : null}
+                      <PriceRow label="Available Stock" value={String(summary.product?.current_stock ?? 0)} />
+                      <PriceRow label="Quantity" value={String(summary.quantity)} />
+                      <PriceRow label="Calculated Amount" value={formatPhp(summary.amount)} strong />
+                    </div>
+                    {summary.bulkMessage ? (
+                      <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">
+                        {summary.bulkMessage}
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
             </div>
-
-            {salePackage === "bulk" ? (
-              <div className="mt-4 grid gap-3 rounded-md border theme-border p-3">
-                <label className="grid gap-2 text-sm font-bold theme-text">
-                  Quantity
-                  <input
-                    name="bulk_quantity"
-                    type="number"
-                    min="1"
-                    value={bulkQuantity}
-                    onChange={(event) => setBulkQuantity(Number(event.target.value || 1))}
-                    className={fieldClass}
-                    required
-                  />
-                </label>
-                <div className="grid gap-2 text-sm">
-                  <PriceRow label="Pricing Tier" value={bulkTier?.label ?? "Not eligible"} />
-                  <PriceRow label="Bulk Price" value={bulkTier?.unitPrice == null ? "-" : `${formatPhp(bulkTier.unitPrice)} / card`} />
-                  <PriceRow label="Regular Value" value={formatPhp(bulkRegularValue)} />
-                  <PriceRow label="Bulk Total" value={bulkReady ? formatPhp(bulkTotal) : "-"} strong />
-                  <PriceRow label="Savings" value={bulkReady ? formatPhp(bulkSavings) : "-"} />
-                  <PriceRow label="Available Stock" value={String(selectedProduct?.current_stock ?? 0)} />
-                </div>
-                {bulkQuantityMessage ? (
-                  <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">
-                    {bulkQuantityMessage}
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
-
-            {salePackage === "custom" ? (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <label className="grid gap-2 text-sm font-bold theme-text">
-                  Quantity
-                  <input
-                    name="custom_quantity"
-                    type="number"
-                    min="1"
-                    value={customQuantity}
-                    onChange={(event) => setCustomQuantity(Number(event.target.value || 1))}
-                    className={fieldClass}
-                    required
-                  />
-                </label>
-                <label className="grid gap-2 text-sm font-bold theme-text">
-                  Amount
-                  <span className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 theme-text-muted">₱</span>
-                    <input
-                      name="custom_amount"
-                      type="number"
-                      min="0"
-                      value={customAmount}
-                      onChange={(event) => setCustomAmount(event.target.value)}
-                      className={`${fieldClass} w-full pl-8`}
-                      required
-                    />
-                  </span>
-                </label>
-              </div>
-            ) : null}
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <label className="grid gap-2 text-sm font-bold theme-text">
@@ -577,18 +618,10 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
             </div>
             {saleStatus === "completed" && !hasSaleStock ? (
               <p className="mt-3 text-sm font-semibold text-red-300">
-                {selectedTracked ? `Insufficient stock for ${salePackage === "buy_2" ? "Buy 2" : "this sale"}.` : "Inventory is not tracked for this product."}
+                Insufficient stock for one or more products in this sale.
               </p>
             ) : null}
-            {salePackage === "bulk" ? (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {saleStatus === "pending" ? (
-                  <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" />
-                ) : (
-                  <SubmitButton saving={saving} disabled={!canMarkSold} label="Record as Sold" />
-                )}
-              </div>
-            ) : saleStatus === "pending" ? (
+            {saleStatus === "pending" ? (
               <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" />
             ) : (
               <SubmitButton saving={saving} disabled={!canMarkSold} label="Record as Sold" />
@@ -800,6 +833,93 @@ function formatSaleDateTime(value: string) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+function createSaleItemDraft(productId: string): SaleItemDraft {
+  return {
+    id: crypto.randomUUID(),
+    productId,
+    packageType: "buy_1",
+    quantity: 1,
+    customAmount: "",
+  };
+}
+
+function summarizeSaleItem(draft: SaleItemDraft, product: ProductRow | undefined): SaleItemSummary {
+  const singlePrice = product ? getSinglePrice(product) : 0;
+  const bundlePrice = product ? getBundlePrice(product) : 0;
+  const quantity = draft.packageType === "buy_1" ? 1 : draft.packageType === "buy_2" ? 2 : Math.max(Number(draft.quantity || 1), 1);
+  const bulk = product ? getBulkPricing(product, quantity) : { ready: false, message: "", tierLabel: "Not eligible", unitPrice: null as number | null };
+  const gross = singlePrice * quantity;
+  const amount =
+    draft.packageType === "buy_1"
+      ? singlePrice
+      : draft.packageType === "buy_2"
+        ? bundlePrice
+        : draft.packageType === "bulk"
+          ? bulk.ready && bulk.unitPrice != null
+            ? quantity * bulk.unitPrice
+            : 0
+          : Number(draft.customAmount || 0);
+
+  return {
+    draft,
+    product,
+    quantity,
+    gross,
+    discount: Math.max(gross - amount, 0),
+    amount,
+    bulkReady: bulk.ready,
+    bulkMessage: bulk.message,
+    bulkTierLabel: bulk.tierLabel,
+    bulkUnitPrice: bulk.unitPrice,
+  };
+}
+
+function getSinglePrice(product: ProductRow) {
+  return Number(product.default_physical_price ?? product.price_single ?? 0);
+}
+
+function getBundlePrice(product: ProductRow) {
+  return Number(product.price_bundle ?? getSinglePrice(product) * 2);
+}
+
+function getBundleSavings(product: ProductRow) {
+  return Math.max(getSinglePrice(product) * 2 - getBundlePrice(product), 0);
+}
+
+function getBulkPricing(product: ProductRow, quantity: number) {
+  const tier1Min = Number(product.bulk_tier_1_min ?? 10);
+  const tier1Max = Number(product.bulk_tier_1_max ?? 24);
+  const tier1UnitPrice = product.bulk_tier_1_unit_price == null ? null : Number(product.bulk_tier_1_unit_price);
+  const tier2Min = Number(product.bulk_tier_2_min ?? 25);
+  const tier2UnitPrice = product.bulk_tier_2_unit_price == null ? null : Number(product.bulk_tier_2_unit_price);
+
+  if (!product.bulk_enabled) {
+    return { ready: false, message: "Bulk pricing is not enabled for this product.", tierLabel: "Not eligible", unitPrice: null };
+  }
+
+  if (quantity === 1) {
+    return { ready: false, message: "Use Buy 1 instead.", tierLabel: "Not eligible", unitPrice: null };
+  }
+
+  if (quantity === 2) {
+    return { ready: false, message: "Use Buy 2 instead.", tierLabel: "Not eligible", unitPrice: null };
+  }
+
+  if (quantity < tier1Min) {
+    return { ready: false, message: "Bulk pricing starts at 10 units.", tierLabel: "Not eligible", unitPrice: null };
+  }
+
+  if (quantity >= tier2Min) {
+    return { ready: tier2UnitPrice != null, message: tier2UnitPrice == null ? "Bulk pricing is not fully configured for this product." : "", tierLabel: `${tier2Min}+ Cards`, unitPrice: tier2UnitPrice };
+  }
+
+  if (quantity <= tier1Max) {
+    return { ready: tier1UnitPrice != null, message: tier1UnitPrice == null ? "Bulk pricing is not fully configured for this product." : "", tierLabel: `${tier1Min}-${tier1Max} Cards`, unitPrice: tier1UnitPrice };
+  }
+
+  return { ready: false, message: "Bulk pricing starts at 10 units.", tierLabel: "Not eligible", unitPrice: null };
 }
 
 function getManilaDateTimeParts(value = new Date()) {

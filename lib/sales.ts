@@ -1,6 +1,12 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
-import type { PaymentMethod, SaleExpenseRow, SaleExpenseType, SalePackageType, SaleRow } from "@/types/database";
+import type {
+  PaymentMethod,
+  SaleExpenseRow,
+  SaleExpenseType,
+  SaleItemPackageType,
+  SaleRow,
+} from "@/types/database";
 
 export type SaleExpenseInput = {
   expenseType: SaleExpenseType;
@@ -8,11 +14,19 @@ export type SaleExpenseInput = {
   description?: string;
 };
 
+export type QuickSaleItemInput = {
+  productId: string;
+  packageType: SaleItemPackageType;
+  quantity?: number | null;
+  customAmount?: number | null;
+};
+
 export type QuickSaleInput = {
   productId: string;
-  packageType: SalePackageType;
+  packageType: SaleItemPackageType;
   customQuantity?: number | null;
   customAmount?: number | null;
+  saleItems?: QuickSaleItemInput[];
   paymentMethod: PaymentMethod;
   referenceNumber?: string;
   notes?: string;
@@ -26,9 +40,10 @@ export type QuickSaleInput = {
 export type UpdateSaleInput = {
   saleId: string;
   productId?: string | null;
-  packageType?: SalePackageType | null;
+  packageType?: SaleItemPackageType | null;
   customQuantity?: number | null;
   customAmount?: number | null;
+  saleItems?: QuickSaleItemInput[];
   paymentMethod?: PaymentMethod | null;
   referenceNumber?: string;
   notes?: string;
@@ -49,6 +64,7 @@ export type SaleResult = {
   saleId: string;
   saleNumber: string;
   status: string;
+  items: SaleLineItem[];
   productId: string;
   productName: string;
   packageLabel: string;
@@ -82,8 +98,24 @@ export type SalesSummary = {
 
 export type ProductSalesTotals = Record<string, { soldToday: number; totalSold: number }>;
 
+export type SaleLineItem = {
+  productId: string;
+  productName: string;
+  sku: string | null;
+  packageLabel: string;
+  pricingTierLabel: string | null;
+  quantity: number;
+  regularUnitPrice: number;
+  bulkUnitPrice: number | null;
+  grossAmount: number;
+  discountAmount: number;
+  finalAmount: number;
+  unitCostSnapshot: number;
+};
+
 export type SaleListItem = {
   sale: SaleRow;
+  items: SaleLineItem[];
   productId: string;
   productName: string;
   sku: string | null;
@@ -158,6 +190,7 @@ export async function recordQuickPhysicalSale(input: QuickSaleInput) {
     p_sale_status: input.saleStatus ?? "completed",
     p_completed_at: input.completedAt ?? null,
     p_sale_expenses: input.expenses ?? [],
+    p_sale_items: input.saleItems ?? [],
   });
 
   if (error) {
@@ -236,6 +269,7 @@ export async function updateQuickSale(input: UpdateSaleInput) {
     p_idempotency_key: input.idempotencyKey ?? null,
     p_completed_at: input.completedAt ?? null,
     p_sale_expenses: input.expenses ?? [],
+    p_sale_items: input.saleItems ?? [],
   });
 
   if (error) {
@@ -302,13 +336,15 @@ export function deriveSalesSummary(sales: SaleListItem[]): SalesSummary {
 export function deriveProductSalesTotals(sales: SaleListItem[]): ProductSalesTotals {
   const todayRange = getManilaTodayRange();
   return sales
-    .filter((item) => item.sale.status === "completed")
-    .reduce<ProductSalesTotals>((totals, item) => {
-      const current = totals[item.productId] ?? { soldToday: 0, totalSold: 0 };
-      totals[item.productId] = {
-        soldToday: isCompletedInRange(item, todayRange) ? current.soldToday + item.quantity : current.soldToday,
-        totalSold: current.totalSold + item.quantity,
-      };
+    .filter((sale) => sale.sale.status === "completed")
+    .reduce<ProductSalesTotals>((totals, sale) => {
+      for (const item of sale.items) {
+        const current = totals[item.productId] ?? { soldToday: 0, totalSold: 0 };
+        totals[item.productId] = {
+          soldToday: isCompletedInRange(sale, todayRange) ? current.soldToday + item.quantity : current.soldToday,
+          totalSold: current.totalSold + item.quantity,
+        };
+      }
       return totals;
     }, {});
 }
@@ -397,6 +433,7 @@ export async function getSalesList(filters: SalesFilters = {}) {
     [
       item.sale.sale_number,
       item.productName,
+      item.items.map((saleItem) => `${saleItem.productName} ${saleItem.sku ?? ""}`).join(" "),
       item.sku,
       item.paymentMethod,
       item.paymentReference,
@@ -433,27 +470,46 @@ export function revalidateSalesAdmin() {
 }
 
 function mapSaleRecord(record: SaleRecord): SaleListItem {
-  const item = record.item?.[0];
+  const items = (record.item ?? []).map((item) => ({
+    productId: item.product_id ?? "",
+    productName: item.product_name_snapshot ?? "Unknown product",
+    sku: item.sku_snapshot ?? null,
+    packageLabel: item.package_label ?? record.package_type,
+    pricingTierLabel: item.pricing_tier_label ?? null,
+    quantity: Number(item.quantity ?? 0),
+    regularUnitPrice: Number(item.unit_regular_price ?? 0),
+    bulkUnitPrice: item.bulk_unit_price == null ? null : Number(item.bulk_unit_price),
+    grossAmount: Number(item.gross_amount ?? 0),
+    discountAmount: Number(item.discount_amount ?? 0),
+    finalAmount: Number(item.final_amount ?? 0),
+    unitCostSnapshot: Number(item.unit_cost_snapshot ?? 0),
+  }));
+  const item = items[0];
   const payment = record.payment?.[0];
   const movement = record.movement?.find((entry) => Boolean(entry.id));
   const expenses = record.expenses ?? [];
   const totalDirectDeductions = expenses.reduce((sum, expense) => sum + Number(expense.amount ?? 0), 0);
-  const finalAmount = Number(item?.final_amount ?? record.total_amount ?? 0);
+  const finalAmount = Number(record.total_amount ?? items.reduce((sum, entry) => sum + entry.finalAmount, 0));
+  const grossAmount = Number(record.gross_product_amount ?? items.reduce((sum, entry) => sum + entry.grossAmount, 0));
+  const discountAmount = Number(record.discount_total ?? items.reduce((sum, entry) => sum + entry.discountAmount, 0));
+  const quantity = items.reduce((sum, entry) => sum + entry.quantity, 0);
+  const isCombo = items.length > 1 || record.package_type === "combo";
 
   return {
     sale: record,
-    productId: item?.product_id ?? "",
-    productName: item?.product_name_snapshot ?? "Unknown product",
-    sku: item?.sku_snapshot ?? null,
-    packageLabel: item?.package_label ?? record.package_type,
-    pricingTierLabel: item?.pricing_tier_label ?? null,
-    quantity: Number(item?.quantity ?? 0),
-    regularUnitPrice: Number(item?.unit_regular_price ?? 0),
-    bulkUnitPrice: item?.bulk_unit_price == null ? null : Number(item.bulk_unit_price),
-    grossAmount: Number(item?.gross_amount ?? record.gross_product_amount ?? 0),
-    discountAmount: Number(item?.discount_amount ?? record.discount_total ?? 0),
+    items,
+    productId: item?.productId ?? "",
+    productName: isCombo ? productSummary(items) : item?.productName ?? "Unknown product",
+    sku: isCombo ? null : item?.sku ?? null,
+    packageLabel: isCombo ? "Combo" : item?.packageLabel ?? record.package_type,
+    pricingTierLabel: isCombo ? null : item?.pricingTierLabel ?? null,
+    quantity,
+    regularUnitPrice: isCombo ? 0 : item?.regularUnitPrice ?? 0,
+    bulkUnitPrice: isCombo ? null : item?.bulkUnitPrice ?? null,
+    grossAmount,
+    discountAmount,
     finalAmount,
-    unitCostSnapshot: Number(item?.unit_cost_snapshot ?? 0),
+    unitCostSnapshot: isCombo ? items.reduce((sum, entry) => sum + entry.unitCostSnapshot * entry.quantity, 0) : item?.unitCostSnapshot ?? 0,
     paymentMethod: payment?.payment_method ?? "other",
     paymentReference: payment?.reference_number ?? null,
     handledByEmail: record.handler?.email ?? null,
@@ -462,6 +518,13 @@ function mapSaleRecord(record: SaleRecord): SaleListItem {
     totalDirectDeductions,
     netAfterDeductions: finalAmount - totalDirectDeductions,
   };
+}
+
+function productSummary(items: SaleLineItem[]) {
+  if (items.length === 0) return "Unknown product";
+  if (items.length === 1) return items[0].productName;
+  if (items.length === 2) return `${items[0].productName} + ${items[1].productName}`;
+  return `${items[0].productName} + ${items.length - 1} more`;
 }
 
 function isCompletedInRange(item: SaleListItem, range: ReturnType<typeof getManilaTodayRange>) {

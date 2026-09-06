@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Fragment, useState, type FormEvent } from "react";
 import { formatPhp } from "@/lib/format";
 import type { SaleListItem, SaleResult } from "@/lib/sales";
-import type { ProductRow, SaleExpenseType, SalePackageType } from "@/types/database";
+import type { ProductRow, SaleExpenseType, SaleItemPackageType } from "@/types/database";
 
 type SalesManagerProps = {
   sales: SaleListItem[];
@@ -27,6 +27,14 @@ type DeductionDraft = {
   description: string;
 };
 
+type SaleItemDraft = {
+  id: string;
+  productId: string;
+  packageType: SaleItemPackageType;
+  quantity: number;
+  customAmount: string;
+};
+
 export function SalesManager({ sales, products }: SalesManagerProps) {
   const router = useRouter();
   const [expandedSaleId, setExpandedSaleId] = useState<string | null>(null);
@@ -40,49 +48,17 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
   const [deleteKey, setDeleteKey] = useState(() => crypto.randomUUID());
   const [completeSoldDate, setCompleteSoldDate] = useState(() => getManilaDateTimeParts().date);
   const [completeSoldTime, setCompleteSoldTime] = useState(() => getManilaDateTimeParts().time);
-  const [editProductId, setEditProductId] = useState("");
-  const [editPackage, setEditPackage] = useState<SalePackageType>("buy_1");
-  const [editCustomQuantity, setEditCustomQuantity] = useState(1);
-  const [editCustomAmount, setEditCustomAmount] = useState("");
-  const [editBulkQuantity, setEditBulkQuantity] = useState(10);
+  const [editSaleItems, setEditSaleItems] = useState<SaleItemDraft[]>([]);
   const [editSoldDate, setEditSoldDate] = useState(() => getManilaDateTimeParts().date);
   const [editSoldTime, setEditSoldTime] = useState(() => getManilaDateTimeParts().time);
   const [editDeductions, setEditDeductions] = useState<DeductionDraft[]>([]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const editProduct = products.find((product) => product.id === editProductId);
-  const editSinglePrice = Number(editProduct?.default_physical_price ?? editProduct?.price_single ?? 0);
-  const editBundlePrice = Number(editProduct?.price_bundle ?? editSinglePrice * 2);
-  const editBulkTier1Min = Number(editProduct?.bulk_tier_1_min ?? 10);
-  const editBulkTier1Max = Number(editProduct?.bulk_tier_1_max ?? 24);
-  const editBulkTier1UnitPrice = editProduct?.bulk_tier_1_unit_price == null ? null : Number(editProduct.bulk_tier_1_unit_price);
-  const editBulkTier2Min = Number(editProduct?.bulk_tier_2_min ?? 25);
-  const editBulkTier2UnitPrice = editProduct?.bulk_tier_2_unit_price == null ? null : Number(editProduct.bulk_tier_2_unit_price);
-  const editBulkTier =
-    editBulkQuantity >= editBulkTier2Min
-      ? { label: `${editBulkTier2Min}+ Cards`, unitPrice: editBulkTier2UnitPrice }
-      : editBulkQuantity >= editBulkTier1Min && editBulkQuantity <= editBulkTier1Max
-        ? { label: `${editBulkTier1Min}-${editBulkTier1Max} Cards`, unitPrice: editBulkTier1UnitPrice }
-        : null;
-  const editQuantity =
-    editPackage === "buy_1" ? 1 : editPackage === "buy_2" ? 2 : editPackage === "bulk" ? editBulkQuantity : editCustomQuantity;
-  const editGross =
-    editPackage === "buy_1"
-      ? editSinglePrice
-      : editPackage === "buy_2"
-        ? editSinglePrice * 2
-        : editPackage === "bulk"
-          ? editSinglePrice * editBulkQuantity
-          : editSinglePrice * editCustomQuantity;
-  const editAmount =
-    editPackage === "buy_1"
-      ? editSinglePrice
-      : editPackage === "buy_2"
-        ? editBundlePrice
-        : editPackage === "bulk"
-          ? (editBulkTier?.unitPrice == null ? 0 : editBulkTier.unitPrice * editBulkQuantity)
-          : Number(editCustomAmount || 0);
+  const editSummaries = editSaleItems.map((item) => summarizeSaleItem(item, products.find((product) => product.id === item.productId)));
+  const editQuantity = editSummaries.reduce((sum, item) => sum + item.quantity, 0);
+  const editGross = editSummaries.reduce((sum, item) => sum + item.gross, 0);
+  const editAmount = editSummaries.reduce((sum, item) => sum + item.amount, 0);
   const editDeductionsTotal = editDeductions.reduce((sum, deduction) => {
     const amount = Number(deduction.amount || 0);
     return Number.isFinite(amount) ? sum + amount : sum;
@@ -90,11 +66,13 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
 
   const openEditSale = (item: SaleListItem) => {
     setEditingSale(item);
-    setEditProductId(item.productId);
-    setEditPackage(item.sale.package_type);
-    setEditCustomQuantity(item.quantity);
-    setEditCustomAmount(String(item.finalAmount));
-    setEditBulkQuantity(item.quantity);
+    setEditSaleItems(item.items.length ? item.items.map((saleItem) => ({
+      id: crypto.randomUUID(),
+      productId: saleItem.productId,
+      packageType: packageTypeFromLabel(saleItem.packageLabel),
+      quantity: saleItem.quantity,
+      customAmount: String(saleItem.finalAmount),
+    })) : [createSaleItemDraft(products[0]?.id ?? "")]);
     const soldParts = item.sale.completed_at ? getManilaDateTimeParts(new Date(item.sale.completed_at)) : getManilaDateTimeParts();
     setEditSoldDate(soldParts.date);
     setEditSoldTime(soldParts.time);
@@ -119,6 +97,10 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
 
   const removeEditDeduction = (id: string) => {
     setEditDeductions((current) => current.filter((deduction) => deduction.id !== id));
+  };
+
+  const updateEditSaleItem = (id: string, changes: Partial<Omit<SaleItemDraft, "id">>) => {
+    setEditSaleItems((current) => current.map((item) => (item.id === id ? { ...item, ...changes } : item)));
   };
 
   const openCompleteSale = (saleId: string) => {
@@ -180,6 +162,17 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formData.set("idempotency_key", editKey);
+    if (editingSale?.sale.status === "pending") {
+      const firstItem = editSaleItems[0];
+      formData.set("product_id", firstItem?.productId ?? "");
+      formData.set("package_type", firstItem?.packageType ?? "buy_1");
+      formData.set("sale_items", JSON.stringify(editSaleItems.map((item) => ({
+        productId: item.productId,
+        packageType: item.packageType,
+        quantity: item.packageType === "buy_1" ? 1 : item.packageType === "buy_2" ? 2 : item.quantity,
+        customAmount: item.packageType === "custom" ? Number(item.customAmount || 0) : null,
+      }))));
+    }
     setError("");
     setMessage("");
 
@@ -263,7 +256,7 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
                   <td className="py-3 theme-text-muted">{item.sale.completed_at ? formatDateTime(item.sale.completed_at) : "-"}</td>
                   <td className="py-3">
                     <p className="font-bold theme-text">{item.productName}</p>
-                    <p className="mt-1 text-xs theme-text-muted">{item.sku || "No SKU"}</p>
+                    <p className="mt-1 text-xs theme-text-muted">{item.items.length > 1 ? `${item.items.length} products` : item.sku || "No SKU"}</p>
                   </td>
                   <td className="py-3 theme-text">{item.quantity}</td>
                   <td className="py-3 theme-text-secondary">{item.packageLabel}</td>
@@ -331,18 +324,29 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
                             <Detail label="Sale Number" value={item.sale.sale_number} />
                             <Detail label="Created" value={formatDateTime(item.sale.created_at)} />
                             <Detail label="Sold" value={item.sale.completed_at ? formatDateTime(item.sale.completed_at) : "-"} />
-                            <Detail label="Product" value={item.productName} />
-                            <Detail label="Package" value={`${item.packageLabel} × ${item.quantity}`} />
                             <Detail label="Gross Value" value={formatPhp(item.grossAmount)} />
                             <Detail label="Discount" value={formatPhp(item.discountAmount)} />
                             <Detail label="Customer Pays" value={formatPhp(item.finalAmount)} />
-                            <Detail label="Regular Unit Price" value={formatPhp(item.regularUnitPrice)} />
-                            <Detail label="Bulk Unit Price" value={item.bulkUnitPrice == null ? "-" : formatPhp(item.bulkUnitPrice)} />
-                            <Detail label="Pricing Tier" value={item.pricingTierLabel || "-"} />
+                            <Detail label="Physical Units" value={String(item.quantity)} />
                             <Detail label="Payment Reference" value={item.paymentReference || "-"} />
                             <Detail label="Movement Reference" value={item.movementId || "-"} />
-                            <Detail label="Unit Cost Snapshot" value={formatPhp(item.unitCostSnapshot)} />
                             <Detail label="Notes" value={item.sale.notes || "-"} />
+                          </div>
+                          <h3 className="mt-5 text-xs font-black uppercase tracking-[0.14em] theme-accent">Items</h3>
+                          <div className="mt-3 grid gap-2">
+                            {item.items.map((saleItem, index) => (
+                              <div key={`${item.sale.id}-${saleItem.productId}-${index}`} className="rounded-md border theme-border p-3">
+                                <div className="flex items-start justify-between gap-3">
+                                  <div>
+                                    <p className="font-bold theme-text">{saleItem.productName}</p>
+                                    <p className="mt-1 text-xs theme-text-muted">
+                                      {saleItem.packageLabel} · Qty {saleItem.quantity}{saleItem.pricingTierLabel ? ` · ${saleItem.pricingTierLabel}` : ""}
+                                    </p>
+                                  </div>
+                                  <p className="font-black theme-accent">{formatPhp(saleItem.finalAmount)}</p>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                         <div>
@@ -416,33 +420,54 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
             </div>
 
             {editingSale.sale.status === "pending" ? (
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <label className="grid gap-2 text-sm font-bold theme-text">
-                  Product
-                  <select name="product_id" value={editProductId} onChange={(event) => setEditProductId(event.target.value)} className={fieldClass}>
-                    {products.map((product) => (
-                      <option key={product.id} value={product.id}>{product.name}</option>
-                    ))}
-                  </select>
-                </label>
-                <label className="grid gap-2 text-sm font-bold theme-text">
-                  Package
-                  <select name="package_type" value={editPackage} onChange={(event) => setEditPackage(event.target.value as SalePackageType)} className={fieldClass}>
-                    <option value="buy_1">Buy 1</option>
-                    <option value="buy_2">Buy 2</option>
-                    <option value="bulk">Bulk</option>
-                    <option value="custom">Custom</option>
-                  </select>
-                </label>
-                {editPackage === "bulk" ? (
-                  <Field label="Bulk Quantity" name="bulk_quantity" type="number" min="1" value={String(editBulkQuantity)} onChange={(value) => setEditBulkQuantity(Number(value || 1))} />
-                ) : null}
-                {editPackage === "custom" ? (
-                  <>
-                    <Field label="Custom Quantity" name="custom_quantity" type="number" min="1" value={String(editCustomQuantity)} onChange={(value) => setEditCustomQuantity(Number(value || 1))} />
-                    <Field label="Custom Amount" name="custom_amount" type="number" min="0" value={editCustomAmount} onChange={setEditCustomAmount} prefix="₱" />
-                  </>
-                ) : null}
+              <div className="mt-5 grid gap-3">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Products</h3>
+                  <button type="button" onClick={() => setEditSaleItems((current) => [...current, createSaleItemDraft(products[0]?.id ?? "")])} className="rounded-md border theme-border px-3 py-2 text-xs font-bold theme-text hover:border-[var(--accent)]">
+                    + Add Product
+                  </button>
+                </div>
+                {editSummaries.map((summary, index) => (
+                  <div key={summary.draft.id} className="grid gap-3 rounded-md border theme-border p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] theme-text-muted">Item {index + 1}</p>
+                      {editSaleItems.length > 1 ? (
+                        <button type="button" onClick={() => setEditSaleItems((current) => current.filter((entry) => entry.id !== summary.draft.id))} className="rounded-md border border-red-400/50 px-3 py-2 text-xs font-bold text-red-300">
+                          Remove
+                        </button>
+                      ) : null}
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <label className="grid gap-2 text-sm font-bold theme-text">
+                        Product
+                        <select value={summary.draft.productId} onChange={(event) => updateEditSaleItem(summary.draft.id, { productId: event.target.value })} className={fieldClass}>
+                          {products.map((product) => <option key={product.id} value={product.id}>{product.name}</option>)}
+                        </select>
+                      </label>
+                      <label className="grid gap-2 text-sm font-bold theme-text">
+                        Package
+                        <select value={summary.draft.packageType} onChange={(event) => updateEditSaleItem(summary.draft.id, { packageType: event.target.value as SaleItemPackageType })} className={fieldClass}>
+                          <option value="buy_1">Buy 1</option>
+                          <option value="buy_2">Buy 2</option>
+                          {summary.product?.bulk_enabled ? <option value="bulk">Bulk</option> : null}
+                          <option value="custom">Custom</option>
+                        </select>
+                      </label>
+                    </div>
+                    {summary.draft.packageType === "bulk" || summary.draft.packageType === "custom" ? (
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <Field label="Quantity" type="number" min="1" value={String(summary.draft.quantity)} onChange={(value) => updateEditSaleItem(summary.draft.id, { quantity: Number(value || 1) })} />
+                        {summary.draft.packageType === "custom" ? (
+                          <Field label="Custom Amount" type="number" min="0" value={summary.draft.customAmount} onChange={(value) => updateEditSaleItem(summary.draft.id, { customAmount: value })} prefix="₱" />
+                        ) : null}
+                      </div>
+                    ) : null}
+                    <SummaryLine label="Calculated Amount" value={formatPhp(summary.amount)} strong />
+                    {summary.bulkMessage ? (
+                      <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">{summary.bulkMessage}</p>
+                    ) : null}
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="mt-5 rounded-md border theme-border p-4">
@@ -778,6 +803,67 @@ function formatDateTime(value: string) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+function createSaleItemDraft(productId: string): SaleItemDraft {
+  return {
+    id: crypto.randomUUID(),
+    productId,
+    packageType: "buy_1",
+    quantity: 1,
+    customAmount: "",
+  };
+}
+
+function packageTypeFromLabel(label: string): SaleItemPackageType {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("buy 2")) return "buy_2";
+  if (normalized.includes("bulk")) return "bulk";
+  if (normalized.includes("custom")) return "custom";
+  return "buy_1";
+}
+
+function summarizeSaleItem(draft: SaleItemDraft, product: ProductRow | undefined) {
+  const singlePrice = Number(product?.default_physical_price ?? product?.price_single ?? 0);
+  const bundlePrice = Number(product?.price_bundle ?? singlePrice * 2);
+  const quantity = draft.packageType === "buy_1" ? 1 : draft.packageType === "buy_2" ? 2 : Math.max(Number(draft.quantity || 1), 1);
+  const gross = singlePrice * quantity;
+  const bulk = product ? getBulkPricing(product, quantity) : { ready: false, message: "", unitPrice: null as number | null };
+  const amount =
+    draft.packageType === "buy_1"
+      ? singlePrice
+      : draft.packageType === "buy_2"
+        ? bundlePrice
+        : draft.packageType === "bulk"
+          ? bulk.ready && bulk.unitPrice != null
+            ? quantity * bulk.unitPrice
+            : 0
+          : Number(draft.customAmount || 0);
+
+  return {
+    draft,
+    product,
+    quantity,
+    gross,
+    amount,
+    bulkMessage: bulk.message,
+  };
+}
+
+function getBulkPricing(product: ProductRow, quantity: number) {
+  const tier1Min = Number(product.bulk_tier_1_min ?? 10);
+  const tier1Max = Number(product.bulk_tier_1_max ?? 24);
+  const tier1UnitPrice = product.bulk_tier_1_unit_price == null ? null : Number(product.bulk_tier_1_unit_price);
+  const tier2Min = Number(product.bulk_tier_2_min ?? 25);
+  const tier2UnitPrice = product.bulk_tier_2_unit_price == null ? null : Number(product.bulk_tier_2_unit_price);
+
+  if (!product.bulk_enabled) return { ready: false, message: "Bulk pricing is not enabled for this product.", unitPrice: null };
+  if (quantity === 1) return { ready: false, message: "Use Buy 1 instead.", unitPrice: null };
+  if (quantity === 2) return { ready: false, message: "Use Buy 2 instead.", unitPrice: null };
+  if (quantity < tier1Min) return { ready: false, message: "Bulk pricing starts at 10 units.", unitPrice: null };
+  if (quantity >= tier2Min) return { ready: tier2UnitPrice != null, message: tier2UnitPrice == null ? "Bulk pricing is not fully configured for this product." : "", unitPrice: tier2UnitPrice };
+  if (quantity <= tier1Max) return { ready: tier1UnitPrice != null, message: tier1UnitPrice == null ? "Bulk pricing is not fully configured for this product." : "", unitPrice: tier1UnitPrice };
+  return { ready: false, message: "Bulk pricing starts at 10 units.", unitPrice: null };
 }
 
 function getManilaDateTimeParts(value = new Date()) {

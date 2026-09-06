@@ -18,7 +18,8 @@ export type InventoryMovementType =
   | "refund_restore";
 export type SaleStatus = "pending" | "completed" | "cancelled";
 export type SaleChannel = "physical";
-export type SalePackageType = "buy_1" | "buy_2" | "bulk" | "custom";
+export type SaleItemPackageType = "buy_1" | "buy_2" | "bulk" | "custom";
+export type SalePackageType = SaleItemPackageType | "combo";
 export type PaymentMethod = "gcash" | "bank_transfer" | "cash" | "other";
 export type PaymentStatus = "pending" | "paid";
 export type SaleExpenseType =
