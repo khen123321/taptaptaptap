@@ -51,8 +51,14 @@ type SaleItemDraft = {
   id: string;
   productId: string;
   packageType: SaleItemPackageType;
-  quantity: number;
+  quantity: string;
   customAmount: string;
+};
+
+type SaleItemError = {
+  product?: string;
+  quantity?: string;
+  customAmount?: string;
 };
 
 type SaleItemSummary = {
@@ -66,6 +72,12 @@ type SaleItemSummary = {
   bulkMessage: string;
   bulkTierLabel: string;
   bulkUnitPrice: number | null;
+};
+
+type QuickSaleResponse = {
+  ok?: boolean;
+  sale?: SaleResult;
+  error?: string;
 };
 
 export function InventoryManager({ data }: { data: InventoryDashboardData }) {
@@ -86,6 +98,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const [soldTime, setSoldTime] = useState(() => getManilaDateTimeParts().time);
   const [saleResult, setSaleResult] = useState<SaleResult | null>(null);
   const [deductions, setDeductions] = useState<DeductionDraft[]>([]);
+  const [saleItemErrors, setSaleItemErrors] = useState<Record<string, SaleItemError>>({});
 
   const selectedProduct = useMemo(
     () => data.items.find((item) => item.product.id === selectedProductId)?.product,
@@ -125,6 +138,22 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
 
   const updateSaleItem = (id: string, changes: Partial<Omit<SaleItemDraft, "id">>) => {
     setSaleItems((current) => current.map((item) => (item.id === id ? { ...item, ...changes } : item)));
+    setSaleItemErrors((current) => ({ ...current, [id]: {} }));
+  };
+
+  const selectSalePackage = (id: string, packageType: SaleItemPackageType) => {
+    updateSaleItem(id, {
+      packageType,
+      quantity:
+        packageType === "buy_1"
+          ? "1"
+          : packageType === "buy_2"
+            ? "2"
+            : packageType === "bulk"
+              ? "10"
+              : "1",
+      customAmount: packageType === "custom" ? "" : "",
+    });
   };
 
   const addSaleItem = () => {
@@ -137,8 +166,13 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
 
   const openProductAction = (productId: string, modal: "restock" | "adjust" | "sale") => {
     setSelectedProductId(productId);
+    setError("");
+    setMessage("");
+    setSaleResult(null);
+    setSaleItemErrors({});
     if (modal === "sale") {
-      setSaleItems((current) => current.length ? current.map((item, index) => index === 0 ? { ...item, productId } : item) : [createSaleItemDraft(productId)]);
+      setSaleItems([createSaleItemDraft(productId)]);
+      setDeductions([]);
     }
     setActiveModal(modal);
   };
@@ -201,46 +235,117 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const submitSale = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (saving) return;
+    const form = event.currentTarget;
     setSaving(true);
     setError("");
     setMessage("");
     setSaleResult(null);
 
-    const formData = new FormData(event.currentTarget);
-    const firstItem = saleItems[0];
-    formData.set("product_id", firstItem?.productId ?? selectedProductId);
-    formData.set("package_type", firstItem?.packageType ?? "buy_1");
-    formData.set("sale_items", JSON.stringify(saleItems.map((item) => ({
-      productId: item.productId,
-      packageType: item.packageType,
-      quantity: item.packageType === "buy_1" ? 1 : item.packageType === "buy_2" ? 2 : item.quantity,
-      customAmount: item.packageType === "custom" ? Number(item.customAmount || 0) : null,
-    }))));
-    formData.set("sale_status", saleStatus);
+    const normalized = normalizeSaleItems(saleItems);
+    setSaleItemErrors(normalized.errors);
 
-    const response = await fetch("/api/admin/sales/quick", {
-      method: "POST",
-      body: formData,
-    });
-    const result = (await response.json()) as { sale?: SaleResult; error?: string };
-    setSaving(false);
-
-    if (!response.ok || result.error || !result.sale) {
-      setError(result.error ?? "Failed to record sale.");
+    if (!normalized.valid) {
+      setError("Fix the highlighted sale item before recording.");
+      setSaving(false);
       return;
     }
 
-    event.currentTarget.reset();
-    setSaleKey(crypto.randomUUID());
-    setSaleItems([createSaleItemDraft(data.items[0]?.product.id ?? "")]);
-    setSaleStatus("completed");
-    const manilaNow = getManilaDateTimeParts();
-    setSoldDate(manilaNow.date);
-    setSoldTime(manilaNow.time);
-    setDeductions([]);
-    setSaleResult(result.sale);
-    closeModal();
-    router.refresh();
+    const formData = new FormData(form);
+    const firstItem = normalized.items[0];
+    formData.set("product_id", firstItem?.productId ?? selectedProductId);
+    formData.set("package_type", firstItem?.packageType ?? "buy_1");
+    formData.set("sale_items", JSON.stringify(normalized.items));
+    formData.set("sale_status", saleStatus);
+
+    if (process.env.NODE_ENV === "development") {
+      console.info("Quick sale payload", {
+        items: normalized.items.map((item, index) => ({
+          index: index + 1,
+          productId: item.productId,
+          packageType: item.packageType,
+          quantity: item.quantity,
+          customAmount: item.customAmount,
+        })),
+      });
+    }
+
+    let response: Response;
+    try {
+      response = await fetch("/api/admin/sales/quick", {
+        method: "POST",
+        body: formData,
+      });
+    } catch (error) {
+      console.error("Quick sale network request failed", error);
+      setError("Unable to reach the server. Check your connection and try again.");
+      setSaving(false);
+      return;
+    }
+
+    let result: QuickSaleResponse;
+    try {
+      result = (await response.json()) as QuickSaleResponse;
+    } catch (error) {
+      console.error("Quick sale response parsing failed", {
+        status: response.status,
+        statusText: response.statusText,
+        error,
+      });
+      if (response.ok) {
+        setSaleKey(crypto.randomUUID());
+        setMessage("Sale recorded, but the response could not be displayed. Refresh sales history before retrying.");
+        closeModal();
+        try {
+          router.refresh();
+        } catch (refreshError) {
+          console.error("Quick sale refresh failed after response parsing error", refreshError);
+        }
+      } else {
+        setError("Sale request failed, but the server response could not be read.");
+      }
+      setSaving(false);
+      return;
+    }
+
+    if (!response.ok || result.error) {
+      setError(result.error ?? "Failed to record sale.");
+      setSaving(false);
+      return;
+    }
+
+    if (!result.sale) {
+      setSaleKey(crypto.randomUUID());
+      setMessage("Sale may have been recorded, but the server did not return sale details. Refresh sales history before retrying.");
+      closeModal();
+      try {
+        router.refresh();
+      } catch (error) {
+        console.error("Quick sale refresh failed after missing sale details", error);
+      }
+      setSaving(false);
+      return;
+    }
+
+    try {
+      form.reset();
+      setSaleKey(crypto.randomUUID());
+      setSaleItems([createSaleItemDraft(data.items[0]?.product.id ?? "")]);
+      setSaleItemErrors({});
+      setSaleStatus("completed");
+      const manilaNow = getManilaDateTimeParts();
+      setSoldDate(manilaNow.date);
+      setSoldTime(manilaNow.time);
+      setDeductions([]);
+      setSaleResult(result.sale);
+      closeModal();
+      router.refresh();
+    } catch (error) {
+      console.error("Quick sale post-success handling failed", error);
+      setMessage(`Sale #${result.sale.saleNumber} recorded. Refresh if the dashboard does not update.`);
+      setError("");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -419,8 +524,14 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
         description="Create a pending sale or record a sold transaction."
         onClose={closeModal}
         size="xl"
-        footer={<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><AdminButton type="button" variant="secondary" onClick={closeModal}>Cancel</AdminButton><SubmitButton saving={saving} form="quick-sale-form" disabled={saleStatus === "pending" ? !canSaveSale : !canMarkSold} label={saleStatus === "pending" ? "Save Pending" : "Record as Sold"} /></div>}
+        footer={<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><AdminButton type="button" variant="secondary" onClick={closeModal}>Cancel</AdminButton><SubmitButton saving={saving} form="quick-sale-form" disabled={saleStatus === "pending" ? !canSaveSale : !canMarkSold} label={saleStatus === "pending" ? "Save Pending" : "Record as Sold"} savingLabel={saleStatus === "pending" ? "Saving..." : "Recording..."} /></div>}
       >
+        {error ? (
+          <div className="mb-4 rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-300" role="alert">
+            <p className="font-black">Unable to record sale</p>
+            <p className="mt-1">{error}</p>
+          </div>
+        ) : null}
         <form id="quick-sale-form" onSubmit={submitSale} className="grid gap-5">
             <input type="hidden" name="idempotency_key" value={saleKey} />
             {deductions.map((deduction) => (
@@ -514,32 +625,37 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                           </option>
                         ))}
                       </select>
+                      {saleItemErrors[summary.draft.id]?.product ? (
+                        <span className="text-xs font-semibold text-red-300">
+                          {saleItemErrors[summary.draft.id]?.product}
+                        </span>
+                      ) : null}
                     </label>
                     <div className="grid gap-2">
                       <PackageButton
                         label="Buy 1"
                         detail={summary.product ? formatPhp(getSinglePrice(summary.product)) : "-"}
                         selected={summary.draft.packageType === "buy_1"}
-                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "buy_1", quantity: 1 })}
+                        onClick={() => selectSalePackage(summary.draft.id, "buy_1")}
                       />
                       <PackageButton
                         label="Buy 2"
                         detail={summary.product ? `${formatPhp(getBundlePrice(summary.product))}${getBundleSavings(summary.product) > 0 ? ` • Save ${formatPhp(getBundleSavings(summary.product))}` : ""}` : "-"}
                         selected={summary.draft.packageType === "buy_2"}
-                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "buy_2", quantity: 2 })}
+                        onClick={() => selectSalePackage(summary.draft.id, "buy_2")}
                       />
                       <PackageButton
                         label="Bulk / Reseller"
                         detail={summary.product?.bulk_enabled ? "Official card tier pricing" : "Not enabled for this product"}
                         selected={summary.draft.packageType === "bulk"}
-                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "bulk", quantity: Math.max(summary.draft.quantity, 10) })}
+                        onClick={() => selectSalePackage(summary.draft.id, "bulk")}
                         disabled={!summary.product?.bulk_enabled}
                       />
                       <PackageButton
                         label="Custom"
                         detail="Negotiated quantity and amount"
                         selected={summary.draft.packageType === "custom"}
-                        onClick={() => updateSaleItem(summary.draft.id, { packageType: "custom", quantity: Math.max(summary.draft.quantity, 1) })}
+                        onClick={() => selectSalePackage(summary.draft.id, "custom")}
                       />
                     </div>
                     {summary.draft.packageType === "bulk" || summary.draft.packageType === "custom" ? (
@@ -549,11 +665,17 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                           <input
                             type="number"
                             min="1"
+                            step="1"
                             value={summary.draft.quantity}
-                            onChange={(event) => updateSaleItem(summary.draft.id, { quantity: Number(event.target.value || 1) })}
+                            onChange={(event) => updateSaleItem(summary.draft.id, { quantity: event.target.value })}
                             className={fieldClass}
                             required
                           />
+                          {saleItemErrors[summary.draft.id]?.quantity ? (
+                            <span className="text-xs font-semibold text-red-300">
+                              {saleItemErrors[summary.draft.id]?.quantity}
+                            </span>
+                          ) : null}
                         </label>
                         {summary.draft.packageType === "custom" ? (
                           <label className="grid gap-2 text-sm font-bold theme-text">
@@ -563,12 +685,18 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                               <input
                                 type="number"
                                 min="0"
+                                step="0.01"
                                 value={summary.draft.customAmount}
                                 onChange={(event) => updateSaleItem(summary.draft.id, { customAmount: event.target.value })}
                                 className={`${fieldClass} w-full pl-8`}
                                 required
                               />
                             </span>
+                            {saleItemErrors[summary.draft.id]?.customAmount ? (
+                              <span className="text-xs font-semibold text-red-300">
+                                {saleItemErrors[summary.draft.id]?.customAmount}
+                              </span>
+                            ) : null}
                           </label>
                         ) : null}
                       </div>
@@ -826,23 +954,26 @@ function SubmitButton({
   saving,
   disabled,
   label,
+  savingLabel = "Saving...",
   value,
   form,
 }: {
   saving: boolean;
   disabled?: boolean;
   label: string;
+  savingLabel?: string;
   value?: string;
   form?: string;
 }) {
   return (
     <button
+      type="submit"
       disabled={saving || disabled}
       value={value}
       form={form}
       className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] disabled:cursor-not-allowed disabled:opacity-60"
     >
-      {saving ? "Saving..." : label}
+      {saving ? savingLabel : label}
     </button>
   );
 }
@@ -875,7 +1006,7 @@ function createSaleItemDraft(productId: string): SaleItemDraft {
     id: crypto.randomUUID(),
     productId,
     packageType: "buy_1",
-    quantity: 1,
+    quantity: "1",
     customAmount: "",
   };
 }
@@ -883,7 +1014,12 @@ function createSaleItemDraft(productId: string): SaleItemDraft {
 function summarizeSaleItem(draft: SaleItemDraft, product: ProductRow | undefined): SaleItemSummary {
   const singlePrice = product ? getSinglePrice(product) : 0;
   const bundlePrice = product ? getBundlePrice(product) : 0;
-  const quantity = draft.packageType === "buy_1" ? 1 : draft.packageType === "buy_2" ? 2 : Math.max(Number(draft.quantity || 1), 1);
+  const enteredQuantity = Number(draft.quantity || 1);
+  const quantity = draft.packageType === "buy_1"
+    ? 1
+    : draft.packageType === "buy_2"
+      ? 2
+      : Math.max(Number.isFinite(enteredQuantity) ? enteredQuantity : 1, 1);
   const bulk = product ? getBulkPricing(product, quantity) : { ready: false, message: "", tierLabel: "Not eligible", unitPrice: null as number | null };
   const gross = singlePrice * quantity;
   const amount =
@@ -908,6 +1044,65 @@ function summarizeSaleItem(draft: SaleItemDraft, product: ProductRow | undefined
     bulkMessage: bulk.message,
     bulkTierLabel: bulk.tierLabel,
     bulkUnitPrice: bulk.unitPrice,
+  };
+}
+
+function normalizeSaleItems(drafts: SaleItemDraft[]) {
+  const errors: Record<string, SaleItemError> = {};
+  const items = drafts.map((draft) => {
+    const itemErrors: SaleItemError = {};
+    const productId = draft.productId.trim();
+    if (!productId) itemErrors.product = "Select a product.";
+
+    if (draft.packageType === "buy_1") {
+      errors[draft.id] = itemErrors;
+      return { productId, packageType: "buy_1" as const, quantity: 1, customAmount: null };
+    }
+
+    if (draft.packageType === "buy_2") {
+      errors[draft.id] = itemErrors;
+      return { productId, packageType: "buy_2" as const, quantity: 2, customAmount: null };
+    }
+
+    const quantityText = draft.quantity.trim();
+    const quantity = Number(quantityText);
+    if (!quantityText || quantity <= 0) {
+      itemErrors.quantity = "Enter a quantity of at least 1.";
+    } else if (!Number.isInteger(quantity)) {
+      itemErrors.quantity = "Quantity must be a whole number.";
+    } else if (!Number.isFinite(quantity)) {
+      itemErrors.quantity = "Enter a quantity of at least 1.";
+    }
+
+    if (draft.packageType === "bulk") {
+      errors[draft.id] = itemErrors;
+      return {
+        productId,
+        packageType: "bulk" as const,
+        quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : 0,
+        customAmount: null,
+      };
+    }
+
+    const amountText = draft.customAmount.trim();
+    const customAmount = Number(amountText);
+    if (!amountText || !Number.isFinite(customAmount) || customAmount < 0) {
+      itemErrors.customAmount = "Enter a custom amount of at least 0.";
+    }
+
+    errors[draft.id] = itemErrors;
+    return {
+      productId,
+      packageType: "custom" as const,
+      quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : 0,
+      customAmount: Number.isFinite(customAmount) && customAmount >= 0 ? customAmount : null,
+    };
+  });
+
+  return {
+    items,
+    errors,
+    valid: items.length > 0 && Object.values(errors).every((itemErrors) => Object.keys(itemErrors).length === 0),
   };
 }
 

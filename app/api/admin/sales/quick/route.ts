@@ -10,9 +10,28 @@ export async function POST(request: Request) {
   }
 
   try {
-    const sale = await recordQuickPhysicalSale(
-      parseQuickSaleForm(await request.formData(), access.session.profileId),
-    );
+    let input;
+    try {
+      input = parseQuickSaleForm(await request.formData(), access.session.profileId);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Quick sale form is invalid.";
+      console.error("Quick sale validation failed", { message });
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      console.info("Quick sale submitted items", {
+        items: input.saleItems?.map((item, index) => ({
+          index: index + 1,
+          productId: item.productId,
+          packageType: item.packageType,
+          quantity: item.quantity ?? null,
+          hasCustomAmount: item.customAmount != null,
+        })) ?? [],
+      });
+    }
+
+    const sale = await recordQuickPhysicalSale(input);
     return NextResponse.json({ ok: true, sale });
   } catch (error) {
     return NextResponse.json(

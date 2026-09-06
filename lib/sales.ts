@@ -8,6 +8,13 @@ import type {
   SaleRow,
 } from "@/types/database";
 
+type SupabaseRpcError = {
+  message: string;
+  code?: string;
+  details?: string | null;
+  hint?: string | null;
+};
+
 export type SaleExpenseInput = {
   expenseType: SaleExpenseType;
   amount: number;
@@ -194,8 +201,8 @@ export async function recordQuickPhysicalSale(input: QuickSaleInput) {
   });
 
   if (error) {
-    console.error("Quick sale failed.", error);
-    throw new Error(mapSaleError(error.message));
+    logRpcError("Quick sale RPC failed", error);
+    throw new Error(mapSaleError(error));
   }
 
   revalidateSalesAdmin();
@@ -219,8 +226,8 @@ export async function completePendingQuickSale(input: {
   });
 
   if (error) {
-    console.error("Pending sale completion failed.", error);
-    throw new Error(mapSaleError(error.message));
+    logRpcError("Pending sale completion RPC failed", error);
+    throw new Error(mapSaleError(error));
   }
 
   revalidateSalesAdmin();
@@ -244,8 +251,8 @@ export async function cancelQuickSale(input: {
   });
 
   if (error) {
-    console.error("Sale cancellation failed.", error);
-    throw new Error(mapSaleError(error.message));
+    logRpcError("Sale cancellation RPC failed", error);
+    throw new Error(mapSaleError(error));
   }
 
   revalidateSalesAdmin();
@@ -273,8 +280,8 @@ export async function updateQuickSale(input: UpdateSaleInput) {
   });
 
   if (error) {
-    console.error("Sale update failed.", error);
-    throw new Error(mapSaleError(error.message));
+    logRpcError("Sale update RPC failed", error);
+    throw new Error(mapSaleError(error));
   }
 
   revalidateSalesAdmin();
@@ -293,8 +300,8 @@ export async function softDeleteQuickSale(input: DeleteSaleInput) {
   });
 
   if (error) {
-    console.error("Sale delete failed.", error);
-    throw new Error(mapSaleError(error.message));
+    logRpcError("Sale delete RPC failed", error);
+    throw new Error(mapSaleError(error));
   }
 
   revalidateSalesAdmin();
@@ -539,8 +546,29 @@ function getSaleSortTime(item: SaleListItem) {
   return new Date(value ?? item.sale.created_at).getTime();
 }
 
-function mapSaleError(message: string) {
-  const lower = message.toLowerCase();
+function logRpcError(label: string, error: SupabaseRpcError) {
+  console.error(label, {
+    message: error.message,
+    code: error.code,
+    details: error.details,
+    hint: error.hint,
+  });
+}
+
+function mapSaleError(error: string | SupabaseRpcError) {
+  const message = typeof error === "string" ? error : error.message;
+  const searchText = typeof error === "string"
+    ? error
+    : `${error.message} ${error.code ?? ""} ${error.details ?? ""} ${error.hint ?? ""}`;
+  const lower = searchText.toLowerCase();
+  if (
+    lower.includes("p_sale_items") ||
+    lower.includes("schema cache") ||
+    lower.includes("could not find the function") ||
+    lower.includes("pgrst202")
+  ) {
+    return "The sales database migration has not been applied. Run supabase/migrations/202609060001_combo_quick_sales.sql, then retry this sale.";
+  }
   if (lower.includes("insufficient stock")) return "Insufficient stock for this sale.";
   if (lower.includes("bulk pricing starts")) return "Bulk pricing starts at 10 units.";
   if (lower.includes("bulk pricing is not enabled")) return "Bulk pricing is not enabled for this product.";

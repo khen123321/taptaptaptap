@@ -15,8 +15,9 @@ const saleExpenseTypes = new Set<SaleExpenseType>([
 
 export function parseQuickSaleForm(formData: FormData, actorProfileId: string): QuickSaleInput {
   const productId = String(formData.get("product_id") ?? "").trim();
-  const packageType = String(formData.get("package_type") ?? "buy_1") as SaleItemPackageType;
   const saleItems = parseSaleItems(formData);
+  const packageType = (saleItems[0]?.packageType ??
+    String(formData.get("package_type") ?? "buy_1")) as SaleItemPackageType;
   const paymentMethod = String(formData.get("payment_method") ?? "cash") as PaymentMethod;
   const referenceNumber = String(formData.get("reference_number") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
@@ -36,12 +37,18 @@ export function parseQuickSaleForm(formData: FormData, actorProfileId: string): 
     productId,
     packageType,
     customQuantity:
-      packageType === "custom"
+      saleItems.length > 0
+        ? saleItems[0]?.quantity ?? null
+        : packageType === "custom"
         ? positiveInteger(formData.get("custom_quantity"), "Custom quantity")
         : packageType === "bulk"
           ? positiveInteger(formData.get("bulk_quantity"), "Bulk quantity")
           : null,
-    customAmount: packageType === "custom" ? nonNegativeNumber(formData.get("custom_amount"), "Custom amount") : null,
+    customAmount: saleItems.length > 0
+      ? saleItems[0]?.customAmount ?? null
+      : packageType === "custom"
+        ? nonNegativeNumber(formData.get("custom_amount"), "Custom amount")
+        : null,
     saleItems,
     paymentMethod,
     referenceNumber,
@@ -82,8 +89,10 @@ export function parseUpdateSaleForm(formData: FormData, actorProfileId: string) 
   const saleId = String(formData.get("sale_id") ?? "").trim();
   const status = String(formData.get("sale_status") ?? "").trim();
   const paymentMethod = String(formData.get("payment_method") ?? "cash") as PaymentMethod;
-  const packageType = String(formData.get("package_type") ?? "buy_1") as SaleItemPackageType;
   const saleItems = parseSaleItems(formData);
+  const packageType = (status === "pending" && saleItems[0]?.packageType
+    ? saleItems[0].packageType
+    : String(formData.get("package_type") ?? "buy_1")) as SaleItemPackageType;
   if (!saleId) throw new Error("Sale is required.");
   if (!paymentMethods.has(paymentMethod)) throw new Error("Invalid payment method.");
   if (status === "pending" && !packageTypes.has(packageType)) throw new Error("Invalid sale package.");
@@ -96,13 +105,17 @@ export function parseUpdateSaleForm(formData: FormData, actorProfileId: string) 
     productId,
     packageType: status === "pending" ? packageType : null,
     customQuantity:
-      status === "pending" && packageType === "custom"
+      status === "pending" && saleItems.length > 0
+        ? saleItems[0]?.quantity ?? null
+        : status === "pending" && packageType === "custom"
         ? positiveInteger(formData.get("custom_quantity"), "Custom quantity")
         : status === "pending" && packageType === "bulk"
           ? positiveInteger(formData.get("bulk_quantity"), "Bulk quantity")
           : null,
     customAmount:
-      status === "pending" && packageType === "custom"
+      status === "pending" && saleItems.length > 0
+        ? saleItems[0]?.customAmount ?? null
+        : status === "pending" && packageType === "custom"
         ? nonNegativeNumber(formData.get("custom_amount"), "Custom amount")
         : null,
     saleItems: status === "pending" ? saleItems : [],
