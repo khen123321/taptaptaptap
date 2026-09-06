@@ -1,5 +1,6 @@
 import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminPageHeader } from "@/components/admin/AdminUI";
 import { InventoryManager } from "@/components/admin/InventoryManager";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getInventoryDashboardData } from "@/lib/inventory";
@@ -15,13 +16,11 @@ export default async function AdminInventoryPage() {
 
   return (
     <AdminShell session={access.session}>
-      <p className="text-xs font-black uppercase tracking-[0.22em] theme-accent">
-        Product Inventory
-      </p>
-      <h1 className="mt-3 text-3xl font-black theme-text">Inventory</h1>
-      <p className="mt-2 text-sm theme-text-secondary">
-        Manage physical stock, replacement cost, and low-stock status.
-      </p>
+      <AdminPageHeader
+        eyebrow="Product Inventory"
+        title="Inventory"
+        description="Manage physical stock, replacement cost, and low-stock status."
+      />
 
       <div className="mt-8">
         <InventoryManager data={data} />

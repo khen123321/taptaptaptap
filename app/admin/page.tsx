@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminMetricCard, AdminPageHeader } from "@/components/admin/AdminUI";
 import { getAnalyticsDashboard } from "@/lib/analytics/admin";
 import { requireAdmin } from "@/lib/admin-auth";
 import { formatInventoryValue, getInventoryDashboardData } from "@/lib/inventory";
@@ -32,24 +33,30 @@ export default async function AdminDashboardPage() {
 
   return (
     <AdminShell session={access.session}>
-      <p className="text-xs font-black uppercase tracking-[0.22em] theme-accent">
-        TapTapTap Admin
-      </p>
-      <h1 className="mt-3 text-3xl font-black theme-text">Dashboard</h1>
-      <p className="mt-2 text-sm theme-text-secondary">Welcome back.</p>
+      <AdminPageHeader
+        eyebrow="TapTapTap Admin"
+        title="Dashboard"
+        description="Review the current storefront, sales, inventory, and website activity."
+      />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-8">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-sm font-black uppercase tracking-[0.16em] theme-text-muted">Products</h2>
+          <Link href="/admin/products" className="text-sm font-bold theme-accent">Manage Products</Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <section key={card.label} className="rounded-lg border p-5 theme-card">
-            <p className="text-sm font-bold theme-text">{card.label}</p>
-            <p className="mt-4 text-3xl font-black theme-accent">{card.value}</p>
-          </section>
+          <AdminMetricCard key={card.label} icon="package" label={card.label} value={card.value} />
         ))}
-      </div>
+        </div>
+      </section>
 
-      <section className="mt-6 rounded-lg border p-5 theme-card">
+      <section className="mt-7 rounded-2xl border p-5 theme-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-black theme-text">Analytics Preview</h2>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.16em] theme-text-muted">Website</p>
+            <h2 className="mt-1 text-xl font-black theme-text">Analytics Preview</h2>
+          </div>
           <Link href="/admin/analytics" className="text-sm font-bold theme-accent">
             View Analytics
           </Link>
@@ -57,15 +64,12 @@ export default async function AdminDashboardPage() {
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {analytics ? (
             [
-              { label: "Views - last 7 days", value: analytics.summary.totalViews },
-              { label: "Unique Visitors - last 7 days", value: analytics.summary.uniqueVisitors },
-              { label: "Product Views - last 7 days", value: analytics.summary.productViews },
-              { label: "Customizer Opens - last 7 days", value: analytics.summary.customizerOpens },
+              { label: "Views", value: analytics.summary.totalViews, icon: "views" as const },
+              { label: "Unique Visitors", value: analytics.summary.uniqueVisitors, icon: "analytics" as const },
+              { label: "Product Views", value: analytics.summary.productViews, icon: "package" as const },
+              { label: "Customizer Opens", value: analytics.summary.customizerOpens, icon: "clicks" as const },
             ].map((item) => (
-              <div key={item.label} className="rounded-md border p-4 theme-subtle">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
-                <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
-              </div>
+              <AdminMetricCard key={item.label} icon={item.icon} label={item.label} value={item.value} description="Last 7 days" tone="neutral" />
             ))
           ) : (
             <UnavailablePanel label="Website analytics unavailable" />
@@ -73,9 +77,12 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <section className="mt-6 rounded-lg border p-5 theme-card">
+      <section className="mt-7 rounded-2xl border p-5 theme-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-black theme-text">Inventory Summary</h2>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.16em] theme-text-muted">Inventory</p>
+            <h2 className="mt-1 text-xl font-black theme-text">Inventory Summary</h2>
+          </div>
           <Link href="/admin/inventory" className="text-sm font-bold theme-accent">
             Manage Inventory
           </Link>
@@ -83,20 +90,17 @@ export default async function AdminDashboardPage() {
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {inventory ? (
             [
-              { label: "Units In Stock", value: inventory.summary.totalUnits.toLocaleString("en-PH") },
-              { label: "Inventory Value", value: formatInventoryValue(inventory.summary.inventoryValue) },
-              { label: "Sold Today", value: inventory.summary.sales ? inventory.summary.sales.soldToday.toLocaleString("en-PH") : "Unavailable" },
-              { label: "Sales Today", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.salesToday) : "Unavailable" },
-              { label: "Orders Today", value: inventory.summary.sales ? inventory.summary.sales.ordersToday.toLocaleString("en-PH") : "Unavailable" },
-              { label: "Direct Deductions Today", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.directDeductionsToday) : "Unavailable" },
-              { label: "Net After Deductions", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.netAfterDirectDeductionsToday) : "Unavailable" },
-              { label: "Low Stock Items", value: String(inventory.summary.lowStockProducts) },
-              { label: "Out of Stock", value: String(inventory.summary.outOfStockProducts) },
+              { label: "Total Units", value: inventory.summary.totalUnits.toLocaleString("en-PH"), icon: "inventory" as const, tone: "accent" as const },
+              { label: "Inventory Value", value: formatInventoryValue(inventory.summary.inventoryValue), icon: "net" as const, tone: "neutral" as const },
+              { label: "Low Stock", value: String(inventory.summary.lowStockProducts), icon: "low-stock" as const, tone: "amber" as const },
+              { label: "Out of Stock", value: String(inventory.summary.outOfStockProducts), icon: "out-of-stock" as const, tone: "red" as const },
+              { label: "Sales Today", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.salesToday) : "Unavailable", icon: "sales" as const, tone: "green" as const },
+              { label: "Orders Today", value: inventory.summary.sales ? inventory.summary.sales.ordersToday.toLocaleString("en-PH") : "Unavailable", icon: "orders" as const, tone: "neutral" as const },
+              { label: "Sold Today", value: inventory.summary.sales ? inventory.summary.sales.soldToday.toLocaleString("en-PH") : "Unavailable", icon: "package" as const, tone: "neutral" as const },
+              { label: "Direct Deductions", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.directDeductionsToday) : "Unavailable", icon: "net" as const, tone: "amber" as const },
+              { label: "Net After Deductions", value: inventory.summary.sales ? formatInventoryValue(inventory.summary.sales.netAfterDirectDeductionsToday) : "Unavailable", icon: "net" as const, tone: "green" as const },
             ].map((item) => (
-              <div key={item.label} className="rounded-md border p-4 theme-subtle">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
-                <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
-              </div>
+              <AdminMetricCard key={item.label} icon={item.icon} label={item.label} value={item.value} tone={item.tone} />
             ))
           ) : (
             <UnavailablePanel label="Inventory data unavailable" />
@@ -109,8 +113,8 @@ export default async function AdminDashboardPage() {
         ) : null}
       </section>
 
-      <section className="mt-6 rounded-lg border p-5 theme-card">
-        <h2 className="text-lg font-black theme-text">Recent Products</h2>
+      <section className="mt-7 rounded-2xl border p-5 theme-card">
+        <h2 className="text-xl font-black theme-text">Recent Products</h2>
         {data.recent.length ? (
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[520px] text-sm">

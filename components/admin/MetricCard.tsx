@@ -8,8 +8,8 @@ export function MetricCard({
   change?: string | null;
 }) {
   return (
-    <div className="rounded-lg border p-4 theme-card">
-      <p className="text-xs font-black uppercase tracking-[0.16em] theme-text-muted">
+    <div className="rounded-2xl border p-5 theme-card">
+      <p className="text-sm font-bold theme-text-secondary">
         {label}
       </p>
       <p className="mt-3 text-3xl font-black theme-text">{value}</p>

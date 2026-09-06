@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { AdminEmptyState, AdminStatusBadge, adminFieldClass } from "@/components/admin/AdminUI";
 import { ProductStatusActions } from "@/components/admin/ProductStatusActions";
 import { formatPhp } from "@/lib/format";
 import { getInventoryStatus, getInventoryStatusClass, getInventoryStatusLabel } from "@/lib/inventory-status";
@@ -33,18 +34,18 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
   }, [products, query, sort, status]);
 
   return (
-    <section className="rounded-lg border p-4 theme-card">
+    <section className="rounded-2xl border p-5 theme-card">
       <div className="grid gap-3 lg:grid-cols-[1fr_auto_auto]">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search by name or slug"
-          className="min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-4 text-sm theme-text"
+          className={`${adminFieldClass} px-4`}
         />
         <select
           value={status}
           onChange={(event) => setStatus(event.target.value as ProductStatus | "all")}
-          className="min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-3 text-sm theme-text"
+          className={adminFieldClass}
         >
           <option value="all">All</option>
           <option value="published">Published</option>
@@ -54,7 +55,7 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
         <select
           value={sort}
           onChange={(event) => setSort(event.target.value as SortValue)}
-          className="min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-3 text-sm theme-text"
+          className={adminFieldClass}
         >
           <option value="display">Display Order</option>
           <option value="newest">Newest</option>
@@ -65,28 +66,26 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
       </div>
 
       {filteredProducts.length === 0 ? (
-        <div className="mt-6 rounded-lg border theme-border p-8 text-center">
-          <p className="font-bold theme-text">No products yet.</p>
-          <Link href="/admin/products/new" className="mt-4 inline-flex font-bold theme-accent">
-            Add Product
-          </Link>
+        <div className="mt-6">
+          <AdminEmptyState
+            title="No products found"
+            description="Adjust the filters or create a new storefront product."
+            action={<Link href="/admin/products/new" className="font-bold theme-accent">Add Product</Link>}
+          />
         </div>
       ) : (
         <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[1120px] text-sm">
-            <thead className="text-left theme-text-muted">
+          <table className="w-full min-w-[1060px] text-sm">
+            <thead className="bg-[var(--surface-secondary)] text-left theme-text-muted">
               <tr>
-                <th className="pb-3 font-semibold">Image</th>
-                <th className="pb-3 font-semibold">Name</th>
-                <th className="pb-3 font-semibold">SKU</th>
-                <th className="pb-3 font-semibold">Type</th>
-                <th className="pb-3 font-semibold">Status</th>
-                <th className="pb-3 font-semibold">Stock</th>
-                <th className="pb-3 font-semibold">Cost</th>
-                <th className="pb-3 font-semibold">Buy 1</th>
-                <th className="pb-3 font-semibold">Buy 2</th>
-                <th className="pb-3 font-semibold">Updated</th>
-                <th className="pb-3 text-right font-semibold">Actions</th>
+                <th className="rounded-l-lg px-3 py-3 font-semibold">Image</th>
+                <th className="px-3 py-3 font-semibold">Product</th>
+                <th className="px-3 py-3 font-semibold">Category</th>
+                <th className="px-3 py-3 font-semibold">Price</th>
+                <th className="px-3 py-3 font-semibold">Status</th>
+                <th className="px-3 py-3 font-semibold">Inventory</th>
+                <th className="px-3 py-3 font-semibold">Updated</th>
+                <th className="rounded-r-lg px-3 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
@@ -96,7 +95,7 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
 
                 return (
                   <tr key={product.id}>
-                    <td className="py-3">
+                    <td className="px-3 py-4">
                       <div className="relative h-14 w-14 overflow-hidden rounded-md bg-black">
                         {image ? (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -104,34 +103,35 @@ export function ProductManager({ products }: { products: ProductRow[] }) {
                         ) : null}
                       </div>
                     </td>
-                    <td className="py-3">
+                    <td className="px-3 py-4">
                       <p className="font-bold theme-text">{product.name}</p>
-                      <p className="mt-1 text-xs theme-text-muted">{product.slug}</p>
+                      <p className="mt-1 text-xs theme-text-muted">{product.slug} · {product.sku || "No SKU"}</p>
                     </td>
-                    <td className="py-3 theme-text-muted">{product.sku || "Not set"}</td>
-                    <td className="py-3 capitalize theme-text-secondary">
+                    <td className="px-3 py-4 capitalize theme-text-secondary">
                       {product.product_type === "custom" ? "Custom Branded" : "Standard"}
                     </td>
-                    <td className="py-3">
-                      <span className="rounded-md border px-2 py-1 text-xs font-bold theme-accent-bg">
-                        {product.status}
-                      </span>
+                    <td className="px-3 py-4">
+                      <div className="grid gap-1">
+                        <span className="font-bold theme-text">{formatPhp(Number(product.price_single))}</span>
+                        <span className="text-xs theme-text-muted">Buy 2 {formatPhp(Number(product.price_bundle ?? 0))}</span>
+                      </div>
                     </td>
-                    <td className="py-3">
+                    <td className="px-3 py-4">
+                      <AdminStatusBadge status={product.status} />
+                    </td>
+                    <td className="px-3 py-4">
                       <div className="grid gap-1">
                         <span className="font-bold theme-text">{product.current_stock ?? 0}</span>
                         <span className={`w-fit rounded-md border px-2 py-1 text-[10px] font-black uppercase tracking-[0.08em] ${getInventoryStatusClass(inventoryStatus)}`}>
                           {getInventoryStatusLabel(inventoryStatus)}
                         </span>
+                        <span className="text-xs theme-text-muted">Cost {formatPhp(Number(product.current_unit_cost ?? 0))}</span>
                       </div>
                     </td>
-                    <td className="py-3 theme-text">{formatPhp(Number(product.current_unit_cost ?? 0))}</td>
-                    <td className="py-3 theme-text">{formatPhp(Number(product.price_single))}</td>
-                    <td className="py-3 theme-text">{formatPhp(Number(product.price_bundle ?? 0))}</td>
-                    <td className="py-3 theme-text-muted">
+                    <td className="px-3 py-4 theme-text-muted">
                       {new Date(product.updated_at).toLocaleDateString("en-PH")}
                     </td>
-                    <td className="py-3">
+                    <td className="px-3 py-4">
                       <div className="flex flex-col items-end gap-2">
                         <Link
                           href={`/admin/products/${product.id}/edit`}

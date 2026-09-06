@@ -25,7 +25,7 @@ export function PeriodTabs({
             current === period.value
               ? "border-[var(--accent)] bg-[var(--accent-soft)] theme-accent"
               : "theme-border theme-text-secondary hover:border-[var(--accent)]"
-          }`}
+          } min-h-11 rounded-lg`}
         >
           {period.label}
         </Link>

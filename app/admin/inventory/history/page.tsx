@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminEmptyState, AdminPageHeader, adminFieldClass } from "@/components/admin/AdminUI";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getInventoryHistory, getInventoryProducts, inventoryMovementTypes } from "@/lib/inventory";
 import type { InventoryMovementType } from "@/types/database";
@@ -25,20 +26,16 @@ export default async function AdminInventoryHistoryPage({
 
   return (
     <AdminShell session={access.session}>
-      <p className="text-xs font-black uppercase tracking-[0.22em] theme-accent">
-        Inventory Ledger
-      </p>
-      <h1 className="mt-3 text-3xl font-black theme-text">Inventory History</h1>
-      <p className="mt-2 text-sm theme-text-secondary">
-        Review stock changes. Existing movements are not editable.
-      </p>
+      <AdminPageHeader
+        eyebrow="Inventory Ledger"
+        title="Inventory History"
+        description="Review stock changes. Existing movements are not editable."
+        action={<Link href="/admin/inventory" className="text-sm font-bold theme-accent">Back to Inventory</Link>}
+      />
 
-      <section className="mt-8 rounded-lg border p-4 theme-card">
+      <section className="mt-8 rounded-2xl border p-5 theme-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-black theme-text">Movement History</h2>
-          <Link href="/admin/inventory" className="text-sm font-bold theme-accent">
-            Back to Inventory
-          </Link>
         </div>
 
         <form className="mt-5 grid gap-3 lg:grid-cols-[1fr_220px_1fr_auto]">
@@ -75,37 +72,37 @@ export default async function AdminInventoryHistoryPage({
 
         <div className="mt-5 overflow-x-auto">
           <table className="w-full min-w-[960px] text-sm">
-            <thead className="text-left theme-text-muted">
+            <thead className="bg-[var(--surface-secondary)] text-left theme-text-muted">
               <tr>
-                <th className="pb-3 font-semibold">Date/Time</th>
-                <th className="pb-3 font-semibold">Product</th>
-                <th className="pb-3 font-semibold">Previous</th>
-                <th className="pb-3 font-semibold">Change</th>
-                <th className="pb-3 font-semibold">New</th>
-                <th className="pb-3 font-semibold">Reason</th>
-                <th className="pb-3 font-semibold">Admin</th>
-                <th className="pb-3 font-semibold">Notes</th>
+                <th className="rounded-l-lg px-3 py-3 font-semibold">Date/Time</th>
+                <th className="px-3 py-3 font-semibold">Product</th>
+                <th className="px-3 py-3 font-semibold">Previous</th>
+                <th className="px-3 py-3 font-semibold">Change</th>
+                <th className="px-3 py-3 font-semibold">New</th>
+                <th className="px-3 py-3 font-semibold">Reason</th>
+                <th className="px-3 py-3 font-semibold">Admin</th>
+                <th className="rounded-r-lg px-3 py-3 font-semibold">Notes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
               {movements.map((movement) => (
                 <tr key={movement.id}>
-                  <td className="py-3 theme-text-muted">
+                  <td className="px-3 py-4 theme-text-muted">
                     {new Date(movement.created_at).toLocaleString("en-PH")}
                   </td>
-                  <td className="py-3">
+                  <td className="px-3 py-4">
                     <p className="font-bold theme-text">{movement.productName}</p>
                     <p className="mt-1 text-xs theme-text-muted">{movement.productSku || "No SKU"}</p>
                   </td>
-                  <td className="py-3 theme-text">{movement.previous_quantity}</td>
-                  <td className={`py-3 font-bold ${movement.quantity_change > 0 ? "text-green-300" : "text-red-300"}`}>
+                  <td className="px-3 py-4 theme-text">{movement.previous_quantity}</td>
+                  <td className={`px-3 py-4 font-bold ${movement.quantity_change > 0 ? "text-green-300" : "text-red-300"}`}>
                     {movement.quantity_change > 0 ? "+" : ""}
                     {movement.quantity_change}
                   </td>
-                  <td className="py-3 theme-text">{movement.new_quantity}</td>
-                  <td className="py-3 theme-text-secondary">{movement.reason || formatMovementType(movement.movement_type)}</td>
-                  <td className="py-3 theme-text-muted">{movement.actorEmail || "Unknown admin"}</td>
-                  <td className="py-3 theme-text-muted">{movement.notes || "-"}</td>
+                  <td className="px-3 py-4 theme-text">{movement.new_quantity}</td>
+                  <td className="px-3 py-4 theme-text-secondary">{movement.reason || formatMovementType(movement.movement_type)}</td>
+                  <td className="px-3 py-4 theme-text-muted">{movement.actorEmail || "Unknown admin"}</td>
+                  <td className="px-3 py-4 theme-text-muted">{movement.notes || "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -113,17 +110,16 @@ export default async function AdminInventoryHistoryPage({
         </div>
 
         {movements.length === 0 ? (
-          <p className="mt-5 rounded-md border theme-border p-5 text-center text-sm theme-text-muted">
-            No inventory movements found.
-          </p>
+          <div className="mt-5">
+            <AdminEmptyState title="No inventory movements found" description="Try changing the filters or add stock to create the first ledger entry." />
+          </div>
         ) : null}
       </section>
     </AdminShell>
   );
 }
 
-const fieldClass =
-  "min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-3 text-sm theme-text outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25";
+const fieldClass = adminFieldClass;
 
 function single(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;

@@ -30,24 +30,24 @@ function SmallTable({
   rows: Array<[string, number | string]>;
 }) {
   return (
-    <section className="rounded-lg border p-4 theme-card">
-      <h2 className="font-black theme-text">{title}</h2>
+    <section className="rounded-2xl border p-5 theme-card">
+      <h2 className="text-lg font-black theme-text">{title}</h2>
       {rows.length === 0 ? (
         <p className="mt-4 text-sm theme-text-muted">No data yet.</p>
       ) : (
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="text-left theme-text-muted">
+            <thead className="bg-[var(--surface-secondary)] text-left theme-text-muted">
               <tr>
-                <th className="pb-2 font-semibold">{columns[0]}</th>
-                <th className="pb-2 text-right font-semibold">{columns[1]}</th>
+                <th className="rounded-l-lg px-3 py-2 font-semibold">{columns[0]}</th>
+                <th className="rounded-r-lg px-3 py-2 text-right font-semibold">{columns[1]}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
               {rows.slice(0, 8).map(([label, value]) => (
                 <tr key={label}>
-                  <td className="py-2 theme-text">{label}</td>
-                  <td className="py-2 text-right font-bold theme-text">{value}</td>
+                  <td className="px-3 py-3 theme-text">{label}</td>
+                  <td className="px-3 py-3 text-right font-bold theme-text">{value}</td>
                 </tr>
               ))}
             </tbody>

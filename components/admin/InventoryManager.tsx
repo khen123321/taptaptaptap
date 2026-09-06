@@ -3,6 +3,14 @@
 import Link from "next/link";
 import { Fragment, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import {
+  AdminButton,
+  AdminEmptyState,
+  AdminFormSection,
+  AdminMetricCard,
+  AdminModal,
+  adminFieldClass,
+} from "@/components/admin/AdminUI";
 import { formatPhp } from "@/lib/format";
 import {
   getInventoryStatusClass,
@@ -63,6 +71,7 @@ type SaleItemSummary = {
 export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const router = useRouter();
   const [selectedProductId, setSelectedProductId] = useState(data.items[0]?.product.id ?? "");
+  const [activeModal, setActiveModal] = useState<"restock" | "adjust" | "sale" | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -126,6 +135,18 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     setSaleItems((current) => current.length > 1 ? current.filter((item) => item.id !== id) : current);
   };
 
+  const openProductAction = (productId: string, modal: "restock" | "adjust" | "sale") => {
+    setSelectedProductId(productId);
+    if (modal === "sale") {
+      setSaleItems((current) => current.length ? current.map((item, index) => index === 0 ? { ...item, productId } : item) : [createSaleItemDraft(productId)]);
+    }
+    setActiveModal(modal);
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+  };
+
   const addDeduction = () => {
     setDeductions((current) => [
       ...current,
@@ -172,6 +193,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     } else {
       setAdjustmentKey(crypto.randomUUID());
     }
+    closeModal();
     setMessage("Inventory updated.");
     router.refresh();
   };
@@ -217,6 +239,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
     setSoldTime(manilaNow.time);
     setDeductions([]);
     setSaleResult(result.sale);
+    closeModal();
     router.refresh();
   };
 
@@ -234,15 +257,10 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
       ) : null}
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <SummaryCard label="Total Units In Stock" value={data.summary.totalUnits.toLocaleString("en-PH")} />
-        <SummaryCard label="Inventory Value" value={formatPhp(data.summary.inventoryValue)} />
-        <SummaryCard label="Sold Today" value={data.summary.sales ? data.summary.sales.soldToday.toLocaleString("en-PH") : "Unavailable"} />
-        <SummaryCard label="Sales Today" value={data.summary.sales ? formatPhp(data.summary.sales.salesToday) : "Unavailable"} />
-        <SummaryCard label="Orders Today" value={data.summary.sales ? data.summary.sales.ordersToday.toLocaleString("en-PH") : "Unavailable"} />
-        <SummaryCard label="Direct Deductions Today" value={data.summary.sales ? formatPhp(data.summary.sales.directDeductionsToday) : "Unavailable"} />
-        <SummaryCard label="Net After Deductions Today" value={data.summary.sales ? formatPhp(data.summary.sales.netAfterDirectDeductionsToday) : "Unavailable"} />
-        <SummaryCard label="Low Stock Products" value={String(data.summary.lowStockProducts)} />
-        <SummaryCard label="Out of Stock Products" value={String(data.summary.outOfStockProducts)} />
+        <AdminMetricCard icon="package-check" label="Total Units" value={data.summary.totalUnits.toLocaleString("en-PH")} />
+        <AdminMetricCard icon="net" label="Inventory Value" value={formatPhp(data.summary.inventoryValue)} tone="neutral" />
+        <AdminMetricCard icon="low-stock" label="Low Stock" value={String(data.summary.lowStockProducts)} tone="amber" />
+        <AdminMetricCard icon="out-of-stock" label="Out of Stock" value={String(data.summary.outOfStockProducts)} tone="red" />
       </section>
       {data.salesError ? (
         <p className="rounded-md border border-yellow-400/40 bg-yellow-500/10 px-3 py-2 text-sm font-semibold text-yellow-200">
@@ -271,64 +289,106 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
         </section>
       ) : null}
 
-      <section className="rounded-lg border p-4 theme-card">
+      <section className="rounded-2xl border p-5 theme-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-black theme-text">Inventory Actions</h2>
-            <p className="mt-1 text-sm theme-text-muted">
-              Every stock change creates a movement entry.
-            </p>
+            <h2 className="text-xl font-black theme-text">Product Inventory</h2>
+            <p className="mt-1 text-sm theme-text-muted">Choose a product action. Every stock change creates a movement entry.</p>
           </div>
           <Link href="/admin/inventory/history" className="text-sm font-bold theme-accent">
             View History
           </Link>
         </div>
 
-        <div className="mt-5 grid gap-5 xl:grid-cols-[280px_1fr_1fr_1fr]">
-          <label className="grid gap-2 text-sm font-bold theme-text">
-            Product
-            <select
-              value={selectedProductId}
-              onChange={(event) => setSelectedProductId(event.target.value)}
-              className={fieldClass}
-            >
-              {data.items.map((item) => (
-                <option key={item.product.id} value={item.product.id}>
-                  {item.product.name}
-                </option>
-              ))}
-            </select>
-            {selectedProduct ? (
-              <span className="text-xs font-semibold theme-text-muted">
-                Current stock: {selectedProduct.current_stock ?? 0}
-              </span>
-            ) : null}
-          </label>
+        {data.items.length ? (
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[980px] text-sm">
+              <thead className="bg-[var(--surface-secondary)] text-left theme-text-muted">
+                <tr>
+                  <th className="rounded-l-lg px-3 py-3 font-semibold">Product</th>
+                  <th className="px-3 py-3 font-semibold">SKU</th>
+                  <th className="px-3 py-3 font-semibold">Stock</th>
+                  <th className="px-3 py-3 font-semibold">Unit Cost</th>
+                  <th className="px-3 py-3 font-semibold">Inventory Value</th>
+                  <th className="px-3 py-3 font-semibold">Status</th>
+                  <th className="rounded-r-lg px-3 py-3 text-right font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--border)]">
+                {data.items.map((item) => (
+                  <tr key={item.product.id}>
+                    <td className="px-3 py-4">
+                      <p className="font-bold theme-text">{item.product.name}</p>
+                      <p className="mt-1 text-xs theme-text-muted">Sold today: {item.soldToday ?? "Unavailable"} · Total sold: {item.totalSold ?? "Unavailable"}</p>
+                    </td>
+                    <td className="px-3 py-4 theme-text-muted">{item.product.sku || "Not set"}</td>
+                    <td className="px-3 py-4 text-xl font-black theme-text">{item.product.current_stock ?? 0}</td>
+                    <td className="px-3 py-4 theme-text">{formatPhp(Number(item.product.current_unit_cost ?? 0))}</td>
+                    <td className="px-3 py-4 font-bold theme-text">{formatPhp(item.inventoryValue)}</td>
+                    <td className="px-3 py-4">
+                      <span className={`rounded-full border px-2.5 py-1 text-xs font-bold ${getInventoryStatusClass(item.status)}`}>
+                        {getInventoryStatusLabel(item.status)}
+                      </span>
+                    </td>
+                    <td className="px-3 py-4">
+                      <div className="flex flex-wrap justify-end gap-2">
+                        <AdminButton type="button" variant="secondary" onClick={() => openProductAction(item.product.id, "restock")}>Add Stock</AdminButton>
+                        <AdminButton type="button" variant="ghost" onClick={() => openProductAction(item.product.id, "adjust")}>Adjust</AdminButton>
+                        <AdminButton type="button" variant="primary" onClick={() => openProductAction(item.product.id, "sale")}>Quick Sale</AdminButton>
+                        <Link href={`/admin/inventory/history?product=${item.product.id}`} className="inline-flex min-h-11 items-center justify-center rounded-lg border theme-border px-4 text-sm font-bold theme-text-secondary hover:border-[var(--accent)]">
+                          History
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <AdminEmptyState title="No products yet" description="Create products before managing stock or recording quick sales." />
+        )}
+      </section>
 
-          <form onSubmit={submit} className="rounded-lg border p-4 theme-subtle">
-            <input type="hidden" name="flow" value="restock" />
-            <input type="hidden" name="idempotency_key" value={restockKey} />
-            <h3 className="text-sm font-black uppercase tracking-[0.14em] theme-accent">Add Stock</h3>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Field label="Quantity received" name="quantity" type="number" min="1" required />
-              <Field label="Cost per unit" name="unit_cost" type="number" min="0" prefix="₱" required />
+      <AdminModal
+        open={activeModal === "restock"}
+        title="Add Stock"
+        description={selectedProduct ? selectedProduct.name : "Select a product to restock."}
+        onClose={closeModal}
+        footer={<div className="flex justify-end gap-3"><AdminButton type="button" variant="secondary" onClick={closeModal}>Cancel</AdminButton><SubmitButton saving={saving} form="restock-form" disabled={!selectedTracked} label={selectedTracked ? "Add Stock" : "Not Tracked"} /></div>}
+      >
+        <form id="restock-form" onSubmit={submit} className="grid gap-4">
+          <input type="hidden" name="flow" value="restock" />
+          <input type="hidden" name="idempotency_key" value={restockKey} />
+          <AdminFormSection title="Stock Received">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Quantity Received" name="quantity" type="number" min="1" required />
+              <Field label="Cost Per Unit" name="unit_cost" type="number" min="0" prefix="₱" required />
               <Field label="Supplier" name="supplier" />
-              <Field label="Freight cost" name="freight_cost" type="number" min="0" prefix="₱" />
-              <Field label="Date received" name="received_at" type="date" />
-              <label className="flex min-h-11 items-center gap-2 rounded-md border theme-border px-3 text-sm font-bold theme-text">
+              <Field label="Freight Cost" name="freight_cost" type="number" min="0" prefix="₱" />
+              <Field label="Date Received" name="received_at" type="date" />
+              <label className="flex min-h-11 items-center gap-2 rounded-lg border theme-border px-3 text-sm font-bold theme-text">
                 <input name="update_unit_cost" type="checkbox" defaultChecked className="h-4 w-4 accent-[var(--accent)]" />
                 Update cost
               </label>
             </div>
             <TextArea label="Notes" name="notes" />
-            <SubmitButton saving={saving} disabled={!selectedTracked} label={selectedTracked ? "Add Stock" : "Not Tracked"} />
-          </form>
+          </AdminFormSection>
+        </form>
+      </AdminModal>
 
-          <form onSubmit={submit} className="rounded-lg border p-4 theme-subtle">
-            <input type="hidden" name="flow" value="adjust" />
-            <input type="hidden" name="idempotency_key" value={adjustmentKey} />
-            <h3 className="text-sm font-black uppercase tracking-[0.14em] theme-accent">Adjust Stock</h3>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <AdminModal
+        open={activeModal === "adjust"}
+        title="Adjust Stock"
+        description={selectedProduct ? `${selectedProduct.name} · Current stock ${selectedProduct.current_stock ?? 0}` : "Select a product to adjust."}
+        onClose={closeModal}
+        footer={<div className="flex justify-end gap-3"><AdminButton type="button" variant="secondary" onClick={closeModal}>Cancel</AdminButton><SubmitButton saving={saving} form="adjust-form" disabled={!selectedTracked} label={selectedTracked ? "Save Adjustment" : "Not Tracked"} /></div>}
+      >
+        <form id="adjust-form" onSubmit={submit} className="grid gap-4">
+          <input type="hidden" name="flow" value="adjust" />
+          <input type="hidden" name="idempotency_key" value={adjustmentKey} />
+          <AdminFormSection title="Adjustment Details">
+            <div className="grid gap-3 sm:grid-cols-2">
               <label className="grid gap-2 text-sm font-bold theme-text">
                 Adjustment
                 <select name="adjustment_action" className={fieldClass} defaultValue="remove">
@@ -349,10 +409,19 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               </label>
             </div>
             <TextArea label="Notes" name="notes" />
-            <SubmitButton saving={saving} disabled={!selectedTracked} label={selectedTracked ? "Save Adjustment" : "Not Tracked"} />
-          </form>
+          </AdminFormSection>
+        </form>
+      </AdminModal>
 
-          <form onSubmit={submitSale} className="rounded-lg border p-4 theme-subtle">
+      <AdminModal
+        open={activeModal === "sale"}
+        title="Record Quick Sale"
+        description="Create a pending sale or record a sold transaction."
+        onClose={closeModal}
+        size="xl"
+        footer={<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><AdminButton type="button" variant="secondary" onClick={closeModal}>Cancel</AdminButton><SubmitButton saving={saving} form="quick-sale-form" disabled={saleStatus === "pending" ? !canSaveSale : !canMarkSold} label={saleStatus === "pending" ? "Save Pending" : "Record as Sold"} /></div>}
+      >
+        <form id="quick-sale-form" onSubmit={submitSale} className="grid gap-5">
             <input type="hidden" name="idempotency_key" value={saleKey} />
             {deductions.map((deduction) => (
               <Fragment key={`${deduction.id}-inputs`}>
@@ -361,10 +430,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                 <input type="hidden" name="expense_description" value={deduction.description} />
               </Fragment>
             ))}
-            <h3 className="text-sm font-black uppercase tracking-[0.14em] theme-accent">Quick Sale</h3>
-
-            <div className="mt-4 grid gap-2">
-              <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Sale Status</h4>
+            <AdminFormSection title="Sale Status">
               <div className="grid gap-2 sm:grid-cols-2">
                 <PackageButton
                   label="Pending"
@@ -379,10 +445,9 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                   onClick={() => setSaleStatus("completed")}
                 />
               </div>
-            </div>
 
             {saleStatus === "completed" ? (
-              <div className="mt-4 grid gap-3 rounded-md border theme-border p-3 sm:grid-cols-2">
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <label className="grid gap-2 text-sm font-bold theme-text">
                   Sold Date
                   <input
@@ -407,10 +472,10 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                 </label>
               </div>
             ) : null}
+            </AdminFormSection>
 
-            <div className="mt-4 rounded-md border theme-border p-3">
+            <AdminFormSection title="Products">
               <div className="flex items-center justify-between gap-3">
-                <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Products</h4>
                 <button
                   type="button"
                   onClick={addSaleItem}
@@ -527,24 +592,25 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
                   </div>
                 ))}
               </div>
-            </div>
+            </AdminFormSection>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <label className="grid gap-2 text-sm font-bold theme-text">
-                Payment
-                <select name="payment_method" className={fieldClass} defaultValue="gcash">
-                  <option value="gcash">GCash</option>
-                  <option value="bank_transfer">Bank Transfer</option>
-                  <option value="cash">Cash</option>
-                  <option value="other">Other</option>
-                </select>
-              </label>
-              <Field label="Reference" name="reference_number" />
-            </div>
-            <TextArea label="Notes" name="notes" />
-            <div className="mt-4 rounded-md border theme-border p-3">
+            <AdminFormSection title="Payment">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="grid gap-2 text-sm font-bold theme-text">
+                  Payment Method
+                  <select name="payment_method" className={fieldClass} defaultValue="gcash">
+                    <option value="gcash">GCash</option>
+                    <option value="bank_transfer">Bank Transfer</option>
+                    <option value="cash">Cash</option>
+                    <option value="other">Other</option>
+                  </select>
+                </label>
+                <Field label="Reference (optional)" name="reference_number" />
+              </div>
+            </AdminFormSection>
+
+            <AdminFormSection title="Direct Deductions" description="Expenses directly related to this sale.">
               <div className="flex items-center justify-between gap-3">
-                <h4 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Sale Deductions</h4>
                 <button
                   type="button"
                   onClick={addDeduction}
@@ -608,31 +674,37 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               ) : (
                 <p className="mt-3 rounded-md border theme-border p-3 text-sm theme-text-muted">No deductions</p>
               )}
-            </div>
-            <div className="mt-4 grid gap-2 rounded-md border theme-border p-3 text-sm">
+            </AdminFormSection>
+
+            <AdminFormSection title="Notes">
+              <TextArea label="Notes" name="notes" />
+            </AdminFormSection>
+
+            <AdminFormSection title={saleItems.length > 1 ? "Sale Summary · Combo Sale" : "Sale Summary"}>
+              <div className="grid gap-2 text-sm">
+                {saleItemSummaries.map((summary, index) => (
+                  <PriceRow key={summary.draft.id} label={`${index + 1}. ${summary.product?.name ?? "Product"} (${summary.quantity})`} value={formatPhp(summary.amount)} />
+                ))}
+              </div>
+              <div className="mt-4 grid gap-2 border-t theme-border pt-4 text-sm">
               <PriceRow label="Gross Value" value={formatPhp(grossValue)} />
               <PriceRow label="Discount" value={formatPhp(saleDiscount)} />
               <PriceRow label="Customer Pays" value={formatPhp(saleAmount)} strong />
               <PriceRow label="Direct Deductions" value={formatPhp(totalDirectDeductions)} />
               <PriceRow label="Net After Deductions" value={formatPhp(netAfterDeductions)} strong />
-            </div>
+              </div>
             {saleStatus === "completed" && !hasSaleStock ? (
               <p className="mt-3 text-sm font-semibold text-red-300">
                 Insufficient stock for one or more products in this sale.
               </p>
             ) : null}
-            {saleStatus === "pending" ? (
-              <SubmitButton saving={saving} disabled={!canSaveSale} label="Save Pending" />
-            ) : (
-              <SubmitButton saving={saving} disabled={!canMarkSold} label="Record as Sold" />
-            )}
+            </AdminFormSection>
           </form>
-        </div>
-      </section>
+      </AdminModal>
 
-      <section className="rounded-lg border p-4 theme-card">
+      <section className="rounded-2xl border p-5 theme-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-black theme-text">Today&apos;s Sales</h2>
+          <h2 className="text-xl font-black theme-text">Today&apos;s Sales</h2>
           <Link href="/admin/sales?date=today" className="text-sm font-bold theme-accent">
             View All Sales
           </Link>
@@ -643,7 +715,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
               Sales data unavailable.
             </p>
           ) : data.todaySales.length ? data.todaySales.map((sale) => (
-            <div key={sale.sale.id} className="grid gap-2 rounded-md border p-3 theme-subtle sm:grid-cols-[90px_1fr_auto_auto] sm:items-center">
+            <div key={sale.sale.id} className="grid gap-2 rounded-xl border p-3 theme-subtle sm:grid-cols-[90px_1fr_auto_auto] sm:items-center">
               <p className="text-sm font-bold theme-text-muted">
                 {sale.sale.completed_at ? formatSaleTime(sale.sale.completed_at) : "-"}
               </p>
@@ -658,56 +730,7 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
           )}
         </div>
       </section>
-
-      <section className="rounded-lg border p-4 theme-card">
-        <h2 className="text-lg font-black theme-text">Current Inventory</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[920px] text-sm">
-            <thead className="text-left theme-text-muted">
-              <tr>
-                <th className="pb-3 font-semibold">Product</th>
-                <th className="pb-3 font-semibold">SKU</th>
-                <th className="pb-3 font-semibold">Stock</th>
-                <th className="pb-3 font-semibold">Sold Today</th>
-                <th className="pb-3 font-semibold">Total Sold</th>
-                <th className="pb-3 font-semibold">Unit Cost</th>
-                <th className="pb-3 font-semibold">Inventory Value</th>
-                <th className="pb-3 font-semibold">Threshold</th>
-                <th className="pb-3 font-semibold">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--border)]">
-              {data.items.map((item) => (
-                <tr key={item.product.id}>
-                  <td className="py-3 font-bold theme-text">{item.product.name}</td>
-                  <td className="py-3 theme-text-muted">{item.product.sku || "Not set"}</td>
-                  <td className="py-3 theme-text">{item.product.current_stock ?? 0}</td>
-                  <td className="py-3 theme-text">{item.soldToday ?? "Unavailable"}</td>
-                  <td className="py-3 theme-text">{item.totalSold ?? "Unavailable"}</td>
-                  <td className="py-3 theme-text">{formatPhp(Number(item.product.current_unit_cost ?? 0))}</td>
-                  <td className="py-3 theme-text">{formatPhp(item.inventoryValue)}</td>
-                  <td className="py-3 theme-text-muted">{item.product.low_stock_threshold ?? 0}</td>
-                  <td className="py-3">
-                    <span className={`rounded-md border px-2 py-1 text-xs font-bold ${getInventoryStatusClass(item.status)}`}>
-                      {getInventoryStatusLabel(item.status)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
     </div>
-  );
-}
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <section className="rounded-lg border p-5 theme-card">
-      <p className="text-sm font-bold theme-text">{label}</p>
-      <p className="mt-4 text-3xl font-black theme-accent">{value}</p>
-    </section>
   );
 }
 
@@ -752,8 +775,7 @@ function PackageButton({
   );
 }
 
-const fieldClass =
-  "min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-3 text-sm theme-text outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25";
+const fieldClass = adminFieldClass;
 
 function Field({
   label,
@@ -794,18 +816,31 @@ function TextArea({ label, name }: { label: string; name: string }) {
       <textarea
         name={name}
         rows={3}
-        className="rounded-md border theme-border bg-[var(--surface-secondary)] px-3 py-2 text-sm theme-text outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25"
+        className="min-h-20 rounded-lg border theme-border bg-[var(--surface-secondary)] px-3 py-2 text-sm theme-text outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25"
       />
     </label>
   );
 }
 
-function SubmitButton({ saving, disabled, label, value }: { saving: boolean; disabled?: boolean; label: string; value?: string }) {
+function SubmitButton({
+  saving,
+  disabled,
+  label,
+  value,
+  form,
+}: {
+  saving: boolean;
+  disabled?: boolean;
+  label: string;
+  value?: string;
+  form?: string;
+}) {
   return (
     <button
       disabled={saving || disabled}
       value={value}
-      className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] disabled:cursor-not-allowed disabled:opacity-60"
+      form={form}
+      className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {saving ? "Saving..." : label}
     </button>

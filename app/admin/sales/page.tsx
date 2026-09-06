@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminLinkButton, AdminMetricCard, AdminPageHeader, adminFieldClass } from "@/components/admin/AdminUI";
 import { SalesManager } from "@/components/admin/SalesManager";
 import { requireAdmin } from "@/lib/admin-auth";
 import { formatPhp } from "@/lib/format";
@@ -37,15 +38,14 @@ export default async function AdminSalesPage({
 
   return (
     <AdminShell session={access.session}>
-      <p className="text-xs font-black uppercase tracking-[0.22em] theme-accent">
-        Physical Sales
-      </p>
-      <h1 className="mt-3 text-3xl font-black theme-text">Sales</h1>
-      <p className="mt-2 text-sm theme-text-secondary">
-        Review quick physical sales and cancel completed sales when needed.
-      </p>
+      <AdminPageHeader
+        eyebrow="Physical Sales"
+        title="Sales"
+        description="Review and manage physical transactions."
+        action={<AdminLinkButton href="/admin/inventory" variant="primary">+ Record Quick Sale</AdminLinkButton>}
+      />
 
-      <section className="mt-8 rounded-lg border p-4 theme-card">
+      <section className="mt-8 rounded-2xl border p-5 theme-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-black theme-text">Sales History</h2>
           <Link href="/admin/inventory" className="text-sm font-bold theme-accent">
@@ -94,10 +94,7 @@ export default async function AdminSalesPage({
             { label: "Direct Deductions Today", value: formatPhp(summary.directDeductionsToday) },
             { label: "Net After Deductions", value: formatPhp(summary.netAfterDirectDeductionsToday) },
           ].map((item) => (
-            <div key={item.label} className="rounded-lg border p-4 theme-card">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] theme-text-muted">{item.label}</p>
-              <p className="mt-3 text-2xl font-black theme-text">{item.value}</p>
-            </div>
+            <AdminMetricCard key={item.label} label={item.label} value={item.value} tone={item.label.includes("Sales") || item.label.includes("Net") ? "green" : "neutral"} />
           ))}
         </section>
       ) : null}
@@ -118,8 +115,7 @@ export default async function AdminSalesPage({
   );
 }
 
-const fieldClass =
-  "min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-3 text-sm theme-text outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25";
+const fieldClass = adminFieldClass;
 
 function single(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Fragment, useState, type FormEvent } from "react";
+import { AdminButton, AdminEmptyState, AdminStatusBadge, adminFieldClass } from "@/components/admin/AdminUI";
 import { formatPhp } from "@/lib/format";
 import type { SaleListItem, SaleResult } from "@/lib/sales";
 import type { ProductRow, SaleExpenseType, SaleItemPackageType } from "@/types/database";
@@ -218,7 +219,7 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
   };
 
   return (
-    <section className="rounded-lg border p-4 theme-card">
+    <section className="rounded-2xl border p-5 theme-card">
       {message ? (
         <p className="mb-4 rounded-md border border-green-400/40 bg-green-500/10 px-3 py-2 text-sm text-green-300">
           {message}
@@ -232,91 +233,87 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[1180px] text-sm">
-          <thead className="text-left theme-text-muted">
+          <thead className="bg-[var(--surface-secondary)] text-left theme-text-muted">
             <tr>
-              <th className="pb-3 font-semibold">Sale ID</th>
-              <th className="pb-3 font-semibold">Sold Date</th>
-              <th className="pb-3 font-semibold">Product</th>
-              <th className="pb-3 font-semibold">Qty</th>
-              <th className="pb-3 font-semibold">Package</th>
-              <th className="pb-3 font-semibold">Amount</th>
-              <th className="pb-3 font-semibold">Deductions</th>
-              <th className="pb-3 font-semibold">Net After</th>
-              <th className="pb-3 font-semibold">Payment</th>
-              <th className="pb-3 font-semibold">Handled By</th>
-              <th className="pb-3 font-semibold">Status</th>
-              <th className="pb-3 text-right font-semibold">Actions</th>
+              <th className="rounded-l-lg px-3 py-3 font-semibold">Sale ID</th>
+              <th className="px-3 py-3 font-semibold">Sold Date</th>
+              <th className="px-3 py-3 font-semibold">Product</th>
+              <th className="px-3 py-3 font-semibold">Qty</th>
+              <th className="px-3 py-3 font-semibold">Package</th>
+              <th className="px-3 py-3 font-semibold">Amount</th>
+              <th className="px-3 py-3 font-semibold">Deductions</th>
+              <th className="px-3 py-3 font-semibold">Net After</th>
+              <th className="px-3 py-3 font-semibold">Payment</th>
+              <th className="px-3 py-3 font-semibold">Status</th>
+              <th className="rounded-r-lg px-3 py-3 text-right font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--border)]">
             {sales.map((item) => (
               <Fragment key={item.sale.id}>
                 <tr>
-                  <td className="py-3 font-bold theme-text">{item.sale.sale_number}</td>
-                  <td className="py-3 theme-text-muted">{item.sale.completed_at ? formatDateTime(item.sale.completed_at) : "-"}</td>
-                  <td className="py-3">
+                  <td className="px-3 py-4 font-bold theme-text">{item.sale.sale_number}</td>
+                  <td className="px-3 py-4 theme-text-muted">{item.sale.completed_at ? formatDateTime(item.sale.completed_at) : "-"}</td>
+                  <td className="px-3 py-4">
                     <p className="font-bold theme-text">{item.productName}</p>
                     <p className="mt-1 text-xs theme-text-muted">{item.items.length > 1 ? `${item.items.length} products` : item.sku || "No SKU"}</p>
                   </td>
-                  <td className="py-3 theme-text">{item.quantity}</td>
-                  <td className="py-3 theme-text-secondary">{item.packageLabel}</td>
-                  <td className="py-3 font-bold theme-text">{formatPhp(item.finalAmount)}</td>
-                  <td className="py-3 theme-text-secondary">{formatPhp(item.totalDirectDeductions)}</td>
-                  <td className="py-3 font-bold theme-text">{formatPhp(item.netAfterDeductions)}</td>
-                  <td className="py-3 theme-text-secondary">{paymentLabel(item.paymentMethod)}</td>
-                  <td className="py-3 theme-text-muted">{item.handledByEmail || "Unknown admin"}</td>
-                  <td className="py-3">
-                    <span className={`rounded-md border px-2 py-1 text-xs font-bold ${statusClass(item.sale.status)}`}>
-                      {item.sale.status}
-                    </span>
+                  <td className="px-3 py-4 font-bold theme-text">{item.quantity}</td>
+                  <td className="px-3 py-4 theme-text-secondary">{item.packageLabel}</td>
+                  <td className="px-3 py-4 font-bold theme-text">{formatPhp(item.finalAmount)}</td>
+                  <td className="px-3 py-4 theme-text-secondary">{formatPhp(item.totalDirectDeductions)}</td>
+                  <td className="px-3 py-4 font-bold theme-text">{formatPhp(item.netAfterDeductions)}</td>
+                  <td className="px-3 py-4 theme-text-secondary">{paymentLabel(item.paymentMethod)}</td>
+                  <td className="px-3 py-4">
+                    <AdminStatusBadge status={item.sale.status} />
                   </td>
-                  <td className="py-3">
+                  <td className="px-3 py-4">
                     <div className="flex flex-wrap justify-end gap-2">
-                      <button
+                      <AdminButton
                         type="button"
+                        variant="ghost"
                         onClick={() => setExpandedSaleId(expandedSaleId === item.sale.id ? null : item.sale.id)}
-                        className="rounded-md border theme-border px-3 py-2 text-xs font-bold theme-text"
                       >
                         Details
-                      </button>
-                      <button
+                      </AdminButton>
+                      <AdminButton
                         type="button"
+                        variant="secondary"
                         onClick={() => openEditSale(item)}
-                        className="rounded-md border border-[var(--accent)]/70 px-3 py-2 text-xs font-bold theme-accent"
                       >
                         Edit
-                      </button>
+                      </AdminButton>
                       {item.sale.status === "pending" ? (
-                        <button
+                        <AdminButton
                           type="button"
+                          variant="primary"
                           onClick={() => openCompleteSale(item.sale.id)}
-                          className="rounded-md border border-[var(--accent)] px-3 py-2 text-xs font-bold theme-accent"
                         >
                           Mark Sold
-                        </button>
+                        </AdminButton>
                       ) : null}
                       {item.sale.status !== "cancelled" ? (
-                        <button
+                        <AdminButton
                           type="button"
+                          variant="danger"
                           onClick={() => setCancellingSaleId(item.sale.id)}
-                          className="rounded-md border border-red-400/50 px-3 py-2 text-xs font-bold text-red-300"
                         >
                           Cancel
-                        </button>
+                        </AdminButton>
                       ) : null}
-                      <button
+                      <AdminButton
                         type="button"
+                        variant="danger"
                         onClick={() => setDeletingSale(item)}
-                        className="rounded-md border border-red-400/50 px-3 py-2 text-xs font-bold text-red-300"
                       >
                         Delete
-                      </button>
+                      </AdminButton>
                     </div>
                   </td>
                 </tr>
                 {expandedSaleId === item.sale.id ? (
                   <tr key={`${item.sale.id}-details`}>
-                    <td colSpan={12} className="py-4">
+                    <td colSpan={11} className="py-4">
                       <div className="grid gap-4 rounded-md border p-4 theme-subtle lg:grid-cols-[1fr_1fr]">
                         <div>
                           <h3 className="text-xs font-black uppercase tracking-[0.14em] theme-accent">Sale Summary</h3>
@@ -382,9 +379,9 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
       </div>
 
       {sales.length === 0 ? (
-        <p className="mt-5 rounded-md border theme-border p-5 text-center text-sm theme-text-muted">
-          No sales found.
-        </p>
+        <div className="mt-5">
+          <AdminEmptyState title="No sales found" description="Record a quick sale from Inventory to start tracking revenue and stock movement." />
+        </div>
       ) : null}
 
       {editingSale ? (
@@ -712,8 +709,7 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
   );
 }
 
-const fieldClass =
-  "min-h-11 rounded-md border theme-border bg-[var(--surface-secondary)] px-3 text-sm theme-text outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[#00A8C0]/25";
+const fieldClass = adminFieldClass;
 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
@@ -789,12 +785,6 @@ function paymentLabel(value: string) {
   if (value === "bank_transfer") return "Bank Transfer";
   if (value === "cash") return "Cash";
   return "Other";
-}
-
-function statusClass(status: string) {
-  if (status === "completed") return "border-green-400/50 bg-green-500/10 text-green-300";
-  if (status === "pending") return "border-yellow-400/50 bg-yellow-500/10 text-yellow-200";
-  return "border-red-400/50 bg-red-500/10 text-red-300";
 }
 
 function formatDateTime(value: string) {

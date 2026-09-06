@@ -1,5 +1,6 @@
 import { AdminDenied } from "@/components/admin/AdminDenied";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminPageHeader } from "@/components/admin/AdminUI";
 import { AnalyticsTables } from "@/components/admin/AnalyticsTables";
 import { MetricCard } from "@/components/admin/MetricCard";
 import { parsePeriod, PeriodTabs } from "@/components/admin/PeriodTabs";
@@ -21,24 +22,25 @@ export default async function AdminAnalyticsPage({
 
   return (
     <AdminShell session={access.session}>
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h1 className="text-3xl font-black theme-text">Analytics</h1>
-          <p className="mt-2 text-sm theme-text-secondary">{data.rangeLabel}</p>
-        </div>
+      <AdminPageHeader
+        eyebrow="Website Analytics"
+        title="Analytics"
+        description={data.rangeLabel}
+        action={
         <div className="flex flex-wrap gap-2">
           <PeriodTabs current={period} basePath="/admin/analytics" />
           <a
             href={`/admin/analytics?period=${period}`}
-            className="rounded-md border theme-border px-3 py-2 text-sm font-semibold theme-text-secondary transition hover:border-[var(--accent)]"
+            className="inline-flex min-h-11 items-center rounded-lg border theme-border px-3 text-sm font-semibold theme-text-secondary transition hover:border-[var(--accent)]"
           >
             Refresh
           </a>
         </div>
-      </div>
+        }
+      />
 
       {!data.hasEvents ? (
-        <section className="mt-6 rounded-lg border p-6 theme-card">
+        <section className="mt-6 rounded-2xl border p-6 theme-card">
           <p className="text-lg font-black theme-text">No analytics data yet.</p>
           <p className="mt-2 text-sm theme-text-secondary">
             Traffic and interaction data will appear after visitors begin using the website.
@@ -55,8 +57,8 @@ export default async function AdminAnalyticsPage({
         <MetricCard label="CTA Clicks" value={data.summary.ctaClicks} change={data.comparisons.ctaClicks} />
       </div>
 
-      <section className="mt-6 rounded-lg border p-5 theme-card">
-        <h2 className="text-lg font-black theme-text">Website Traffic</h2>
+      <section className="mt-6 rounded-2xl border p-5 theme-card">
+        <h2 className="text-xl font-black theme-text">Website Traffic</h2>
         <div className="mt-4">
           <TrafficChart data={data.traffic} />
         </div>
