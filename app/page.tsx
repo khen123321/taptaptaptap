@@ -7,6 +7,7 @@ import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { IntroSection } from "@/components/home/IntroSection";
 import { LiveDemo } from "@/components/home/LiveDemo";
+import { PhilippinesReach } from "@/components/home/PhilippinesReach";
 import { ProductsSection } from "@/components/home/ProductsSection";
 import { TrustBar } from "@/components/home/TrustBar";
 import { WhyTapTapTap } from "@/components/home/WhyTapTapTap";
@@ -26,6 +27,7 @@ export default function Home() {
         <LiveDemo />
         <WhyTapTapTap />
         <BusinessUses />
+        <PhilippinesReach />
         <CustomOrderCTA />
         <FAQ />
         <FinalCTA />

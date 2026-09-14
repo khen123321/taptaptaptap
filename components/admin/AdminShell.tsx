@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BarChart3, Boxes, ExternalLink, LayoutDashboard, LogOut, Package, ReceiptText } from "lucide-react";
+import { BarChart3, Boxes, ExternalLink, Images, LayoutDashboard, LogOut, MapPin, Package, ReceiptText } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import type { AdminSession } from "@/lib/admin-auth";
@@ -12,6 +12,8 @@ const navItems = [
   { href: "/admin/inventory", label: "Inventory", icon: Boxes },
   { href: "/admin/sales", label: "Sales", icon: ReceiptText },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/admin/map-locations", label: "Map Locations", icon: MapPin },
+  { href: "/admin/business-logos", label: "Business Logos", icon: Images },
 ];
 
 export function AdminShell({

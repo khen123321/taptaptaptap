@@ -16,6 +16,10 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Map Data
+
+The public Philippines reach map uses a responsive SVG infographic generated from the `faeldon/philippines-json-maps` 2023 low-resolution country GeoJSON, not an external basemap. Public pins are managed manually in Admin > Map Locations and are not derived from sales. Admin city selection uses the local TapTapTap-maintained city/municipality list in `data/philippine-cities.ts`; the list stores city-level center coordinates only and does not store street addresses.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

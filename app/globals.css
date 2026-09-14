@@ -504,6 +504,28 @@ html[data-theme="dark"] .theme-media-frame {
   flex: 0 0 88%;
 }
 
+.partner-logo-card {
+  animation: partner-logo-float 5.8s ease-in-out infinite;
+  animation-delay: var(--partner-float-delay);
+}
+
+.partner-logo-inner {
+  transform: translate3d(var(--partner-hover-x, 0), var(--partner-hover-y, 0), 0);
+  transition: transform 180ms ease;
+}
+
+.partner-float-b {
+  animation-duration: 6.4s;
+}
+
+.partner-float-c {
+  animation-duration: 7s;
+}
+
+.partner-float-d {
+  animation-duration: 6.8s;
+}
+
 @media (min-width: 768px) {
   .product-carousel-slide {
     flex-basis: calc((100% - 1.25rem) / 2);
@@ -546,6 +568,17 @@ html[data-theme="dark"] .theme-media-frame {
   }
 }
 
+@keyframes partner-logo-float {
+  0%,
+  100% {
+    transform: translate3d(0, -3px, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tap-open-marquee {
     mask-image: none;
@@ -576,6 +609,15 @@ html[data-theme="dark"] .theme-media-frame {
   .business-marquee-track {
     animation: none;
     width: auto;
+  }
+
+  .partner-logo-card {
+    animation: none;
+  }
+
+  .partner-logo-inner {
+    transform: none !important;
+    transition: none;
   }
 
   *,
