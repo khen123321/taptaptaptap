@@ -27,11 +27,11 @@ export function PhilippinesMap({ markers }: PhilippinesMapProps) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-lg border theme-card p-4 sm:p-6"
+      className="relative mx-auto w-full max-w-[430px] sm:max-w-[470px] lg:max-w-[500px]"
       onClick={() => setActiveMarker(null)}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(0,168,192,0.12),transparent_38%)]" />
-      <div className="relative mx-auto aspect-[8/11] w-full max-w-[560px]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(0,168,192,0.08),transparent_44%)]" />
+      <div className="relative mx-auto aspect-[8/11] w-full">
         <svg
           className="h-full w-full overflow-visible"
           viewBox={`0 0 ${philippinesMapViewBox.width} ${philippinesMapViewBox.height}`}
@@ -47,9 +47,6 @@ export function PhilippinesMap({ markers }: PhilippinesMapProps) {
               <feDropShadow dx="0" dy="8" stdDeviation="6" floodColor="#001014" floodOpacity="0.22" />
             </filter>
           </defs>
-
-          <rect width={philippinesMapViewBox.width} height={philippinesMapViewBox.height} rx="36" className="fill-[color-mix(in_srgb,var(--surface-secondary)_82%,transparent)]" />
-
           <g opacity="0.96">
             {philippinesBoundaryPaths.map((path) => (
               <path
@@ -108,7 +105,7 @@ export function PhilippinesMap({ markers }: PhilippinesMapProps) {
       </div>
 
       {markers.length === 0 ? (
-        <div className="relative mx-auto -mt-3 max-w-xs rounded-md border theme-card-elevated p-3 text-center text-sm theme-text-secondary">
+        <div className="relative mx-auto -mt-2 max-w-xs rounded-md bg-[var(--surface-secondary)]/70 p-3 text-center text-sm theme-text-secondary">
           No locations added yet.
         </div>
       ) : null}
