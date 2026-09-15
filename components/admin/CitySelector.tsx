@@ -6,6 +6,14 @@ import { adminFieldClass } from "@/components/admin/AdminUI";
 import { cityProviderId, philippineCities, type PhilippineCityOption } from "@/data/philippine-cities";
 import type { MapLocationInput } from "@/types/map-locations";
 
+const maxCityResults = 15;
+const citySearchIndex = philippineCities.map((city) => ({
+  city,
+  cityText: normalizeSearchText(city.cityName),
+  provinceText: normalizeSearchText(city.provinceName),
+  regionText: normalizeSearchText(city.regionName),
+}));
+
 type CitySelection = Pick<
   MapLocationInput,
   "cityName" | "provinceName" | "regionName" | "latitude" | "longitude" | "providerId"
@@ -29,9 +37,12 @@ export function CitySelector({ initialCity = null, disabled = false }: CitySelec
     if (disabled || !trimmed) return;
     setError("");
 
-    const matches = philippineCities
-      .filter((city) => cityMatchesQuery(city, trimmed))
-      .slice(0, 8);
+    const matches = citySearchIndex
+      .map((entry) => ({ city: entry.city, rank: citySearchRank(entry, trimmed) }))
+      .filter((result): result is { city: PhilippineCityOption; rank: number } => result.rank !== null)
+      .sort((a, b) => a.rank - b.rank || a.city.cityName.localeCompare(b.city.cityName))
+      .slice(0, maxCityResults)
+      .map((result) => result.city);
 
     setResults(matches);
     if (!matches.length) setError("No matching city or municipality found in the local list.");
@@ -160,12 +171,31 @@ function cityToSelection(city: PhilippineCityOption): CitySelection {
   };
 }
 
-function cityMatchesQuery(city: PhilippineCityOption, query: string) {
+function citySearchRank(
+  city: {
+    cityText: string;
+    provinceText: string;
+    regionText: string;
+  },
+  query: string,
+) {
   const normalizedQuery = normalizeSearchText(query);
-  return [city.cityName, city.provinceName, city.regionName]
-    .some((value) => normalizeSearchText(value).includes(normalizedQuery));
+  if (!normalizedQuery) return null;
+  if (city.cityText === normalizedQuery) return 0;
+  if (city.cityText.startsWith(normalizedQuery)) return 1;
+  if (city.cityText.includes(normalizedQuery)) return 2;
+  if (city.provinceText.startsWith(normalizedQuery)) return 3;
+  if (city.regionText.startsWith(normalizedQuery)) return 4;
+  if (`${city.cityText} ${city.provinceText} ${city.regionText}`.includes(normalizedQuery)) return 5;
+  return null;
 }
 
 function normalizeSearchText(value: string) {
-  return value.toLowerCase().replace(/\bcity\b/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  return value
+    .toLowerCase()
+    .replace(/\bcity\b/g, "")
+    .replace(/\bmunicipality of\b/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
