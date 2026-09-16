@@ -17,6 +17,13 @@ type ProjectedMarker = PublicMapMarker & {
   y: number;
 };
 
+const philippinesMapViewport = {
+  x: 40,
+  y: 0,
+  width: 560,
+  height: 880,
+} as const;
+
 export function PhilippinesMap({ markers }: PhilippinesMapProps) {
   const [activeMarker, setActiveMarker] = useState<ProjectedMarker | null>(null);
 
@@ -27,14 +34,14 @@ export function PhilippinesMap({ markers }: PhilippinesMapProps) {
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[430px] sm:max-w-[470px] lg:max-w-[500px]"
+      className="relative mx-auto w-full max-w-[430px] sm:max-w-[470px] lg:max-w-[800px] xl:max-w-[900px]"
       onClick={() => setActiveMarker(null)}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(0,168,192,0.08),transparent_44%)]" />
-      <div className="relative mx-auto aspect-[8/11] w-full">
+      <div className="relative mx-auto aspect-[8/11] w-full lg:aspect-[7/11]">
         <svg
           className="h-full w-full overflow-visible"
-          viewBox={`0 0 ${philippinesMapViewBox.width} ${philippinesMapViewBox.height}`}
+          viewBox={`${philippinesMapViewport.x} ${philippinesMapViewport.y} ${philippinesMapViewport.width} ${philippinesMapViewport.height}`}
           preserveAspectRatio="xMidYMid meet"
           role="img"
           aria-label="Philippines map showing TapTapTap public locations by city"
@@ -114,10 +121,10 @@ export function PhilippinesMap({ markers }: PhilippinesMapProps) {
 }
 
 function MapTooltip({ marker }: { marker: ProjectedMarker | null }) {
-  const left = `${((marker?.x ?? philippinesMapViewBox.width / 2) / philippinesMapViewBox.width) * 100}%`;
-  const top = `${((marker?.y ?? philippinesMapViewBox.height / 2) / philippinesMapViewBox.height) * 100}%`;
-  const alignRight = (marker?.x ?? 0) > philippinesMapViewBox.width * 0.68;
-  const alignBottom = (marker?.y ?? 0) > philippinesMapViewBox.height * 0.72;
+  const left = `${(((marker?.x ?? philippinesMapViewport.x + philippinesMapViewport.width / 2) - philippinesMapViewport.x) / philippinesMapViewport.width) * 100}%`;
+  const top = `${(((marker?.y ?? philippinesMapViewport.y + philippinesMapViewport.height / 2) - philippinesMapViewport.y) / philippinesMapViewport.height) * 100}%`;
+  const alignRight = (marker?.x ?? 0) > philippinesMapViewport.x + philippinesMapViewport.width * 0.68;
+  const alignBottom = (marker?.y ?? 0) > philippinesMapViewport.y + philippinesMapViewport.height * 0.72;
 
   return (
     <div
