@@ -32,8 +32,8 @@ export async function getAdminMapLocations() {
   const { data, error } = await supabase
     .from("public_map_locations")
     .select(mapLocationColumns)
-    .order("is_visible", { ascending: false })
-    .order("updated_at", { ascending: false });
+    .order("city_name", { ascending: true })
+    .order("province_name", { ascending: true });
 
   if (error) {
     if (isMissingMapLocationsTable(error)) return [];
