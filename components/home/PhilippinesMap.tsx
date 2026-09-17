@@ -18,10 +18,10 @@ type ProjectedMarker = PublicMapMarker & {
 };
 
 const philippinesMapViewport = {
-  x: 40,
-  y: 0,
-  width: 560,
-  height: 880,
+  x: 80,
+  y: 28,
+  width: 480,
+  height: 824,
 } as const;
 
 export function PhilippinesMap({ markers }: PhilippinesMapProps) {
@@ -34,11 +34,11 @@ export function PhilippinesMap({ markers }: PhilippinesMapProps) {
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[430px] sm:max-w-[470px] lg:max-w-[800px] xl:max-w-[900px]"
+      className="relative mx-auto w-full max-w-[430px] sm:max-w-[470px] lg:mx-0 lg:max-w-[640px] xl:max-w-[680px]"
       onClick={() => setActiveMarker(null)}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(0,168,192,0.08),transparent_44%)]" />
-      <div className="relative mx-auto aspect-[8/11] w-full lg:aspect-[7/11]">
+      <div className="relative mx-auto aspect-[8/11] w-full lg:aspect-[60/103]">
         <svg
           className="h-full w-full overflow-visible"
           viewBox={`${philippinesMapViewport.x} ${philippinesMapViewport.y} ${philippinesMapViewport.width} ${philippinesMapViewport.height}`}

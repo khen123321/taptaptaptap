@@ -10,7 +10,7 @@ export async function PhilippinesReach() {
   return (
     <section className="section-spacing theme-section px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+        <div className="mx-auto grid w-full max-w-[1120px] gap-8 lg:translate-x-[110px] lg:grid-cols-[minmax(0,420px)_minmax(0,660px)] lg:items-center lg:justify-center lg:gap-14 xl:translate-x-[160px] xl:gap-16 2xl:translate-x-[170px]">
           <div>
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] theme-accent">
               OUR REACH
@@ -30,7 +30,7 @@ export async function PhilippinesReach() {
               Locations are displayed by city or municipality only. Exact customer addresses are never shown.
             </p>
           </div>
-          <div className="lg:justify-self-center">
+          <div className="lg:justify-self-start">
             <PhilippinesMap markers={markers} />
           </div>
         </div>
