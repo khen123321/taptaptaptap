@@ -45,6 +45,9 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
   const [completingSaleId, setCompletingSaleId] = useState<string | null>(null);
   const [editingSale, setEditingSale] = useState<SaleListItem | null>(null);
   const [deletingSale, setDeletingSale] = useState<SaleListItem | null>(null);
+  const [resettingSales, setResettingSales] = useState(false);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [resetConfirmation, setResetConfirmation] = useState("");
   const [cancelKey, setCancelKey] = useState(() => crypto.randomUUID());
   const [completeKey, setCompleteKey] = useState(() => crypto.randomUUID());
   const [editKey, setEditKey] = useState(() => crypto.randomUUID());
@@ -221,6 +224,37 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
     router.refresh();
   };
 
+  const resetSalesData = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (resetConfirmation !== "RESET SALES" || resettingSales) return;
+
+    setResettingSales(true);
+    setError("");
+    setMessage("");
+
+    const response = await fetch("/api/admin/sales/reset", {
+      method: "POST",
+    });
+    const result = (await response.json()) as {
+      ok?: boolean;
+      restoredUnits?: number;
+      resetSales?: number;
+      error?: string;
+    };
+
+    setResettingSales(false);
+
+    if (!response.ok || result.error || !result.ok) {
+      setError(result.error ?? "Failed to reset sales data.");
+      return;
+    }
+
+    setMessage("Sales data has been reset successfully.");
+    setResetModalOpen(false);
+    setResetConfirmation("");
+    router.refresh();
+  };
+
   return (
     <section className="rounded-2xl border p-5 theme-card">
       {message ? (
@@ -386,6 +420,29 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
           <AdminEmptyState title="No sales found" description="Record a quick sale from Inventory to start tracking revenue and stock movement." />
         </div>
       ) : null}
+
+      <div className="mt-8 rounded-lg border border-red-400/40 bg-red-500/10 p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-black text-red-300">Danger Zone</h2>
+            <p className="mt-2 text-sm leading-6 text-red-100/85">
+              Reset all sales records and related sales data.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setResetModalOpen(true);
+              setResetConfirmation("");
+              setError("");
+              setMessage("");
+            }}
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-red-400/50 bg-red-500/10 px-4 text-sm font-bold text-red-300 hover:bg-red-500/20"
+          >
+            Reset Sales Data
+          </button>
+        </div>
+      </div>
 
       {editingSale ? (
         <div
@@ -574,6 +631,53 @@ export function SalesManager({ sales, products }: SalesManagerProps) {
               </button>
               <button className="inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--accent)] bg-[var(--accent)] px-4 text-sm font-bold text-[var(--button-primary-text)]">
                 Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : null}
+
+      {resetModalOpen ? (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+          style={{ background: "var(--overlay)" }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reset-sales-title"
+        >
+          <form onSubmit={resetSalesData} className="w-full max-w-lg rounded-lg border border-red-400/40 p-6 theme-card-elevated">
+            <h2 id="reset-sales-title" className="text-xl font-black text-red-300">Reset all sales data?</h2>
+            <p className="mt-3 text-sm leading-6 theme-text-secondary">
+              This will permanently reset all TapTapTap sales records, payments, sale items, and direct deductions. Inventory deducted by eligible completed sales will be restored.
+            </p>
+            <label className="mt-5 grid gap-2 text-sm font-bold theme-text">
+              Type RESET SALES to confirm
+              <input
+                value={resetConfirmation}
+                onChange={(event) => setResetConfirmation(event.target.value)}
+                className={fieldClass}
+                disabled={resettingSales}
+                autoComplete="off"
+              />
+            </label>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (resettingSales) return;
+                  setResetModalOpen(false);
+                  setResetConfirmation("");
+                }}
+                disabled={resettingSales}
+                className="inline-flex min-h-11 items-center justify-center rounded-md border theme-border px-4 text-sm font-bold theme-text disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={resetConfirmation !== "RESET SALES" || resettingSales}
+                className="inline-flex min-h-11 items-center justify-center rounded-md border border-red-400/50 bg-red-500/10 px-4 text-sm font-bold text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {resettingSales ? "Resetting sales data..." : "Reset All Sales Data"}
               </button>
             </div>
           </form>

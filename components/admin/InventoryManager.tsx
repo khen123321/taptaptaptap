@@ -209,35 +209,71 @@ export function InventoryManager({ data }: { data: InventoryDashboardData }) {
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (saving) return;
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     setSaving(true);
     setError("");
     setMessage("");
     setSaleResult(null);
 
-    const formData = new FormData(event.currentTarget);
     formData.set("product_id", selectedProductId);
 
-    const response = await fetch("/api/admin/inventory/adjust", {
-      method: "POST",
-      body: formData,
-    });
-    const result = (await response.json()) as { error?: string };
-    setSaving(false);
-
-    if (!response.ok || result.error) {
-      setError(result.error ?? "Inventory adjustment failed.");
+    let response: Response;
+    try {
+      response = await fetch("/api/admin/inventory/adjust", {
+        method: "POST",
+        body: formData,
+      });
+    } catch (error) {
+      console.error("Inventory adjustment network request failed", error);
+      setError("Unable to reach the server. Check your connection and try again.");
+      setSaving(false);
       return;
     }
 
-    event.currentTarget.reset();
-    if (formData.get("flow") === "restock") {
-      setRestockKey(crypto.randomUUID());
-    } else {
-      setAdjustmentKey(crypto.randomUUID());
+    let result: { error?: string };
+    try {
+      result = (await response.json()) as { error?: string };
+    } catch (error) {
+      console.error("Inventory adjustment response parsing failed", {
+        status: response.status,
+        statusText: response.statusText,
+        error,
+      });
+      if (response.ok) {
+        setMessage("Inventory updated, but the response could not be displayed. Refresh before retrying.");
+        closeModal();
+        router.refresh();
+      } else {
+        setError("Inventory adjustment failed, but the server response could not be read.");
+      }
+      setSaving(false);
+      return;
     }
-    closeModal();
-    setMessage("Inventory updated.");
-    router.refresh();
+
+    if (!response.ok || result.error) {
+      setError(result.error ?? "Inventory adjustment failed.");
+      setSaving(false);
+      return;
+    }
+
+    try {
+      form.reset();
+      if (formData.get("flow") === "restock") {
+        setRestockKey(crypto.randomUUID());
+      } else {
+        setAdjustmentKey(crypto.randomUUID());
+      }
+      closeModal();
+      setMessage("Inventory updated.");
+      router.refresh();
+    } catch (error) {
+      console.error("Inventory adjustment post-success handling failed", error);
+      setMessage("Inventory updated. Refresh if the dashboard does not update.");
+      setError("");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const submitSale = async (event: FormEvent<HTMLFormElement>) => {

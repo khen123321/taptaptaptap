@@ -67,6 +67,17 @@ export type DeleteSaleInput = {
   idempotencyKey?: string;
 };
 
+export type ResetSalesDataResult = {
+  ok: boolean;
+  resetSales: number;
+  resetSaleItems: number;
+  resetPayments: number;
+  resetSaleExpenses: number;
+  resetSaleLocations: number;
+  restoredUnits: number;
+  restoreMovements: number;
+};
+
 export type SaleResult = {
   saleId: string;
   saleNumber: string;
@@ -324,6 +335,23 @@ export async function softDeleteQuickSale(input: DeleteSaleInput) {
 
   revalidateSalesAdmin();
   return data as unknown as SaleResult;
+}
+
+export async function resetAllSalesData(input: { actorProfileId: string }) {
+  const supabase = createSupabaseSecretClient();
+  if (!supabase) throw new Error("Missing Supabase secret key configuration.");
+
+  const { data, error } = await supabase.rpc("reset_all_sales_data", {
+    p_actor_profile_id: input.actorProfileId,
+  });
+
+  if (error) {
+    logRpcError("Sales reset RPC failed", error);
+    throw new Error(mapSaleError(error));
+  }
+
+  revalidateSalesAdmin();
+  return data as unknown as ResetSalesDataResult;
 }
 
 export async function getSalesSummary(): Promise<SalesSummary> {
@@ -700,6 +728,7 @@ function mapSaleError(error: string | SupabaseRpcError) {
   if (lower.includes("bulk pricing is not fully configured")) return "Bulk pricing is not fully configured for this product.";
   if (lower.includes("bulk quantity")) return "Bulk quantity must be a positive whole number.";
   if (lower.includes("cancelled sales cannot be marked sold")) return "Cancelled sales cannot be marked sold.";
+  if (lower.includes("sales reset requires an admin profile")) return "You do not have permission to reset sales data.";
   if (lower.includes("future")) return "Sold date and time cannot be in the future.";
   if (lower.includes("payment reference already exists")) return message;
   if (lower.includes("idempotency key")) return "This request key was already used for a different sale.";

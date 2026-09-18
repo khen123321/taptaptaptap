@@ -15,6 +15,7 @@ export type InventoryMovementType =
   | "sale_commit"
   | "sale_cancel_restore"
   | "sale_delete_restore"
+  | "sales_reset_restore"
   | "refund_restore";
 export type SaleStatus = "pending" | "completed" | "cancelled";
 export type SaleChannel = "physical";
