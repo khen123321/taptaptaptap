@@ -302,6 +302,94 @@ html[data-theme="dark"] .theme-hero-glow {
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 34%);
 }
 
+.connect-ambient {
+  position: absolute;
+  inset: -7rem -4rem auto;
+  height: 28rem;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.82;
+}
+
+.connect-ambient-layer {
+  position: absolute;
+  display: block;
+  border-radius: 9999px;
+  filter: blur(38px);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+.connect-ambient-layer-one {
+  left: 50%;
+  top: 1rem;
+  width: 18rem;
+  height: 18rem;
+  background: radial-gradient(circle, rgba(0, 168, 192, 0.24), transparent 68%);
+  animation: connect-ambient-drift-one 14s ease-in-out infinite;
+}
+
+.connect-ambient-layer-two {
+  left: 12%;
+  top: 7rem;
+  width: 15rem;
+  height: 15rem;
+  background: radial-gradient(circle, rgba(18, 185, 208, 0.18), transparent 70%);
+  animation: connect-ambient-drift-two 18s ease-in-out infinite;
+}
+
+.connect-ambient-layer-three {
+  right: 8%;
+  top: 5.5rem;
+  width: 16rem;
+  height: 12rem;
+  background: linear-gradient(110deg, transparent, rgba(0, 168, 192, 0.16), transparent);
+  animation: connect-ambient-sweep 22s ease-in-out infinite;
+}
+
+html[data-theme="dark"] .connect-ambient {
+  opacity: 0.95;
+}
+
+@keyframes connect-ambient-drift-one {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: translate3d(-52%, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.88;
+    transform: translate3d(-44%, 1.25rem, 0) scale(1.06);
+  }
+}
+
+@keyframes connect-ambient-drift-two {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0) scale(0.96);
+  }
+
+  50% {
+    opacity: 0.78;
+    transform: translate3d(1.5rem, -0.75rem, 0) scale(1.04);
+  }
+}
+
+@keyframes connect-ambient-sweep {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: translate3d(0, 0.25rem, 0) rotate(-7deg);
+  }
+
+  50% {
+    opacity: 0.72;
+    transform: translate3d(-1.25rem, -0.5rem, 0) rotate(5deg);
+  }
+}
+
 .hero-cta-primary {
   background: var(--hero-cta-primary);
   border-color: var(--hero-cta-primary);
@@ -576,6 +664,10 @@ html[data-theme="dark"] .theme-media-frame {
   .business-marquee-track {
     animation: none;
     width: auto;
+  }
+
+  .connect-ambient-layer {
+    animation: none;
   }
 
   *,
