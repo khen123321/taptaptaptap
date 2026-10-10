@@ -35,15 +35,43 @@ export function ProductGrid({ products }: { products: Product[] }) {
     [autoplay],
   );
 
+  const syncAutoplay = useCallback(() => {
+    if (!emblaApi) return;
+
+    const autoplayPlugin = emblaApi.plugins().autoplay;
+    if (!autoplayPlugin) return;
+
+    const snapCount = emblaApi.scrollSnapList().length;
+    if (!shouldAutoplay || products.length < 2 || snapCount < 2) {
+      autoplayPlugin.stop();
+      return;
+    }
+
+    autoplayPlugin.play();
+  }, [emblaApi, products.length, shouldAutoplay]);
+
   useEffect(() => {
     if (!emblaApi) return;
 
-    if (products.length <= 1 || !shouldAutoplay) {
-      autoplay.stop();
-    } else {
-      autoplay.play();
-    }
-  }, [autoplay, emblaApi, products.length, shouldAutoplay]);
+    syncAutoplay();
+    emblaApi.on("reInit", syncAutoplay);
+
+    return () => {
+      emblaApi.off("reInit", syncAutoplay);
+      emblaApi.plugins().autoplay?.stop();
+    };
+  }, [emblaApi, syncAutoplay]);
+
+  const resetAutoplay = useCallback(() => {
+    if (!emblaApi || !shouldAutoplay) return;
+
+    const autoplayPlugin = emblaApi.plugins().autoplay;
+    if (!autoplayPlugin) return;
+
+    if (products.length < 2 || emblaApi.scrollSnapList().length < 2) return;
+
+    autoplayPlugin.reset();
+  }, [emblaApi, products.length, shouldAutoplay]);
 
   const openProduct = (product: Product) => {
     trackEvent("product_details_open", {
@@ -61,13 +89,13 @@ export function ProductGrid({ products }: { products: Product[] }) {
 
   const scrollPrev = useCallback(() => {
     emblaApi?.scrollPrev();
-    if (shouldAutoplay) autoplay.reset();
-  }, [autoplay, emblaApi, shouldAutoplay]);
+    resetAutoplay();
+  }, [emblaApi, resetAutoplay]);
 
   const scrollNext = useCallback(() => {
     emblaApi?.scrollNext();
-    if (shouldAutoplay) autoplay.reset();
-  }, [autoplay, emblaApi, shouldAutoplay]);
+    resetAutoplay();
+  }, [emblaApi, resetAutoplay]);
 
   return (
     <>
