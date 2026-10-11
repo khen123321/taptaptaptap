@@ -4,7 +4,6 @@ import { Check, CheckCircle2, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatPhp } from "@/lib/format";
-import { getProductSavingsLabel } from "@/lib/product-promos";
 import type { Product } from "@/types/product";
 import type { OrderContactDetails } from "@/components/products/OrderContactModal";
 
@@ -68,7 +67,6 @@ export function ProductDetailsModal({ product, onClose, onOrder }: ProductDetail
 
   if (!product) return null;
 
-  const savingsLabel = getProductSavingsLabel(product);
   const selectedPrice =
     selectedPackage === "one" ? product.buyOnePrice : product.buyTwoPrice;
   const selectedPackageLabel = selectedPackage === "one" ? "Buy 1" : "Buy 2";
@@ -86,7 +84,6 @@ export function ProductDetailsModal({ product, onClose, onOrder }: ProductDetail
       label: "Buy 2",
       detail: "2 NFC Signs",
       price: product.buyTwoPrice,
-      savings: product.buyTwoSavings,
       badge: "Best Value",
     },
   ];
@@ -138,14 +135,6 @@ export function ProductDetailsModal({ product, onClose, onOrder }: ProductDetail
             <p className="mt-3 text-sm leading-6 theme-text-secondary sm:mt-4 sm:text-base sm:leading-7">
               {product.description}
             </p>
-            {savingsLabel ? (
-              <div className="promo-banner mt-5 inline-flex max-w-full flex-wrap items-center gap-2 rounded-lg border px-3 py-2">
-                <span className="promo-badge rounded-md px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em]">
-                  Limited Time Offer
-                </span>
-                <span className="promo-savings-text text-sm font-bold">{savingsLabel}</span>
-              </div>
-            ) : null}
 
             <div className="mt-7">
               <p className="text-xs font-black uppercase tracking-[0.18em] theme-text">
@@ -181,11 +170,6 @@ export function ProductDetailsModal({ product, onClose, onOrder }: ProductDetail
                       <p className="mt-3 text-2xl font-black tracking-normal theme-text">
                         {formatPhp(option.price)}
                       </p>
-                      {option.savings ? (
-                        <p className="promo-savings-text mt-1 text-xs font-bold uppercase tracking-[0.12em]">
-                          Save {formatPhp(option.savings)}
-                        </p>
-                      ) : null}
                     </button>
                   );
                 })}
@@ -198,11 +182,6 @@ export function ProductDetailsModal({ product, onClose, onOrder }: ProductDetail
                 {selectedPackage === "one" ? "Buy 1" : "Buy 2"}{" "}
                 <span className="theme-accent">{formatPhp(selectedPrice)}</span>
               </p>
-              {selectedPackage === "two" ? (
-                <p className="promo-savings-text mt-2 text-sm font-bold">
-                  You save {formatPhp(product.buyTwoSavings)}
-                </p>
-              ) : null}
             </div>
 
             <div className="mt-6 border-t theme-border pt-5">

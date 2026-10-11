@@ -154,7 +154,8 @@ function TeamProfile({ member }: { member: TeamMember }) {
             alt={member.name ? `${member.name} profile photo` : `${member.roleLabel} profile photo`}
             width={176}
             height={176}
-            className="h-full w-full object-cover"
+                    className={`h-full w-full object-cover ${member.photoClassName ?? ""}`}
+                    style={member.photoObjectPosition ? { objectPosition: member.photoObjectPosition } : undefined}
           />
         ) : initials ? (
           <span className="text-3xl font-black">{initials}</span>
@@ -169,9 +170,6 @@ function TeamProfile({ member }: { member: TeamMember }) {
       <h2 className="mt-2 text-2xl font-black tracking-tight theme-text">
         {member.name ?? member.roleLabel}
       </h2>
-      <p className="mt-1 text-sm font-bold theme-text-secondary">
-        {member.position ?? "Team profile details coming soon"}
-      </p>
       <p className="mx-auto mt-4 max-w-md text-sm leading-6 theme-text-secondary">
         {member.description ?? roleDescriptions[member.roleKey]}
       </p>

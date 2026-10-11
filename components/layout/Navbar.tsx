@@ -84,7 +84,6 @@ export function Navbar() {
               className="brand-logo-image brand-logo-dark"
             />
           </span>
-          <span className="ml-2 text-base font-bold theme-text sm:ml-3">TapTapTap</span>
         </Link>
 
         <div className="hidden items-center gap-7 lg:flex">

@@ -13,7 +13,6 @@ export type Product = {
   unitLabel: string;
   bundlePricePhp?: number;
   bundleLabel?: string;
-  bundleSavingsLabel?: string;
   includedFeatures: string[];
   ctaLabel: string;
   ctaHref: string;

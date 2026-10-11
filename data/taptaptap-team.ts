@@ -7,6 +7,8 @@ export type TeamMember = {
   name?: string;
   position?: string;
   photo?: string;
+  photoClassName?: string;
+  photoObjectPosition?: string;
   description?: string;
   email?: string;
   portfolio?: string;
@@ -33,6 +35,7 @@ export const taptaptapTeam: TeamMember[] = [
     name: "Khen Joshua Gania Verson",
     position: "Web Developer",
     photo: "/images/team/khen_joshua_verson.png",
+    photoClassName: "scale-[1.18]",
     portfolio: "https://khenjoshua.dev/",
   },
   {
@@ -42,6 +45,7 @@ export const taptaptapTeam: TeamMember[] = [
     name: "Michael Ceasar Cabarse Generalao",
     position: "Technical IT",
     photo: "/images/team/micheal_generalao.jpg",
+    photoObjectPosition: "center 34%",
     email: "mgeneralao04@gmail.com",
   },
 ];

@@ -44,7 +44,6 @@ export const products: Product[] = [
     unitLabel: "1 Sign",
     bundlePricePhp: 1499,
     bundleLabel: "2 Signs",
-    bundleSavingsLabel: "Save ₱299",
     includedFeatures: [
       "Free nationwide shipping",
       "Google Review integration",
@@ -73,7 +72,6 @@ export const products: Product[] = [
     unitLabel: "1 Sign",
     bundlePricePhp: 1499,
     bundleLabel: "2 Signs",
-    bundleSavingsLabel: "Save ₱299",
     includedFeatures: [
       "Free nationwide shipping",
       "Facebook Page integration",
@@ -104,7 +102,6 @@ export const products: Product[] = [
     unitLabel: "1 Sign",
     bundlePricePhp: 1899,
     bundleLabel: "2 Signs",
-    bundleSavingsLabel: "Save ₱299",
     includedFeatures: [
       "Free nationwide shipping",
       "Initial NFC setup & programming",
@@ -156,7 +153,6 @@ export function mapProductRow(row: ProductRow): Product {
     unitLabel: "1 Sign",
     bundlePricePhp: Number(row.price_bundle ?? 0),
     bundleLabel: "2 Signs",
-    bundleSavingsLabel: `Save ${formatPhp(Number(row.bundle_savings ?? 0))}`,
     includedFeatures: Array.isArray(row.included_features)
       ? row.included_features.map(String)
       : [],
