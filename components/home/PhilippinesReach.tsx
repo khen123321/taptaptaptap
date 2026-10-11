@@ -5,7 +5,7 @@ import { PhilippinesMap } from "@/components/home/PhilippinesMap";
 export async function PhilippinesReach() {
   const markers = await getPublicMapMarkers();
   const totalCities = markers.length;
-  const totalLocations = markers.reduce((sum, marker) => sum + marker.count, 0);
+  const totalBusinesses = markers.reduce((sum, marker) => sum + marker.count, 0);
 
   return (
     <section className="section-spacing theme-section px-4 sm:px-6 lg:px-8">
@@ -23,7 +23,7 @@ export async function PhilippinesReach() {
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:max-w-md">
               <ReachMetric label="Cities Reached" value={String(totalCities)} />
-              <ReachMetric label="Total Locations" value={String(totalLocations)} />
+              <ReachMetric label="Total Businesses" value={String(totalBusinesses)} />
             </div>
             <p className="mt-4 flex items-start gap-2 text-sm leading-6 theme-text-muted">
               <MapPin className="mt-1 h-4 w-4 shrink-0 theme-accent" aria-hidden />

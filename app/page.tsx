@@ -6,7 +6,6 @@ import { FinalCTA } from "@/components/home/FinalCTA";
 import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { IntroSection } from "@/components/home/IntroSection";
-import { LiveDemo } from "@/components/home/LiveDemo";
 import { MissionVisionSection } from "@/components/home/MissionVisionSection";
 import { PhilippinesReach } from "@/components/home/PhilippinesReach";
 import { ProductsSection } from "@/components/home/ProductsSection";
@@ -25,7 +24,6 @@ export default function Home() {
         <IntroSection />
         <ProductsSection />
         <HowItWorks />
-        <LiveDemo />
         <WhyTapTapTap />
         <BusinessUses />
         <PhilippinesReach />

@@ -3,7 +3,6 @@
 import { ArrowRight } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import { getProductSavingsLabel } from "@/lib/product-promos";
 import type { Product } from "@/types/product";
 
 type ProductCardProps = {
@@ -13,7 +12,6 @@ type ProductCardProps = {
 
 export function ProductCard({ product, onViewDetails }: ProductCardProps) {
   const image = product.cardImage ?? product.image;
-  const savingsLabel = getProductSavingsLabel(product);
 
   const openDetails = () => {
     onViewDetails?.(product);
@@ -39,16 +37,6 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
       }`}
     >
       <div className="relative aspect-square overflow-hidden bg-black">
-        {savingsLabel ? (
-          <div className="absolute left-2 top-2 z-10 flex max-w-[calc(100%-1rem)] flex-wrap gap-1.5 sm:left-3 sm:top-3 sm:gap-2">
-            <span className="promo-badge rounded-md px-2.5 py-1.5 text-[0.62rem] font-black uppercase tracking-[0.1em] sm:px-3 sm:text-[0.68rem] sm:tracking-[0.12em]">
-              Limited Time Offer
-            </span>
-            <span className="promo-savings-badge rounded-md border px-2.5 py-1.5 text-[0.62rem] font-black uppercase tracking-[0.1em] backdrop-blur sm:px-3 sm:text-[0.68rem] sm:tracking-[0.12em]">
-              {savingsLabel}
-            </span>
-          </div>
-        ) : null}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={image}

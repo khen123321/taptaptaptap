@@ -500,38 +500,6 @@ html[data-theme="dark"] .theme-media-frame {
   color: #9ca6ad;
 }
 
-@keyframes nfc-pulse {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.96);
-  }
-
-  50% {
-    opacity: 0.85;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes tap-phone {
-  0%,
-  100% {
-    transform: translateX(0) rotate(-2deg);
-  }
-
-  45% {
-    transform: translateX(34px) rotate(0deg);
-  }
-}
-
-.nfc-pulse {
-  animation: nfc-pulse 2.8s ease-in-out infinite;
-}
-
-.tap-demo-active {
-  animation: tap-phone 900ms ease-in-out;
-}
-
 .tap-open-marquee {
   mask-image: linear-gradient(
     90deg,
@@ -557,8 +525,10 @@ html[data-theme="dark"] .theme-media-frame {
   animation-name: tap-open-marquee-right;
 }
 
-.tap-open-marquee:hover .tap-open-marquee-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .tap-open-marquee:hover .tap-open-marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 .tap-open-marquee-group {
@@ -584,8 +554,10 @@ html[data-theme="dark"] .theme-media-frame {
   will-change: transform;
 }
 
-.business-marquee:hover .business-marquee-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .business-marquee:hover .business-marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 .product-carousel-slide {
@@ -640,7 +612,7 @@ html[data-theme="dark"] .theme-media-frame {
   }
 
   .tap-open-marquee-viewport {
-    overflow-x: auto;
+    overflow: hidden;
     scrollbar-width: none;
   }
 
@@ -649,12 +621,11 @@ html[data-theme="dark"] .theme-media-frame {
   }
 
   .tap-open-marquee-track {
-    animation: none;
-    width: auto;
+    animation-duration: 140s;
   }
 
   .tap-open-marquee-group[aria-hidden="true"] {
-    display: none;
+    display: flex;
   }
 
   .business-marquee {
@@ -681,5 +652,10 @@ html[data-theme="dark"] .theme-media-frame {
 
   html[data-theme-transition="active"]::view-transition-new(root) {
     animation: none;
+  }
+
+  .tap-open-marquee-track {
+    animation-duration: 140s !important;
+    animation-iteration-count: infinite !important;
   }
 }
